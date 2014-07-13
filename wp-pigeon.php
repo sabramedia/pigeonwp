@@ -1,29 +1,26 @@
 <?php
 /**
- * The WordPress Plugin Boilerplate.
+ * WP Pidgeon
  *
- * A foundation off of which to build well-documented WordPress plugins that
- * also follow WordPress Coding Standards and PHP best practices.
+ * The Pidgeon Paywall plugin for WordPress
  *
  * @package   WP_Pidgeon
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
- * @link      http://example.com
- * @copyright 2014 Your Name or Company Name
+ * @link      http://pigeonpaywall.com/
+ * @copyright 2014 Sabramedia
  *
  * @wordpress-plugin
  * Plugin Name:       WP Pidgeon
- * Plugin URI:        @TODO
- * Description:       @TODO
+ * Plugin URI:        http://pigeonpaywall.com/
+ * Description:       The Pidgeon Paywall plugin for WordPress
  * Version:           1.0.0
  * Author:            @TODO
  * Author URI:        @TODO
- * Text Domain:       plugin-name-locale
+ * Text Domain:       wp-pidgeon-locale
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages
- * GitHub Plugin URI: https://github.com/<owner>/<repo>
- * WordPress-Plugin-Boilerplate: v2.6.1
  */
 
 // If this file is called directly, abort.
