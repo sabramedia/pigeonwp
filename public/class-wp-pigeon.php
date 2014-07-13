@@ -168,8 +168,9 @@ class WP_Pigeon {
 		if ( ! $this->pigeon_settings['content_access'] )
 			$this->pigeon_settings['content_access'] = 0;
 
-		// Redirect setting
-		$this->pigeon_settings['redirect'] = TRUE;
+		// Redirect setting (this could be already set via our functions)
+		if ( ! isset( $this->pigeon_settings['redirect'] ) )
+			$this->pigeon_settings['redirect'] = TRUE;
 
 		// Subdomain
 		$this->pigeon_settings['subdomain'] = 'my';
