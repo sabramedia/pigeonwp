@@ -67,8 +67,8 @@ class WP_Pidgeon {
 		// On each request, we need to make a call to Pidgeon
 		add_action( 'init', array( $this, 'make_pidgeon_request' ) );
 
-		// Include our custom functions
-		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/functions.php' );
+		// Load functions
+		add_action( 'init', array( $this, 'load_pidgeon_functions' ) );
 
 	}
 
@@ -128,6 +128,18 @@ class WP_Pidgeon {
 
 		load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
 		load_plugin_textdomain( $domain, FALSE, basename( plugin_dir_path( dirname( __FILE__ ) ) ) . '/languages/' );
+
+	}
+
+	/**
+	 * Load Pidgeon Functions
+	 *
+	 * @since    1.0.0
+	 */
+	public function load_pidgeon_functions() {
+
+		// Include our custom functions
+		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/functions.php' );
 
 	}
 
