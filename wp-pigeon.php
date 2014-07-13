@@ -11,7 +11,7 @@
  * @copyright 2014 Sabramedia
  *
  * @wordpress-plugin
- * Plugin Name:       WP Pidgeon
+ * Plugin Name:       WP_Pidgeon
  * Plugin URI:        http://pigeonpaywall.com/
  * Description:       The Pidgeon Paywall plugin for WordPress
  * Version:           1.0.0
@@ -37,13 +37,6 @@ if ( ! defined( 'WPINC' ) ) {
  *
  */
 require_once( plugin_dir_path( __FILE__ ) . 'public/class-wp-pidgeon.php' );
-
-/*
- * Register hooks that are fired when the plugin is activated or deactivated.
- * When the plugin is deleted, the uninstall.php file is loaded.
- */
-register_activation_hook( __FILE__, array( 'WP_Pidgeon', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'WP_Pidgeon', 'deactivate' ) );
 
 /*
  * Actually load the plugin by creating an instance
