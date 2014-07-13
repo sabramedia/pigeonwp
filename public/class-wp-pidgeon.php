@@ -67,6 +67,9 @@ class WP_Pidgeon {
 		// On each request, we need to make a call to Pidgeon
 		add_action( 'init', array( $this, 'make_pidgeon_request' ) );
 
+		// Include our custom functions
+		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/functions.php' );
+
 	}
 
 	/**
@@ -139,7 +142,7 @@ class WP_Pidgeon {
 		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/class-pidgeon-api.php' );
 
 		// Make the request
-		$pidgeon_obj = new WP_Pidgeon
+		$pidgeon_obj = new WP_Pidgeon;
 		$this->pidgeon_settings = $pidgeon_obj->send();
 
 	}
