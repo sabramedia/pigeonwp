@@ -1,1 +1,1 @@
-<h2>Wp Pigeon</h2>
+<h2>Pigeon for WordPress</h2>

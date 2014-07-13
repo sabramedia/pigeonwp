@@ -1,9 +1,9 @@
 <?php
 /**
- * WP Pigeon
+ * Pigeon for WordPress
  *
- * @package   WP_Pigeon
- * @author    Your Name <email@example.com>
+ * @package   Pigeon for WordPress
+ * @author    Matt Geri / Jonathan Wold
  * @license   GPL-2.0+
  * @link      http://pigeonpaywall.com/
  * @copyright 2014 Sabramedia
@@ -75,7 +75,7 @@ class WP_Pigeon_Admin {
 	public function add_meta_box() {
 		
 		foreach ( array( 'post', 'page' ) as $post_type )
-			add_meta_box( 'wp_pigeon', 'Pigeon', array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
+			add_meta_box( 'wp_pigeon', 'Pigeon Access Status', array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
 	
 	}
 
@@ -88,7 +88,7 @@ class WP_Pigeon_Admin {
 		
 		wp_nonce_field( 'wp_pigeon', 'wp_pigeon_nonce' );
 
-		$value = get_post_meta( $post->ID, '_wp_pidgeon_content_access', true );
+		$value = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
 
 		include_once( 'views/meta-box.php' );
 
@@ -114,7 +114,7 @@ class WP_Pigeon_Admin {
 
 		$pigeon_content_access = intval( $_POST['pigeon_content_access'] );
 
-		update_post_meta( $post_id, '_wp_pidgeon_content_access', $pigeon_content_access );
+		update_post_meta( $post_id, '_wp_pigeon_content_access', $pigeon_content_access );
 
 	}
 
@@ -126,8 +126,8 @@ class WP_Pigeon_Admin {
 	public function add_plugin_admin_menu() {
 
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'WP Pigeon', $this->plugin_slug ),
-			__( 'WP Pigeon', $this->plugin_slug ),
+			__( 'Pigeon Settings', $this->plugin_slug ),
+			__( 'Pigeon Settings', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )

@@ -1,22 +1,21 @@
 <?php
 /**
- * WP Pigeon
+ * Pigeon for WordPress
  *
  * The Pigeon Paywall plugin for WordPress
  *
- * @package   WP_Pigeon
+ * @package   Pigeon for WordPress
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
  * @link      http://pigeonpaywall.com/
  * @copyright 2014 Sabramedia
  *
  * @wordpress-plugin
- * Plugin Name:       WP_Pigeon
+ * Plugin Name:       Pigeon for WordPress
  * Plugin URI:        http://pigeonpaywall.com/
  * Description:       The Pigeon Paywall plugin for WordPress
  * Version:           1.0.0
- * Author:            @TODO
- * Author URI:        @TODO
+ * Author:            Matt Geri / Jonathan Wold
  * Text Domain:       wp-pigeon-locale
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt

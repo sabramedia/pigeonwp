@@ -148,7 +148,7 @@ class WP_Pigeon {
 	public function load_pigeon_functions() {
 
 		// Include our custom functions
-		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/functions.php' );
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php' );
 
 	}
 
@@ -160,10 +160,10 @@ class WP_Pigeon {
 	public function make_pigeon_request() {
 
 		// Load the API class
-		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/class-pigeon-api.php' );
+		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-pigeon-api.php' );
 
 		// Get our content access settings
-		$this->pigeon_settings['content_access'] = get_post_meta( get_the_ID(), '_wp_pidgeon_content_access', true );
+		$this->pigeon_settings['content_access'] = get_post_meta( get_the_ID(), '_wp_pigeon_content_access', true );
 
 		if ( ! $this->pigeon_settings['content_access'] )
 			$this->pigeon_settings['content_access'] = 0;
