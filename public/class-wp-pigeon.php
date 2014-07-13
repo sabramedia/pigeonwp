@@ -154,8 +154,8 @@ class WP_Pigeon {
 		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/class-pigeon-api.php' );
 
 		// Make the request
-		$pigeon_obj = new WP_Pigeon;
-		$this->pigeon_settings = $pigeon_obj->send();
+		$pigeon_api = new WP_Pigeon_Api;
+		$this->pigeon_settings = $pigeon_api->exec();
 
 	}
 
