@@ -1,6 +1,6 @@
 <?php
 /**
- * Fired when the plugin is uninstalled.
+ * WP Pigeon
  *
  * @package   WP_Pigeon
  * @author    Your Name <email@example.com>
@@ -9,7 +9,16 @@
  * @copyright 2014 Sabramedia
  */
 
-// If uninstall not called from WordPress, then exit
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
-	exit;
+/**
+ * The core class for the plugin
+ *
+ * @package WP_Pigeon
+ * @author  Your Name <email@example.com>
+ */
+class WP_Pigeon_Api {
+
+	public function send() {
+		
+	}
+
 }

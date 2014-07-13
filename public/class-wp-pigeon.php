@@ -1,8 +1,8 @@
 <?php
 /**
- * WP Pidgeon
+ * WP Pigeon
  *
- * @package   WP_Pidgeon
+ * @package   WP_Pigeon
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
  * @link      http://pigeonpaywall.com/
@@ -12,10 +12,10 @@
 /**
  * The core class for the plugin
  *
- * @package WP_Pidgeon
+ * @package WP_Pigeon
  * @author  Your Name <email@example.com>
  */
-class WP_Pidgeon {
+class WP_Pigeon {
 
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
@@ -33,16 +33,16 @@ class WP_Pidgeon {
 	 *
 	 * @var      string
 	 */
-	protected $plugin_slug = 'wp-pidgeon';
+	protected $plugin_slug = 'wp-pigeon';
 
 	/**
-	 * Pidgeon settings returns from the API
+	 * Pigeon settings returns from the API
 	 *
 	 * @since    1.0.0
 	 *
 	 * @var      array
 	 */
-	protected $pidgeon_settings = array();
+	protected $pigeon_settings = array();
 
 	/**
 	 * Instance of this class.
@@ -64,11 +64,11 @@ class WP_Pidgeon {
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
-		// On each request, we need to make a call to Pidgeon
-		add_action( 'init', array( $this, 'make_pidgeon_request' ) );
+		// On each request, we need to make a call to Pigeon
+		add_action( 'init', array( $this, 'make_pigeon_request' ) );
 
 		// Load functions
-		add_action( 'init', array( $this, 'load_pidgeon_functions' ) );
+		add_action( 'init', array( $this, 'load_pigeon_functions' ) );
 
 	}
 
@@ -86,15 +86,15 @@ class WP_Pidgeon {
 	}
 
 	/**
-	 * Return the pidgeon settings.
+	 * Return the pigeon settings.
 	 *
 	 * @since    1.0.0
 	 *
-	 * @return    The pidgeon settings array.
+	 * @return    The pigeon settings array.
 	 */
-	public function get_pidgeon_settings() {
+	public function get_pigeon_settings() {
 
-		return $this->pidgeon_settings;
+		return $this->pigeon_settings;
 
 	}
 
@@ -132,11 +132,11 @@ class WP_Pidgeon {
 	}
 
 	/**
-	 * Load Pidgeon Functions
+	 * Load Pigeon Functions
 	 *
 	 * @since    1.0.0
 	 */
-	public function load_pidgeon_functions() {
+	public function load_pigeon_functions() {
 
 		// Include our custom functions
 		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/functions.php' );
@@ -144,18 +144,18 @@ class WP_Pidgeon {
 	}
 
 	/**
-	 * Make a request to the Pidgeon Paywall
+	 * Make a request to the Pigeon Paywall
 	 *
 	 * @since    1.0.0
 	 */
-	public function make_pidgeon_request() {
+	public function make_pigeon_request() {
 
 		// Load the API class
-		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/class-pidgeon-api.php' );
+		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/class-pigeon-api.php' );
 
 		// Make the request
-		$pidgeon_obj = new WP_Pidgeon;
-		$this->pidgeon_settings = $pidgeon_obj->send();
+		$pigeon_obj = new WP_Pigeon;
+		$this->pigeon_settings = $pigeon_obj->send();
 
 	}
 
