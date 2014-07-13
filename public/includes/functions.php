@@ -1,13 +1,13 @@
 <?php
 
-if ( ! function_exists( 'get_pigeon_setting' ) ) {
+if ( ! function_exists( 'get_pigeon_value' ) ) {
 
 	/**
 	 * Get Pigeon Setting
 	 *
 	 * @since     1.0.0
 	 */
-	function get_pigeon_setting( $key ) {
+	function get_pigeon_value( $key ) {
 		
 		$pigeon_obj = WP_Pigeon::get_instance();
 
