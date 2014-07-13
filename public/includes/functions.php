@@ -12,10 +12,10 @@ if ( ! function_exists( 'get_pigeon_value' ) ) {
 		$pigeon_obj = WP_Pigeon::get_instance();
 
 		if ( is_object( $pigeon_obj ) ) {
-			$pigeon_settings = $pigeon_obj->get_pigeon_settings();
+			$pigeon_values = $pigeon_obj->get_pigeon_values();
 
-			if ( isset( $pigeon_obj->pigeon_settings[$key] ) ) {
-				return $pigeon_obj->pigeon_settings[$key];
+			if ( isset( $pigeon_obj->pigeon_values[$key] ) ) {
+				return $pigeon_obj->pigeon_values[$key];
 			}
 		}
 

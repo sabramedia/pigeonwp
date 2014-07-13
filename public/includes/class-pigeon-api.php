@@ -23,17 +23,23 @@ class WP_Pigeon_Api {
 	protected $pigeon_api = '';
 	protected $pigeon_session = '';
 
-	protected function setup() {
+	protected function setup( $parameters ) {
 
-		$this->pigeon_settings['content_access'] = 0;
-		$this->pigeon_settings['redirect'] = TRUE;
-		$pigeon_subdomain = 'my';
+		// Get the content access setting
+		$this->pigeon_settings['content_access'] = $parameters['content_access'];
+
+		// @Todo: allow the user to set this
+		$this->pigeon_settings['redirect'] = $parameters['redirect'];
+
+		// @Todo: set this in the settings page
+		$pigeon_subdomain = $parameters['subdomain'];
 
 		$this->pigeon_uri = $pigeon_subdomain . '.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 		$this->pigeon_api = 'http://' . $this->pigeon_uri . '/action/public/vo/pigeon-server';
 		$this->pigeon_session = md5( $this->pigeon_uri );
 
-		$this->pigeon_data['secret'] = '';
+		// @Todo: set this in the settigs page
+		$this->pigeon_data['secret'] = $parameters['secret'];
 		$this->pigeon_data['pigeon_version'] = '1.7';
 		$this->pigeon_data['ip'] = $_SERVER['REMOTE_ADDR'];
 		$this->pigeon_data['uri'] = urlencode( 'http://' . $domain . $_SERVER['REQUEST_URI'] );
@@ -63,7 +69,7 @@ class WP_Pigeon_Api {
 
 	}
 
-	public function exec() {
+	public function exec( $parameters ) {
 
 		// Avoid sending assets to the Pigeon server. Will reduce impression load and client cost.
 		foreach ( array( ".css", ".js", ".woff", ".eot", ".ttf", ".svg", ".png", ".jpg" ) as $asset ) {
@@ -71,6 +77,9 @@ class WP_Pigeon_Api {
 				return false;
 			}
 		}
+
+		// Setup our settings and data
+		$this->setup( $parameters );
 
 		$special_access = FALSE;
 
@@ -159,7 +168,7 @@ class WP_Pigeon_Api {
 		}
 
 		return array();
-		
+
 	}
 
 }

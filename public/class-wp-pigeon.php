@@ -36,7 +36,16 @@ class WP_Pigeon {
 	protected $plugin_slug = 'wp-pigeon';
 
 	/**
-	 * Pigeon settings returns from the API
+	 * Pigeon values returns from the API
+	 *
+	 * @since    1.0.0
+	 *
+	 * @var      array
+	 */
+	protected $pigeon_values = array();
+
+	/**
+	 * Pigeon settings defined by a user
 	 *
 	 * @since    1.0.0
 	 *
@@ -86,15 +95,15 @@ class WP_Pigeon {
 	}
 
 	/**
-	 * Return the pigeon settings.
+	 * Return the pigeon values.
 	 *
 	 * @since    1.0.0
 	 *
-	 * @return    The pigeon settings array.
+	 * @return    The pigeon values array.
 	 */
-	public function get_pigeon_settings() {
+	public function get_pigeon_values() {
 
-		return $this->pigeon_settings;
+		return $this->pigeon_values;
 
 	}
 
@@ -153,9 +162,24 @@ class WP_Pigeon {
 		// Load the API class
 		require_once( plugin_dir_path( __FILE__ ) . 'public/includes/class-pigeon-api.php' );
 
+		// Get our content access settings
+		$this->pigeon_settings['content_access'] = get_post_meta( get_the_ID(), '_wp_pidgeon_content_access', true );
+
+		if ( ! $this->pigeon_settings['content_access'] )
+			$this->pigeon_settings['content_access'] = 0;
+
+		// Redirect setting
+		$this->pigeon_settings['redirect'] = TRUE;
+
+		// Subdomain
+		$this->pigeon_settings['subdomain'] = 'my';
+
+		// Secret key
+		$this->pigeon_settings['secret'] = '';
+
 		// Make the request
 		$pigeon_api = new WP_Pigeon_Api;
-		$this->pigeon_settings = $pigeon_api->exec();
+		$this->pigeon_values = $pigeon_api->exec( $this->pigeon_settings );
 
 	}
 
