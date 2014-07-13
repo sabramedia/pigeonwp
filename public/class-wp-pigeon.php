@@ -74,7 +74,7 @@ class WP_Pigeon {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
 		// On each request, we need to make a call to Pigeon
-		add_action( 'init', array( $this, 'make_pigeon_request' ) );
+		// add_action( 'init', array( $this, 'make_pigeon_request' ) );
 
 		// Load functions
 		add_action( 'init', array( $this, 'load_pigeon_functions' ) );
