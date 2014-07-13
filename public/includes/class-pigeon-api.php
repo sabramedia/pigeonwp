@@ -28,17 +28,14 @@ class WP_Pigeon_Api {
 		// Get the content access setting
 		$this->pigeon_settings['content_access'] = $parameters['content_access'];
 
-		// @Todo: allow the user to set this
 		$this->pigeon_settings['redirect'] = $parameters['redirect'];
 
-		// @Todo: set this in the settings page
 		$pigeon_subdomain = $parameters['subdomain'];
 
 		$this->pigeon_uri = $pigeon_subdomain . '.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 		$this->pigeon_api = 'http://' . $this->pigeon_uri . '/action/public/vo/pigeon-server';
 		$this->pigeon_session = md5( $this->pigeon_uri );
 
-		// @Todo: set this in the settigs page
 		$this->pigeon_data['secret'] = $parameters['secret'];
 		$this->pigeon_data['pigeon_version'] = '1.7';
 		$this->pigeon_data['ip'] = $_SERVER['REMOTE_ADDR'];
