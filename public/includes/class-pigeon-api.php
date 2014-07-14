@@ -139,7 +139,7 @@ class WP_Pigeon_Api {
 		) {
 			// POST current page data to pigeon server
 			$response = json_decode( $this->send( 'action=validate&json=' . json_encode( $this->pigeon_data ) ), TRUE );
-			
+
 			if ( array_key_exists( 'reset_cookie', $response ) ){
 				header( 'Location: ' . $this->pigeon_api . '?action=validate&set_cookie=1&reset=1&redirect_url=' . urlencode( $this->pigeon_current_page ) );
 				exit();
@@ -152,7 +152,7 @@ class WP_Pigeon_Api {
 				'profile' => $response['profile'] // User profile
 			);
 
-			if ( $response['status'] == 'redirect' && $user_variables['pigeon_redirect'] ) {
+			if ( $response['status'] == 'redirect' && $this->pigeon_settings['redirect'] ) {
 				header( 'Location: ' . $response['redirect'] );
 				exit();
 			} else {

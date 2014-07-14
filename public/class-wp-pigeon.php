@@ -51,7 +51,7 @@ class WP_Pigeon {
 	 *
 	 * @var      array
 	 */
-	protected $pigeon_settings = array();
+	public $pigeon_settings = array();
 
 	/**
 	 * Instance of this class.
