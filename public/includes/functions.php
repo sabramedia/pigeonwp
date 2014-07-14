@@ -23,20 +23,4 @@ if ( ! function_exists( 'get_pigeon_value' ) ) {
 
 	}
 
-	/**
-	 * Set Pigeon Option
-	 *
-	 * @since     1.0.0
-	 */
-	function set_pigeon_option( $key, $value ) {
-
-		// We currently only allowing the redirect option to be set
-		if ( ! in_array( $key, array( 'redirect' ) ) )
-			return;
-
-		$pigeon_obj = WP_Pigeon::get_instance();
-		$pigeon_obj->pigeon_settings[$key] = wp_kses( $value, array() );
-
-	}
-
 }

@@ -175,8 +175,8 @@ class WP_Pigeon {
 			$this->pigeon_settings['content_access'] = 0;
 
 		// Redirect setting (this could be already set via our functions)
-		if ( ! isset( $this->pigeon_settings['redirect'] ) )
-			$this->pigeon_settings['redirect'] = TRUE;
+		// @TODO: This should be an admin setting
+		$this->pigeon_settings['redirect'] = TRUE;
 
 		// Subdomain
 		// @TODO: This should be an admin setting
