@@ -42,7 +42,7 @@ class WP_Pigeon {
 	 *
 	 * @var      array
 	 */
-	protected $pigeon_values = array();
+	public $pigeon_values = array();
 
 	/**
 	 * Pigeon settings defined by a user
