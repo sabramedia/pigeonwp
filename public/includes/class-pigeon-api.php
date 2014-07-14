@@ -19,7 +19,8 @@ class WP_Pigeon_Api {
 
 	protected $pigeon_settings = array();
 	protected $pigeon_data = array();
-	protected $pigeon_uri = '';
+	protected $pigeon_current_page = '';
+	protected $pigeon_subdomain = '';
 	protected $pigeon_api = '';
 	protected $pigeon_session = '';
 
@@ -30,16 +31,15 @@ class WP_Pigeon_Api {
 
 		$this->pigeon_settings['redirect'] = $parameters['redirect'];
 
-		$pigeon_subdomain = $parameters['subdomain'];
-
-		$this->pigeon_uri = $pigeon_subdomain . '.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
-		$this->pigeon_api = 'http://' . $this->pigeon_uri . '/action/public/vo/pigeon-server';
-		$this->pigeon_session = md5( $this->pigeon_uri );
+		$this->pigeon_current_page = 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
+		$this->pigeon_subdomain = $parameters['subdomain'] . '.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
+		$this->pigeon_api = 'http://' . $this->pigeon_subdomain . '/action/public/vo/pigeon-server';
+		$this->pigeon_session = md5( $this->pigeon_subdomain );
 
 		$this->pigeon_data['secret'] = $parameters['secret'];
 		$this->pigeon_data['pigeon_version'] = '1.7';
 		$this->pigeon_data['ip'] = $_SERVER['REMOTE_ADDR'];
-		$this->pigeon_data['uri'] = urlencode( 'http://' . $domain . $_SERVER['REQUEST_URI'] );
+		$this->pigeon_data['uri'] = urlencode( 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] );
 
 	}
 
@@ -82,8 +82,8 @@ class WP_Pigeon_Api {
 
 		if ( array_key_exists( $this->pigeon_session . "_id", $_COOKIE ) && array_key_exists( $this->pigeon_session . "_hash", $_COOKIE ) ) {
 			$session_data = array(
-				'session_id' => $_COOKIE[$unique_session . '_id'],
-				'session_hash' => $_COOKIE[$unique_session . '_hash']
+				'session_id' => $_COOKIE[$this->pigeon_session . '_id'],
+				'session_hash' => $_COOKIE[$this->pigeon_session . '_hash']
 			);
 
 			$this->pigeon_data = array_merge( $this->pigeon_data, $this->pigeon_settings, $session_data );
@@ -120,7 +120,7 @@ class WP_Pigeon_Api {
 					$cookie_not_setting = "&cookies_disabled=1";
 				}
 
-				header( 'Location: ' . $this->pigeon_api . '?action=validate&set_cookie=1' . $cookie_not_setting . '&redirect_url=' . urlencode( 'http://' . $this->pigeon_uri . $_SERVER['REQUEST_URI'] ) );
+				header( 'Location: ' . $this->pigeon_api . '?action=validate&set_cookie=1' . $cookie_not_setting . '&redirect_url=' . urlencode( $this->pigeon_current_page ) );
 				exit();
 			} else {
 				$special_access = TRUE;
@@ -139,9 +139,9 @@ class WP_Pigeon_Api {
 		) {
 			// POST current page data to pigeon server
 			$response = json_decode( $this->send( 'action=validate&json=' . json_encode( $this->pigeon_data ) ), TRUE );
-
+			
 			if ( array_key_exists( 'reset_cookie', $response ) ){
-				header( 'Location: ' . $this->pigeon_api . '?action=validate&set_cookie=1&reset=1&redirect_url=' . urlencode( 'http://' . $this->pigeon_uri . $_SERVER['REQUEST_URI'] ) );
+				header( 'Location: ' . $this->pigeon_api . '?action=validate&set_cookie=1&reset=1&redirect_url=' . urlencode( $this->pigeon_current_page ) );
 				exit();
 			}
 
@@ -152,7 +152,7 @@ class WP_Pigeon_Api {
 				'profile' => $response['profile'] // User profile
 			);
 
-			if ( $response['status'] == 'redirect' && $user_variables['pigeon_redirect'] ){
+			if ( $response['status'] == 'redirect' && $user_variables['pigeon_redirect'] ) {
 				header( 'Location: ' . $response['redirect'] );
 				exit();
 			} else {

@@ -162,17 +162,16 @@ class WP_Pigeon {
 		if ( is_admin() )
 			return;
 
-		if ( is_front_page() )
-			return;
-
 		// Load the API class
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-pigeon-api.php' );
 
 		// Get our content access settings
-		if ( get_the_ID() )
-			$this->pigeon_settings['content_access'] = get_post_meta( get_the_ID(), '_wp_pigeon_content_access', true );
+		if ( is_singular() ) {
+			global $post;
+			$this->pigeon_settings['content_access'] = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+		}
 
-		if ( ! isset( $this->pigeon_settings['content_access'] ) )
+		if ( ! isset( $this->pigeon_settings['content_access'] ) || $this->pigeon_settings['content_access'] == '' )
 			$this->pigeon_settings['content_access'] = 0;
 
 		// Redirect setting (this could be already set via our functions)
@@ -180,9 +179,11 @@ class WP_Pigeon {
 			$this->pigeon_settings['redirect'] = TRUE;
 
 		// Subdomain
+		// @TODO: This should be an admin setting
 		$this->pigeon_settings['subdomain'] = 'my';
 
 		// Secret key
+		// @TODO: this should be an admin setting
 		$this->pigeon_settings['secret'] = '';
 
 		// Make the request
