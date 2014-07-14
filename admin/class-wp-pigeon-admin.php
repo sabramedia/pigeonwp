@@ -13,7 +13,7 @@
  * The core admin class
  *
  * @package WP_Pigeon
- * @author  Your Name <email@example.com>
+ * @author  Sabramedia
  */
 class WP_Pigeon_Admin {
 
