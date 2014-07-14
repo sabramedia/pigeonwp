@@ -15,7 +15,7 @@
  * Plugin URI:        http://pigeonpaywall.com/
  * Description:       The Pigeon Paywall plugin for WordPress
  * Version:           0.1 Beta
- * Author:            Matt Geri / Jonathan Wold
+ * Author:            Sabramedia
  * Text Domain:       wp-pigeon-locale
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
