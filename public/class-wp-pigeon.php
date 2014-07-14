@@ -74,10 +74,10 @@ class WP_Pigeon {
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
 
 		// On each request, we need to make a call to Pigeon
-		// add_action( 'init', array( $this, 'make_pigeon_request' ) );
+		add_action( 'wp', array( $this, 'make_pigeon_request' ) );
 
 		// Load functions
-		add_action( 'init', array( $this, 'load_pigeon_functions' ) );
+		add_action( 'wp', array( $this, 'load_pigeon_functions' ) );
 
 	}
 
@@ -159,13 +159,20 @@ class WP_Pigeon {
 	 */
 	public function make_pigeon_request() {
 
+		if ( is_admin() )
+			return;
+
+		if ( is_front_page() )
+			return;
+
 		// Load the API class
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/class-pigeon-api.php' );
 
 		// Get our content access settings
-		$this->pigeon_settings['content_access'] = get_post_meta( get_the_ID(), '_wp_pigeon_content_access', true );
+		if ( get_the_ID() )
+			$this->pigeon_settings['content_access'] = get_post_meta( get_the_ID(), '_wp_pigeon_content_access', true );
 
-		if ( ! $this->pigeon_settings['content_access'] )
+		if ( ! isset( $this->pigeon_settings['content_access'] ) )
 			$this->pigeon_settings['content_access'] = 0;
 
 		// Redirect setting (this could be already set via our functions)
