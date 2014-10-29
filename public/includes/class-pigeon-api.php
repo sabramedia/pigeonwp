@@ -38,7 +38,7 @@ class WP_Pigeon_Api {
 
 		$this->pigeon_data['secret'] = $parameters['secret'];
 		$this->pigeon_data['pigeon_version'] = '1.7';
-		$this->pigeon_data['ip'] = $_SERVER['REMOTE_ADDR'];
+		$this->pigeon_data['ip'] = array_key_exists('HTTP_CLIENT_IP',$_SERVER) ? $_SERVER['HTTP_CLIENT_IP'] : ( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
 		$this->pigeon_data['uri'] = urlencode( 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] );
 
 	}
@@ -160,11 +160,9 @@ class WP_Pigeon_Api {
 					$pigeon['user_status'] = 1;
 				}
 			}
-
-			return $pigeon;
 		}
 
-		return array();
+		return $pigeon;
 
 	}
 
