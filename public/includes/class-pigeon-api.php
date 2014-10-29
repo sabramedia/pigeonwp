@@ -79,6 +79,7 @@ class WP_Pigeon_Api {
 		$this->setup( $parameters );
 
 		$special_access = FALSE;
+		$pigeon = array();
 
 		if ( array_key_exists( $this->pigeon_session . "_id", $_COOKIE ) && array_key_exists( $this->pigeon_session . "_hash", $_COOKIE ) ) {
 			$session_data = array(
