@@ -33,5 +33,10 @@ Follow the instructions below to install the plugin
 
 == Changelog ==
 
+= 1.0.1 =
+* Look for other variables that reference the user's IP address
+* Bugfixes
+
 = 1.0.0 =
 * First version of the plugin
+
