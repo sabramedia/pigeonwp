@@ -39,6 +39,9 @@ class WP_Pigeon_Admin {
 
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
+		
+		// Register the settings 
+		add_action( 'admin_menu', array( $this, 'plugin_settings_init' ) );
 
 		// Add an action link pointing to the options page.
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->plugin_slug . '.php' );
@@ -134,6 +137,154 @@ class WP_Pigeon_Admin {
 		);
 
 	}
+	
+	/* Register the administration menu for this plugin into the WordPress Dashboard menu.
+	 *
+	 * @since    1.1.0
+	 */
+	public function plugin_settings_init() {
+
+		register_setting( 'plugin_options', 'wp_pigeon_settings' );
+		
+		// Register our sections
+		$this->plugin_screen_hook_suffix = add_settings_section(
+			'settings_section_basic', 
+			__( 'Basic Configuration', $this->plugin_slug ),  
+			array( $this, 'settings_section_basic_callback' ),
+			'plugin_options'
+		);
+		
+		$this->plugin_screen_hook_suffix = add_settings_section(
+			'settings_section_api', 
+			__( 'API Connection', $this->plugin_slug ),  
+			array( $this, 'settings_section_api_callback' ),
+			'plugin_options'
+		);
+		
+		// Register our fields 
+		
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_subdomain', 
+			__( 'Pigeon Subdomain', $this->plugin_slug ),  
+			array( $this, 'setting_pigeon_subdomain_render' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
+		
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_redirect', 
+			__( 'Redirect', $this->plugin_slug ),  
+			array( $this, 'setting_pigeon_redirect_render' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
+		
+		
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_api_user', 
+			__( 'User', $this->plugin_slug ),  
+			array( $this, 'setting_pigeon_api_user_render' ),
+			'plugin_options',
+			'settings_section_api'
+		);
+		
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_api_secret_key', 
+			__( 'Secret Key', $this->plugin_slug ),  
+			array( $this, 'setting_pigeon_api_secret_key_render' ),
+			'plugin_options',
+			'settings_section_api'
+		);
+	
+
+	}
+	
+	/* Basic section settings callback
+	 *
+	 * @since    1.1.0
+	 */
+	public function settings_section_basic_callback() {
+
+		// echo __( 'Basic section description', $this->plugin_slug );
+
+	}
+	
+	/* API Section settings callback
+	 *
+	 * @since    1.1.0
+	 */
+	public function settings_section_api_callback() {
+
+		// echo __( 'API section Description', $this->plugin_slug );
+
+	}
+	
+	
+	/* Pigeon subdomain callback
+	 *
+	 * @since    1.1.0
+	 */
+	public function setting_pigeon_subdomain_render() {
+		$options = get_option( 'wp_pigeon_settings' );
+	?>
+		
+		<input type='text' name='wp_pigeon_settings[pigeon_subdomain]' value='<?php echo $options['pigeon_subdomain']; ?>'>
+		<p class="description">Defines the subdomain used for Pigeon.</p>
+	
+	<?php
+
+	}
+	
+	/* Pigeon redirect callback
+	 *
+	 * @since    1.1.0
+	 */
+	public function setting_pigeon_redirect_render() {
+		
+		$options = get_option( 'wp_pigeon_settings' );
+		
+		$html  = '<input type="radio" id="redirect_enabled" name="wp_pigeon_settings[pigeon_redirect]" value="1"' . checked( 1, $options['pigeon_redirect'], false ) . '/>';
+		$html .= '<label for="redirect_enabled">Enabled</label> ';
+     
+		$html .= '<input type="radio" id="redirect_disabled" name="wp_pigeon_settings[pigeon_redirect]" value="2"' . checked( 2, $options['pigeon_redirect'], false ) . '/>';
+		$html .= '<label for="redirect_disabled">Disabled</label>';
+		
+		$html .= '<p class="description">Determines whether the plugin does the automatic reroute or stays on the page.</p>';
+     
+		echo $html;
+
+	}
+	
+	
+	/* API user callback
+	 *
+	 * @since    1.1.0
+	 */
+	public function setting_pigeon_api_user_render() {
+		$options = get_option( 'wp_pigeon_settings' );
+	?>
+		
+		<input type='text' name='wp_pigeon_settings[pigeon_api_user]' value='<?php echo $options['pigeon_api_user']; ?>'>
+	
+	<?php
+
+	}
+	
+	
+	/* API secret key callback
+	 *
+	 * @since    1.1.0
+	 */
+	public function setting_pigeon_api_secret_key_render() {
+		$options = get_option( 'wp_pigeon_settings' );
+	?>
+		
+		<input type='text' name='wp_pigeon_settings[pigeon_api_secret_key]' value='<?php echo $options['pigeon_api_secret_key']; ?>'>
+	
+	<?php
+
+	}
+	
 
 	/**
 	 * Render the settings page for this plugin.

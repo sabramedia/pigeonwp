@@ -33,6 +33,9 @@ Follow the instructions below to install the plugin
 
 == Changelog ==
 
+= 1.1.0 =
+* Add plugin options to the settings screen
+
 = 1.0.1 =
 * Look for other variables that reference the user's IP address
 * Bugfixes
