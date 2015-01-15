@@ -179,7 +179,7 @@ class WP_Pigeon {
 		$this->pigeon_settings['redirect'] = $admin_options["pigeon_redirect"] ? ( $admin_options["pigeon_redirect"] == 1 ? TRUE : FALSE ) : TRUE;
 
 		// Subdomain
-		$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? $admin_options["pigeon_subdomain"] : 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
+		$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 
 		// User
 		$this->pigeon_settings['user'] = $admin_options["pigeon_api_user"];
