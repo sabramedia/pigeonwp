@@ -158,6 +158,7 @@ class WP_Pigeon {
 	 * @since    1.0.0
 	 */
 	public function make_pigeon_request() {
+		$admin_options = get_option( 'wp_pigeon_settings' );
 
 		if ( is_admin() )
 			return;
@@ -175,16 +176,16 @@ class WP_Pigeon {
 			$this->pigeon_settings['content_access'] = 0;
 
 		// Redirect setting (this could be already set via our functions)
-		// @TODO: This should be an admin setting
-		$this->pigeon_settings['redirect'] = TRUE;
+		$this->pigeon_settings['redirect'] = $admin_options["pigeon_redirect"] ? ( $admin_options["pigeon_redirect"] == 1 ? TRUE : FALSE ) : TRUE;
 
 		// Subdomain
-		// @TODO: This should be an admin setting
-		$this->pigeon_settings['subdomain'] = 'my';
+		$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? $admin_options["pigeon_subdomain"] : 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
+
+		// User
+		$this->pigeon_settings['user'] = $admin_options["pigeon_api_user"];
 
 		// Secret key
-		// @TODO: this should be an admin setting
-		$this->pigeon_settings['secret'] = '';
+		$this->pigeon_settings['secret'] = $admin_options["pigeon_api_secret_key"];
 
 		// Make the request
 		$pigeon_api = new WP_Pigeon_Api;
