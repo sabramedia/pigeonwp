@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '1.2.0';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -78,6 +78,9 @@ class WP_Pigeon {
 
 		// Load functions
 		add_action( 'wp', array( $this, 'load_pigeon_functions' ) );
+
+		// Load JS
+		add_action( 'wp', array( $this, 'load_pigeon_js' ) );
 
 	}
 
@@ -143,13 +146,65 @@ class WP_Pigeon {
 	/**
 	 * Load Pigeon Functions
 	 *
-	 * @since    1.0.0
+	 * @since    1.2.0
 	 */
 	public function load_pigeon_functions() {
 
 		// Include our custom functions
 		require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php' );
 
+	}
+
+	public function init_pigeon_js()
+	{
+		echo '<script type="text/javascript">';
+
+		echo "
+		var Pigeon = new Pigeon({
+			subdomain:'".$this->pigeon_settings['subdomain']."',
+			apiUser:'".$this->pigeon_settings['user']."',
+			apiSecret:'".$this->pigeon_settings['secret']."',
+			fingerprint:true
+		});
+
+		Pigeon.widget.promotionDialog();
+		";
+
+		if( $this->pigeon_settings["soundcloud"] && ! $this->pigeon_values["user_status"] ){
+		echo "
+		$(document).ready(function(){
+			$('iframe').not('.pigeon-free').each(function(i,el){
+				if( el.src.search('soundcloud.com') != -1 ){
+					var widget = SC.Widget(el);
+					widget.bind(SC.Widget.Events.PLAY,function(){
+						this.pause();
+						Pigeon.widget.promotionDialog('open');
+					});
+				}
+			});
+		});
+		";
+		}
+
+		echo '
+		</script>
+		';
+	}
+
+	/**
+	 * Load Pigeon JS
+	 *
+	 * @since    1.2.0
+	 */
+	public function load_pigeon_js() {
+
+		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon.js",array("jquery"), self::VERSION );
+
+		if( $this->pigeon_settings["soundcloud"] ){
+			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
+		}
+
+		add_action("wp_head", array($this, 'init_pigeon_js') );
 	}
 
 	/**
@@ -178,6 +233,9 @@ class WP_Pigeon {
 		// Redirect setting (this could be already set via our functions)
 		$this->pigeon_settings['redirect'] = $admin_options["pigeon_redirect"] ? ( $admin_options["pigeon_redirect"] == 1 ? TRUE : FALSE ) : TRUE;
 
+		// Set Soundcloud option
+		$this->pigeon_settings['soundcloud'] = $admin_options["pigeon_soundcloud"] ? ( $admin_options["pigeon_soundcloud"] == 1 ? TRUE : FALSE ) : TRUE;
+
 		// Subdomain
 		$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 
@@ -190,7 +248,6 @@ class WP_Pigeon {
 		// Make the request
 		$pigeon_api = new WP_Pigeon_Api;
 		$this->pigeon_values = $pigeon_api->exec( $this->pigeon_settings );
-
 	}
 
 }

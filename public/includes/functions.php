@@ -22,5 +22,4 @@ if ( ! function_exists( 'get_pigeon_value' ) ) {
 		return false;
 
 	}
-
 }
