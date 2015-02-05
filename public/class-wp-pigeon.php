@@ -198,7 +198,7 @@ class WP_Pigeon {
 	 */
 	public function load_pigeon_js() {
 
-		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon.js",array("jquery"), self::VERSION );
+		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon.min.js",array("jquery"), self::VERSION );
 
 		if( $this->pigeon_settings["soundcloud"] ){
 			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
