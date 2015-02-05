@@ -277,7 +277,7 @@ class WP_Pigeon_Admin {
 		$html .= '<input type="radio" id="soundcloud_disabled" name="wp_pigeon_settings[pigeon_soundcloud]" value="2"' . checked( 2, $options['pigeon_soundcloud'], false ) . '/>';
 		$html .= '<label for="soundcloud_disabled">Disabled</label>';
 
-		$html .= '<p class="description">Uses Soundcloud api to keep player from playing. Add the class of "pigeon-free" to iframe to override locally.</p>';
+		$html .= '<p class="description">Uses Soundcloud api to keep player from playing for unauthorized users. Add the class of "pigeon-free" to iframe to override locally.</p>';
 
 		echo $html;
 
