@@ -33,6 +33,9 @@ Follow the instructions below to install the plugin
 
 == Changelog ==
 
+= 1.2.0 =
+* Added Pigeon JavaScript plugin and Soundcloud support.
+
 = 1.1.0 =
 * Add plugin options to the settings screen
 
