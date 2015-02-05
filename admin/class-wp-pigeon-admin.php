@@ -178,6 +178,14 @@ class WP_Pigeon_Admin {
 			'plugin_options',
 			'settings_section_basic'
 		);
+
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_soundcloud',
+			__( 'Soundcloud', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_soundcloud_render' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
 		
 		
 		$this->plugin_screen_hook_suffix = add_settings_field(
@@ -251,6 +259,26 @@ class WP_Pigeon_Admin {
 		
 		$html .= '<p class="description">Determines whether the plugin does the automatic reroute or stays on the page.</p>';
      
+		echo $html;
+
+	}
+
+	/* Pigeon Soundcloud protection callback
+	 *
+	 * @since    1.2.0
+	 */
+	public function setting_pigeon_soundcloud_render() {
+
+		$options = get_option( 'wp_pigeon_settings' );
+
+		$html  = '<input type="radio" id="soundcloud_enabled" name="wp_pigeon_settings[pigeon_soundcloud]" value="1"' . checked( 1, $options['pigeon_soundcloud'], false ) . '/>';
+		$html .= '<label for="soundcloud_enabled">Enabled</label> ';
+
+		$html .= '<input type="radio" id="soundcloud_disabled" name="wp_pigeon_settings[pigeon_soundcloud]" value="2"' . checked( 2, $options['pigeon_soundcloud'], false ) . '/>';
+		$html .= '<label for="soundcloud_disabled">Disabled</label>';
+
+		$html .= '<p class="description">Uses Soundcloud api to keep player from playing. Add the class of "pigeon-free" to iframe to override locally.</p>';
+
 		echo $html;
 
 	}
