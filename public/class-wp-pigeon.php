@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.2.0';
+	const VERSION = '1.2.1';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -160,6 +160,7 @@ class WP_Pigeon {
 		echo '<script type="text/javascript">';
 
 		echo "
+		if( typeof Pigeon !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
 		var Pigeon = new Pigeon({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
 			apiUser:'".$this->pigeon_settings['user']."',
@@ -198,7 +199,7 @@ class WP_Pigeon {
 	 */
 	public function load_pigeon_js() {
 
-		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon.min.js",array("jquery"), self::VERSION );
+		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.4.min.js",array("jquery"), self::VERSION );
 
 		if( $this->pigeon_settings["soundcloud"] ){
 			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
