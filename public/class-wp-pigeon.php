@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.2.1';
+	const VERSION = '1.3.0';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -171,21 +171,62 @@ class WP_Pigeon {
 		Pigeon.widget.promotionDialog();
 		";
 
-		if( $this->pigeon_settings["soundcloud"] && ! $this->pigeon_values["user_status"] ){
-		echo "
-		$(document).ready(function(){
-			$('iframe').not('.pigeon-free').each(function(i,el){
-				if( el.src.search('soundcloud.com') != -1 ){
-					var widget = SC.Widget(el);
-					widget.bind(SC.Widget.Events.PLAY,function(){
-						this.pause();
-						Pigeon.widget.promotionDialog('open');
-					});
-				}
+		// Server Side plugin
+		if( $this->pigeon_settings["paywall"] == 1 ){
+			if( $this->pigeon_settings["soundcloud"] && ! $this->pigeon_values["user_status"]  ){
+			echo "
+			$(document).ready(function(){
+				$('iframe').not('.pigeon-free').each(function(i,el){
+					if( el.src.search('soundcloud.com') != -1 ){
+						var widget = SC.Widget(el);
+						widget.bind(SC.Widget.Events.PLAY,function(){
+							this.pause();
+							Pigeon.widget.promotionDialog('open');
+						});
+					}
+				});
 			});
-		});
-		";
+			";
+			}
 		}
+
+		// JS Plugin
+		if( $this->pigeon_settings["paywall"] == 2 ){
+			switch($this->pigeon_settings['paywall_interrupt']){
+				case "1": $paywall_iterrupt = 1; break;
+				case "2": $paywall_iterrupt = 0; break;
+				case "3": $paywall_iterrupt = "'modal'"; break;
+			}
+
+			echo "
+				Pigeon.paywall({
+					redirect:".$paywall_iterrupt.",
+					free:".$this->pigeon_settings['content_access']."
+				});";
+
+			if( $this->pigeon_settings["soundcloud"] ){
+				echo "
+				$(document).ready(function(){
+					Pigeon.paywallPromise.done(function(data){
+
+						if( ! data.user_status ){
+							$('iframe').not('.pigeon-free').each(function(i,el){
+								if( el.src.search('soundcloud.com') != -1 ){
+									var widget = SC.Widget(el);
+									widget.bind(SC.Widget.Events.PLAY,function(){
+										this.pause();
+										Pigeon.widget.promotionDialog('open');
+									});
+								}
+							});
+						}
+					});
+				});
+				";
+			}
+		}
+
+
 
 		echo '
 		</script>
@@ -232,10 +273,16 @@ class WP_Pigeon {
 			$this->pigeon_settings['content_access'] = 0;
 
 		// Redirect setting (this could be already set via our functions)
-		$this->pigeon_settings['redirect'] = $admin_options["pigeon_redirect"] ? ( $admin_options["pigeon_redirect"] == 1 ? TRUE : FALSE ) : TRUE;
+		$this->pigeon_settings['redirect'] = $admin_options["pigeon_paywall_interrupt"] ? ( $admin_options["pigeon_paywall_interrupt"] == 1 ? TRUE : FALSE ) : TRUE;
 
 		// Set Soundcloud option
 		$this->pigeon_settings['soundcloud'] = $admin_options["pigeon_soundcloud"] ? ( $admin_options["pigeon_soundcloud"] == 1 ? TRUE : FALSE ) : TRUE;
+
+		// Paywall implementation
+		$this->pigeon_settings['paywall'] = $admin_options["pigeon_paywall"];
+
+		// Paywall interrupt method
+		$this->pigeon_settings['paywall_interrupt'] = $admin_options["pigeon_paywall_interrupt"];
 
 		// Subdomain
 		$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
@@ -246,9 +293,12 @@ class WP_Pigeon {
 		// Secret key
 		$this->pigeon_settings['secret'] = $admin_options["pigeon_api_secret_key"];
 
+
 		// Make the request
-		$pigeon_api = new WP_Pigeon_Api;
-		$this->pigeon_values = $pigeon_api->exec( $this->pigeon_settings );
+		if( $this->pigeon_settings['paywall'] == 1 ){
+			$pigeon_api = new WP_Pigeon_Api;
+			$this->pigeon_values = $pigeon_api->exec( $this->pigeon_settings );
+		}
 	}
 
 }

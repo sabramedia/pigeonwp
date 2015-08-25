@@ -8,13 +8,13 @@
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
  * @link      http://pigeonpaywall.com/
- * @copyright 2014 Sabramedia
+ * @copyright 2014-2015 Sabramedia
  *
  * @wordpress-plugin
  * Plugin Name:       Pigeon for WordPress
  * Plugin URI:        http://pigeonpaywall.com/
  * Description:       The Pigeon Paywall plugin for WordPress
- * Version:           1.2.1
+ * Version:           1.3.0
  * Author:            Sabramedia
  * Text Domain:       wp-pigeon-locale
  * License:           GPL-2.0+
