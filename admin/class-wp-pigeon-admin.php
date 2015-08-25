@@ -168,13 +168,30 @@ class WP_Pigeon_Admin {
 			__( 'Pigeon Subdomain', $this->plugin_slug ),  
 			array( $this, 'setting_pigeon_subdomain_render' ),
 			'plugin_options',
-			'settings_section_basic'
+			'settings_section_basic',
+			array("class"=>"test")
 		);
 		
+//		$this->plugin_screen_hook_suffix = add_settings_field(
+//			'pigeon_redirect',
+//			__( 'Redirect', $this->plugin_slug ),
+//			array( $this, 'setting_pigeon_redirect_render' ),
+//			'plugin_options',
+//			'settings_section_basic'
+//		);
+
 		$this->plugin_screen_hook_suffix = add_settings_field(
-			'pigeon_redirect', 
-			__( 'Redirect', $this->plugin_slug ),  
-			array( $this, 'setting_pigeon_redirect_render' ),
+			'pigeon_paywall',
+			__( 'Paywall', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_paywall_render' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
+
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_paywall_interrupt',
+			__( 'Paywall Interrupt', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_paywall_interrupt_render' ),
 			'plugin_options',
 			'settings_section_basic'
 		);
@@ -278,6 +295,49 @@ class WP_Pigeon_Admin {
 		$html .= '<label for="soundcloud_disabled">Disabled</label>';
 
 		$html .= '<p class="description">Uses Soundcloud api to keep player from playing for unauthorized users. Add the class of "pigeon-free" to iframe to override locally.</p>';
+
+		echo $html;
+
+	}
+
+	/* Pigeon Paywall plugin technology server | browser
+	 *
+	 * @since    1.3.0
+	 */
+	public function setting_pigeon_paywall_render() {
+
+		$options = get_option( 'wp_pigeon_settings' );
+
+		$html  = '<input type="radio" id="paywall_server" name="wp_pigeon_settings[pigeon_paywall]" value="1"' . checked( 1, $options['pigeon_paywall'], false ) . '/>';
+		$html .= '<label for="paywall_server">Server</label> ';
+
+		$html .= '<input type="radio" id="paywall_js" name="wp_pigeon_settings[pigeon_paywall]" value="2"' . checked( 2, $options['pigeon_paywall'], false ) . '/>';
+		$html .= '<label for="paywall_js">JavaScript</label>';
+
+		$html .= '<p class="description">Use JavaScript if you have a metered paywall or want to use the modal popup.</p>';
+
+		echo $html;
+
+	}
+
+	/* Pigeon Paywall interrupt type
+	 *
+	 * @since    1.3.0
+	 */
+	public function setting_pigeon_paywall_interrupt_render() {
+
+		$options = get_option( 'wp_pigeon_settings' );
+
+		$html  = '<input type="radio" id="paywall_interrupt_redirect" name="wp_pigeon_settings[pigeon_paywall_interrupt]" value="1"' . checked( 1, $options['pigeon_paywall_interrupt'], false ) . '/>';
+		$html .= '<label for="paywall_server">Redirect</label> ';
+
+		$html .= '<input type="radio" id="paywall_interrupt_modal" name="wp_pigeon_settings[pigeon_paywall_interrupt]" value="3"' . checked( 3, $options['pigeon_paywall_interrupt'], false ) . '/>';
+		$html .= '<label for="paywall_js">Modal Popup</label>';
+
+		$html .= '<input type="radio" id="paywall_interrupt_custom" name="wp_pigeon_settings[pigeon_paywall_interrupt]" value="2"' . checked( 2, $options['pigeon_paywall_interrupt'], false ) . '/>';
+		$html .= '<label for="paywall_js">Custom</label>';
+
+		$html .= '<p class="description">Redirect respects paywall rules. Modal uses the default Pigeon modal. Custom allows you to take your own actions. Refer to documentation on how to do this.</p>';
 
 		echo $html;
 

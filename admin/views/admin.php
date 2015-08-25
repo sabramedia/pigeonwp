@@ -2,6 +2,13 @@
 $admin_options = get_option( 'wp_pigeon_settings' );
 $admin_options["pigeon_subdomain"] = str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]);
 ?>
+<script type="text/javascript">
+	;(function ($, window, document, undefined ){
+	$(document).ready(function(){
+		//console.log($('tr.test'));
+	});
+	})(jQuery, window, document);
+</script>
 <div class="wrap">
 
 	<h2>Pigeon for WordPress</h2>
