@@ -33,6 +33,10 @@ Follow the instructions below to install the plugin
 
 == Changelog ==
 
+= 1.3.0 =
+* More control is given over which technology is used for the paywall, server or browser (JavaScript).
+* Streamlined the admin settings a bit.
+
 = 1.2.0 =
 * Added Pigeon JavaScript plugin and Soundcloud support.
 
