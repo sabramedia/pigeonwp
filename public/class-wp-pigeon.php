@@ -226,11 +226,15 @@ class WP_Pigeon {
 			}
 		}
 
-
-
 		echo '
 		</script>
 		';
+
+		if( $this->pigeon_settings["paywall"] == 2 ){
+			echo '<noscript>
+					<meta http-equiv="refresh" content="0; url=http://'.$this->pigeon_settings['subdomain'].'/no-script" />
+				</noscript>';
+		}
 	}
 
 	/**
