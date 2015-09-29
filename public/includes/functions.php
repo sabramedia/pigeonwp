@@ -23,3 +23,25 @@ if ( ! function_exists( 'get_pigeon_value' ) ) {
 
 	}
 }
+if ( ! function_exists( 'set_pigeon_access' ) ) {
+
+	/**
+	 * Get Pigeon Setting
+	 *
+	 * @since     1.3.1
+	 */
+	function set_pigeon_access( $level ) {
+
+		$pigeon_obj = WP_Pigeon::get_instance();
+
+		if ( is_object( $pigeon_obj ) ) {
+			switch( strtolower($level) ){
+				case "metered": $pigeon_obj->pigeon_content_access = 0; break; // Respects meter rules whether logged in or not
+				case "public": $pigeon_obj->pigeon_content_access = 1; break; // No restrictions
+				case "restricted": $pigeon_obj->pigeon_content_access = 2; break; // You have to be logged in with access permissions
+			}
+		}
+
+		return false;
+	}
+}

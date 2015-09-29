@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.3.0';
+	const VERSION = '1.3.1';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -52,6 +52,16 @@ class WP_Pigeon {
 	 * @var      array
 	 */
 	public $pigeon_settings = array();
+
+	/**
+	 * Pigeon content access override from templates, takes precedence over admin interface setting control.
+	 *
+	 * @since    1.3.1
+	 *
+	 * @var      array
+	 */
+	public $pigeon_content_access = NULL;
+
 
 	/**
 	 * Instance of this class.
@@ -160,15 +170,13 @@ class WP_Pigeon {
 		echo '<script type="text/javascript">';
 
 		echo "
-		if( typeof Pigeon !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
-		var Pigeon = new Pigeon({
+		if( typeof PigeonClass !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
+		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
 			apiUser:'".$this->pigeon_settings['user']."',
 			apiSecret:'".$this->pigeon_settings['secret']."',
 			fingerprint:true
 		});
-
-		Pigeon.widget.promotionDialog();
 		";
 
 		// Server Side plugin
@@ -201,7 +209,7 @@ class WP_Pigeon {
 			echo "
 				Pigeon.paywall({
 					redirect:".$paywall_iterrupt.",
-					free:".$this->pigeon_settings['content_access']."
+					free:".($this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access'])."
 				});";
 
 			if( $this->pigeon_settings["soundcloud"] ){
@@ -244,7 +252,7 @@ class WP_Pigeon {
 	 */
 	public function load_pigeon_js() {
 
-		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.4.min.js",array("jquery"), self::VERSION );
+		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.4.1.min.js",array("jquery"), self::VERSION );
 
 		if( $this->pigeon_settings["soundcloud"] ){
 			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
