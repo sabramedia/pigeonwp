@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.3.1';
+	const VERSION = '1.4.0';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -58,9 +58,36 @@ class WP_Pigeon {
 	 *
 	 * @since    1.3.1
 	 *
-	 * @var      array
+	 * @var      bool
 	 */
 	public $pigeon_content_access = NULL;
+
+	/**
+	 * Pigeon content value override from templates, takes precedence over admin interface setting control.
+	 *
+	 * @since    1.4.0
+	 *
+	 * @var      int
+	 */
+	public $pigeon_content_value = NULL;
+
+	/**
+	 * Pigeon content prompt override from templates, takes precedence over admin interface setting control.
+	 *
+	 * @since    1.4.0
+	 *
+	 * @var      bool
+	 */
+	public $pigeon_content_prompt = NULL;
+
+	/**
+	 * Pigeon content ID is the WP post id.
+	 *
+	 * @since    1.4.0
+	 *
+	 * @var      int
+	 */
+	public $pigeon_content_id = NULL;
 
 
 	/**
@@ -181,6 +208,20 @@ class WP_Pigeon {
 
 		// Server Side plugin
 		if( $this->pigeon_settings["paywall"] == 1 ){
+
+			// Simulate a response promise here so the status widget will still work in server mode
+			echo "
+				var pdfd = $.Deferred();
+				var response = ".json_encode($this->pigeon_values).";
+				pdfd.resolve(response);
+				Pigeon.paywallPromise = pdfd.promise();
+				Pigeon.widget.status();";
+
+			// If the modal is set then pop it up
+			if( !$this->pigeon_values["allowed"] && $this->pigeon_settings['paywall_interrupt'] == "3" ){
+				echo "Pigeon.widget.promotionDialog('open');";
+			}
+
 			if( $this->pigeon_settings["soundcloud"] && ! $this->pigeon_values["user_status"]  ){
 			echo "
 			$(document).ready(function(){
@@ -209,8 +250,13 @@ class WP_Pigeon {
 			echo "
 				Pigeon.paywall({
 					redirect:".$paywall_iterrupt.",
-					free:".($this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access'])."
-				});";
+					free:".($this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access']).",
+					contentId:".($this->pigeon_content_id ? $this->pigeon_content_id : empty($this->pigeon_settings['content_id']) ? 0 : $this->pigeon_settings['content_id']).",
+					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value']).",
+					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt'])."
+				});
+
+				Pigeon.widget.status();";
 
 			if( $this->pigeon_settings["soundcloud"] ){
 				echo "
@@ -238,10 +284,13 @@ class WP_Pigeon {
 		</script>
 		';
 
-		if( $this->pigeon_settings["paywall"] == 2 ){
-			echo '<noscript>
-					<meta http-equiv="refresh" content="0; url=http://'.$this->pigeon_settings['subdomain'].'/no-script" />
-				</noscript>';
+		// If the JS paywall or modal interrupt is on then force script to be loaded
+		if( $this->pigeon_settings["paywall"] == 2 || $this->pigeon_settings['paywall_interrupt'] == "3" ){
+			echo '
+			<noscript>
+				<meta http-equiv="refresh" content="0; url=http://'.$this->pigeon_settings['subdomain'].'/no-script" />
+			</noscript>
+			';
 		}
 	}
 
@@ -252,9 +301,10 @@ class WP_Pigeon {
 	 */
 	public function load_pigeon_js() {
 
-		wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.4.1.min.js",array("jquery"), self::VERSION );
+		if( isset($this->pigeon_settings['subdomain']) )
+			wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.4.2.min.js",array("jquery"), self::VERSION );
 
-		if( $this->pigeon_settings["soundcloud"] ){
+		if( isset($this->pigeon_settings["soundcloud"] ) && $this->pigeon_settings["soundcloud"] ){
 			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
 		}
 
@@ -278,10 +328,18 @@ class WP_Pigeon {
 		// Get our content access settings
 		if ( is_singular() ) {
 			global $post;
+			$this->pigeon_settings['content_id'] = $post->ID;
 			$this->pigeon_settings['content_access'] = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+
+			// Send zero value if the value meter is disabled
+			$this->pigeon_settings['content_value'] = $admin_options["pigeon_content_value_meter"] == 1 ? (int)get_post_meta( $post->ID, '_wp_pigeon_content_value', true ) : 0;
+			$this->pigeon_settings['content_prompt'] = (int)get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
 		}
 
 		if ( ! isset( $this->pigeon_settings['content_access'] ) || $this->pigeon_settings['content_access'] == '' )
+			$this->pigeon_settings['content_access'] = 0;
+
+		if ( ! isset( $this->pigeon_settings['content_value'] ) || $this->pigeon_settings['content_access'] == '' )
 			$this->pigeon_settings['content_access'] = 0;
 
 		// Redirect setting (this could be already set via our functions)
@@ -305,11 +363,12 @@ class WP_Pigeon {
 		// Secret key
 		$this->pigeon_settings['secret'] = $admin_options["pigeon_api_secret_key"];
 
-
 		// Make the request
 		if( $this->pigeon_settings['paywall'] == 1 ){
 			$pigeon_api = new WP_Pigeon_Api;
 			$this->pigeon_values = $pigeon_api->exec( $this->pigeon_settings );
+		}else{
+			$this->pigeon_values = $this->pigeon_settings;
 		}
 	}
 

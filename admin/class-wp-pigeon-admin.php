@@ -43,6 +43,9 @@ class WP_Pigeon_Admin {
 		// Register the settings 
 		add_action( 'admin_menu', array( $this, 'plugin_settings_init' ) );
 
+		// Load JS
+		add_action( 'admin_enqueue_scripts', array( $this, 'load_pigeon_admin_js' ) );
+
 		// Add an action link pointing to the options page.
 		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__ ) ) ) . $this->plugin_slug . '.php' );
 		add_filter( 'plugin_action_links_' . $plugin_basename, array( $this, 'add_action_links' ) );
@@ -78,7 +81,7 @@ class WP_Pigeon_Admin {
 	public function add_meta_box() {
 		
 		foreach ( array( 'post', 'page' ) as $post_type )
-			add_meta_box( 'wp_pigeon', 'Pigeon Access Status', array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
+			add_meta_box( 'wp_pigeon', 'Pigeon Settings', array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
 	
 	}
 
@@ -91,7 +94,11 @@ class WP_Pigeon_Admin {
 		
 		wp_nonce_field( 'wp_pigeon', 'wp_pigeon_nonce' );
 
-		$value = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+		$access_value = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+		$content_value = get_post_meta( $post->ID, '_wp_pigeon_content_value', true );
+		$content_prompt = get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
+
+		$options = get_option( 'wp_pigeon_settings' );
 
 		include_once( 'views/meta-box.php' );
 
@@ -116,6 +123,15 @@ class WP_Pigeon_Admin {
 			return $post_id;
 
 		$pigeon_content_access = intval( $_POST['pigeon_content_access'] );
+		if( array_key_exists('pigeon_content_value', $_POST)){
+			$pigeon_content_value = intval( $_POST['pigeon_content_value'] );
+			update_post_meta( $post_id, '_wp_pigeon_content_value', $pigeon_content_value );
+			if(array_key_exists("pigeon_content_prompt",$_POST)){
+				update_post_meta( $post_id, '_wp_pigeon_content_prompt', 1 );
+			}else{
+				update_post_meta( $post_id, '_wp_pigeon_content_prompt', 0 );
+			}
+		}
 
 		update_post_meta( $post_id, '_wp_pigeon_content_access', $pigeon_content_access );
 
@@ -136,6 +152,17 @@ class WP_Pigeon_Admin {
 			array( $this, 'display_plugin_admin_page' )
 		);
 
+	}
+
+	/**
+	 * Load Pigeon JS
+	 *
+	 * @since    1.4.0
+	 */
+	public function load_pigeon_admin_js( $hook ) {
+
+		if( $hook == "settings_page_wp-pigeon" )
+			wp_enqueue_script( 'pigeon_admin', plugin_dir_url( __FILE__ ) . 'js/settings.js' );
 	}
 	
 	/* Register the administration menu for this plugin into the WordPress Dashboard menu.
@@ -158,6 +185,13 @@ class WP_Pigeon_Admin {
 			'settings_section_api', 
 			__( 'API Connection', $this->plugin_slug ),  
 			array( $this, 'settings_section_api_callback' ),
+			'plugin_options'
+		);
+
+		$this->plugin_screen_hook_suffix = add_settings_section(
+			'settings_section_content',
+			__( 'Content', $this->plugin_slug ),
+			array( $this, 'settings_section_content_callback' ),
 			'plugin_options'
 		);
 		
@@ -220,7 +254,23 @@ class WP_Pigeon_Admin {
 			'plugin_options',
 			'settings_section_api'
 		);
-	
+
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_content_value_meter',
+			__( 'Value Meter', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_content_value_meter_render' ),
+			'plugin_options',
+			'settings_section_content'
+		);
+
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_content_value',
+			__( 'Credit Value', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_content_value_render' ),
+			'plugin_options',
+			'settings_section_content'
+		);
+
 
 	}
 	
@@ -241,6 +291,15 @@ class WP_Pigeon_Admin {
 	public function settings_section_api_callback() {
 
 		// echo __( 'API section Description', $this->plugin_slug );
+
+	}
+	/* Content Section settings callback
+	 *
+	 * @since    1.4.0
+	 */
+	public function settings_section_content_callback() {
+
+		 echo __( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', $this->plugin_slug );
 
 	}
 	
@@ -371,6 +430,52 @@ class WP_Pigeon_Admin {
 	
 	<?php
 
+	}
+
+
+
+	/* Content value meter on or off
+	 *
+	 * @since    1.4.0
+	 */
+	public function setting_pigeon_content_value_meter_render() {
+
+		$options = get_option( 'wp_pigeon_settings' );
+
+		$html  = '<input type="radio" id="value_meter_enabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="1"' . checked( 1, $options['pigeon_content_value_meter'], false ) . '/>';
+		$html .= '<label for="value_meter_enabled">Enabled</label> ';
+
+		$html .= '<input type="radio" id="value_meter_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="2"' . checked( 2, $options['pigeon_content_value_meter'], false ) . '/>';
+		$html .= '<label for="value_meter_disabled">Disabled</label>';
+
+		echo $html;
+
+	}
+
+	/* Content value list
+	 *
+	 * @since    1.4.0
+	 */
+	public function setting_pigeon_content_value_render() {
+		$options = get_option( 'wp_pigeon_settings' );
+
+		// preset empty array if not set
+		if( !isset($options['pigeon_content_value']) )
+			$options['pigeon_content_value'] = array("");
+
+		foreach( $options['pigeon_content_value'] as $option ){
+	?>
+		<div class="pigeon-content-value-option">
+			<input type='text' name='wp_pigeon_settings[pigeon_content_value][]' value='<?php echo $option; ?>'>
+			<button class="remove">Remove</button>
+		</div>
+	<?php
+		}
+	?>
+		<div class="pigeon-add-content-value">
+			<button>Add New Value</button>
+		</div>
+	<?php
 	}
 	
 
