@@ -27,7 +27,9 @@ class WP_Pigeon_Api {
 	protected function setup( $parameters ) {
 
 		// Get the content access setting
+		$this->pigeon_settings['content_id'] = isset($parameters['content_id']) ? $parameters['content_id'] : 0;
 		$this->pigeon_settings['content_access'] = $parameters['content_access'];
+		$this->pigeon_settings['content_value'] = empty($parameters['content_value']) ? 0 : $parameters['content_value'];
 
 		$this->pigeon_settings['redirect'] = $parameters['redirect'];
 
@@ -149,11 +151,18 @@ class WP_Pigeon_Api {
 			}
 
 			$pigeon = array(
+				'allowed' => $response['status'] == "redirect" ? 0 : 1,
 				'user_status' => 0,
 				'meter_limit' => $response['meter_limit'],
 				'meter' => $response['meter'] >= $response['meter_limit'] ? $response['meter_limit'] : $response['meter'], // Accommodate for interval
 				'profile' => $response['profile'] // User profile
 			);
+
+			if( array_key_exists("credits", $response) )
+				$pigeon['credits'] = $response['credits'];
+
+
+			$pigeon['content_value'] = $this->pigeon_settings['content_value'];
 
 			if ( $response['status'] == 'redirect' && $this->pigeon_settings['redirect'] ) {
 				header( 'Location: ' . $response['redirect'] );

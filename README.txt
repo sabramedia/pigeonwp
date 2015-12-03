@@ -3,7 +3,7 @@ Contributors:
 Tags: pigeon, paywall
 Requires at least: 3.5.1
 Tested up to: 3.6
-Stable tag: 1.0.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,8 @@ Follow the instructions below to install the plugin
 4. Activate the plugin in the Plugin dashboard
 
 == Changelog ==
+= 1.4.0 =
+* On-demand value can now be set on each post/page. New settings control. Improved uniqueness in JS browser fingerprinting.
 
 = 1.3.1 =
 * Added the pigeon_set_access() method to override access at the template level.
