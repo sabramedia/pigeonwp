@@ -89,6 +89,15 @@ class WP_Pigeon {
 	 */
 	public $pigeon_content_id = NULL;
 
+	/**
+	 * Pigeon content title
+	 *
+	 * @since    1.4.0
+	 *
+	 * @var      int
+	 */
+	public $pigeon_content_title = NULL;
+
 
 	/**
 	 * Instance of this class.
@@ -252,6 +261,7 @@ class WP_Pigeon {
 					redirect:".$paywall_iterrupt.",
 					free:".($this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access']).",
 					contentId:".($this->pigeon_content_id ? $this->pigeon_content_id : empty($this->pigeon_settings['content_id']) ? 0 : $this->pigeon_settings['content_id']).",
+					contentTitle:'".($this->pigeon_content_title ? $this->pigeon_content_title : $this->pigeon_settings['content_title'])."',
 					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value']).",
 					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt'])."
 				});
@@ -328,7 +338,9 @@ class WP_Pigeon {
 		// Get our content access settings
 		if ( is_singular() ) {
 			global $post;
+
 			$this->pigeon_settings['content_id'] = $post->ID;
+			$this->pigeon_settings['content_title'] = $post->post_title;
 			$this->pigeon_settings['content_access'] = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
 
 			// Send zero value if the value meter is disabled
