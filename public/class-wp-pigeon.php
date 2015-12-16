@@ -228,7 +228,15 @@ class WP_Pigeon {
 
 			// If the modal is set then pop it up
 			if( !$this->pigeon_values["allowed"] && $this->pigeon_settings['paywall_interrupt'] == "3" ){
-				echo "Pigeon.widget.promotionDialog('open');";
+				if( $this->pigeon_settings['content_value'] ){
+					echo "Pigeon.widget.promotionDialog('open',{
+						content_id:'".$this->pigeon_settings['content_id']."',
+						content_title:'".$this->pigeon_settings['content_title']."',
+						content_value:'".$this->pigeon_settings['content_value']."'
+					});";
+				}else{
+					echo "Pigeon.widget.promotionDialog('open');";
+				}
 			}
 
 			if( $this->pigeon_settings["soundcloud"] && ! $this->pigeon_values["user_status"]  ){
