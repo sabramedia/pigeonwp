@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.1';
+	const VERSION = '1.4.2';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -221,7 +221,7 @@ class WP_Pigeon {
 
 			// Simulate a response promise here so the status widget will still work in server mode
 			echo "
-				var pdfd = $.Deferred();
+				var pdfd = jQuery.Deferred();
 				var response = ".json_encode($this->pigeon_values).";
 				pdfd.resolve(response);
 				Pigeon.paywallPromise = pdfd.promise();
@@ -242,8 +242,8 @@ class WP_Pigeon {
 
 			if( $this->pigeon_settings["soundcloud"] && ! $this->pigeon_values["user_status"]  ){
 			echo "
-			$(document).ready(function(){
-				$('iframe').not('.pigeon-free').each(function(i,el){
+			jQuery(document).ready(function(){
+				jQuery('iframe').not('.pigeon-free').each(function(i,el){
 					if( el.src.search('soundcloud.com') != -1 ){
 						var widget = SC.Widget(el);
 						widget.bind(SC.Widget.Events.PLAY,function(){
@@ -279,11 +279,11 @@ class WP_Pigeon {
 
 			if( $this->pigeon_settings["soundcloud"] ){
 				echo "
-				$(document).ready(function(){
+				jQuery(document).ready(function(){
 					Pigeon.paywallPromise.done(function(data){
 
 						if( ! data.user_status ){
-							$('iframe').not('.pigeon-free').each(function(i,el){
+							jQueryg('iframe').not('.pigeon-free').each(function(i,el){
 								if( el.src.search('soundcloud.com') != -1 ){
 									var widget = SC.Widget(el);
 									widget.bind(SC.Widget.Events.PLAY,function(){
