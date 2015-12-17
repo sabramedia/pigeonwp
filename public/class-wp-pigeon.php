@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.0';
+	const VERSION = '1.4.1';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -205,8 +205,9 @@ class WP_Pigeon {
 	{
 		echo '<script type="text/javascript">';
 
+		// TODO Removed the PigeonClass check... this was done for adBlockers, but seems to be causing an issue with Bing.
+		//if( typeof PigeonClass !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
 		echo "
-		if( typeof PigeonClass !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
 		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
 			apiUser:'".$this->pigeon_settings['user']."',
@@ -302,14 +303,15 @@ class WP_Pigeon {
 		</script>
 		';
 
+		// TODO removed based on the note above
 		// If the JS paywall or modal interrupt is on then force script to be loaded
-		if( $this->pigeon_settings["paywall"] == 2 || $this->pigeon_settings['paywall_interrupt'] == "3" ){
-			echo '
-			<noscript>
-				<meta http-equiv="refresh" content="0; url=http://'.$this->pigeon_settings['subdomain'].'/no-script" />
-			</noscript>
-			';
-		}
+//		if( $this->pigeon_settings["paywall"] == 2 || $this->pigeon_settings['paywall_interrupt'] == "3" ){
+//			echo '
+//			<noscript>
+//				<meta http-equiv="refresh" content="0; url=http://'.$this->pigeon_settings['subdomain'].'/no-script" />
+//			</noscript>
+//			';
+//		}
 	}
 
 	/**
