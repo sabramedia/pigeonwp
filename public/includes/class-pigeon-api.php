@@ -157,7 +157,8 @@ class WP_Pigeon_Api {
 				'user_status' => 0,
 				'meter_limit' => $response['meter_limit'],
 				'meter' => $response['meter'] >= $response['meter_limit'] ? $response['meter_limit'] : $response['meter'], // Accommodate for interval
-				'profile' => $response['profile'] // User profile
+				'profile' => $response['profile'], // User profile
+				'ssl' => $response["ssl"] // Need to know if subdomain is secure or not.
 			);
 
 			if( array_key_exists("credits", $response) )
