@@ -32,6 +32,10 @@ Follow the instructions below to install the plugin
 4. Activate the plugin in the Plugin dashboard
 
 == Changelog ==
+
+= 1.4.4 =
+* Added get_pigeon_post_meta() method for accessing pigeon-created metadata on the post level in the WP loop.
+
 = 1.4.0 =
 * On-demand value can now be set on each post/page. New settings control. Improved uniqueness in JS browser fingerprinting.
 
