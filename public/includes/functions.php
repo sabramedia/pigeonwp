@@ -23,6 +23,27 @@ if ( ! function_exists( 'get_pigeon_value' ) ) {
 
 	}
 }
+if ( ! function_exists( 'the_pigeon_values' ) ) {
+
+	/**
+	 * Get Pigeon metadata in a post loop
+	 *
+	 * @since     1.4.4
+	 */
+	function get_pigeon_post_meta() {
+		global $post;
+
+		$pigeon_values = array();
+		foreach( get_post_meta($post->ID) as $key=>$pm ){
+			if(strpos($key,"_wp_pigeon_") !== FALSE ){
+				$pigeon_values[str_replace("_wp_pigeon_","",$key)] = $pm[0];
+			}
+		}
+
+		return $pigeon_values;
+
+	}
+}
 if ( ! function_exists( 'set_pigeon_access' ) ) {
 
 	/**
