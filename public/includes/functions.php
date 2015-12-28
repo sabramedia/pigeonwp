@@ -33,7 +33,12 @@ if ( ! function_exists( 'the_pigeon_values' ) ) {
 	function get_pigeon_post_meta() {
 		global $post;
 
-		$pigeon_values = array();
+		// Set defaults
+		$pigeon_values = array(
+			"content_value"=>0,
+			"content_access"=>1,
+			"content_prompt"=>0
+		);
 		foreach( get_post_meta($post->ID) as $key=>$pm ){
 			if(strpos($key,"_wp_pigeon_") !== FALSE ){
 				$pigeon_values[str_replace("_wp_pigeon_","",$key)] = $pm[0];
