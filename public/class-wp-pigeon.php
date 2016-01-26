@@ -283,7 +283,7 @@ class WP_Pigeon {
 					Pigeon.paywallPromise.done(function(data){
 
 						if( ! data.user_status ){
-							jQueryg('iframe').not('.pigeon-free').each(function(i,el){
+							jQuery('iframe').not('.pigeon-free').each(function(i,el){
 								if( el.src.search('soundcloud.com') != -1 ){
 									var widget = SC.Widget(el);
 									widget.bind(SC.Widget.Events.PLAY,function(){
