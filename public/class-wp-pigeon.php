@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.4';
+	const VERSION = '1.4.5';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -232,7 +232,7 @@ class WP_Pigeon {
 				if( $this->pigeon_settings['content_value'] ){
 					echo "Pigeon.widget.promotionDialog('open',{
 						content_id:'".$this->pigeon_settings['content_id']."',
-						content_title:'".$this->pigeon_settings['content_title']."',
+						content_title:'".urlencode($this->pigeon_settings['content_title'])."',
 						content_value:'".$this->pigeon_settings['content_value']."'
 					});";
 				}else{
@@ -270,7 +270,7 @@ class WP_Pigeon {
 					redirect:".$paywall_iterrupt.",
 					free:".($this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access']).",
 					contentId:".($this->pigeon_content_id ? $this->pigeon_content_id : empty($this->pigeon_settings['content_id']) ? 0 : $this->pigeon_settings['content_id']).",
-					contentTitle:'".($this->pigeon_content_title ? $this->pigeon_content_title : empty($this->pigeon_settings['content_title']) ? "" : $this->pigeon_settings['content_title'] )."',
+					contentTitle:'".urlencode($this->pigeon_content_title ? $this->pigeon_content_title : empty($this->pigeon_settings['content_title']) ? "" : $this->pigeon_settings['content_title'] )."',
 					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value']).",
 					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt'])."
 				});

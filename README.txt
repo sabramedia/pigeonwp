@@ -33,6 +33,9 @@ Follow the instructions below to install the plugin
 
 == Changelog ==
 
+= 1.4.5 =
+* Encoded content title properly for special characters.
+
 = 1.4.4 =
 * Added get_pigeon_post_meta() method for accessing pigeon-created metadata on the post level in the WP loop.
 
