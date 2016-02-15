@@ -322,7 +322,7 @@ class WP_Pigeon {
 	public function load_pigeon_js() {
 
 		if( isset($this->pigeon_settings['subdomain']) )
-			wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.4.2.min.js",array("jquery"), self::VERSION );
+			wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.5.min.js",array("jquery"), self::VERSION );
 
 		if( isset($this->pigeon_settings["soundcloud"] ) && $this->pigeon_settings["soundcloud"] ){
 			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
