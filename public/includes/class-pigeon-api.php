@@ -75,7 +75,7 @@ class WP_Pigeon_Api {
 	public function exec( $parameters ) {
 
 		// Avoid sending assets to the Pigeon server. Will reduce impression load and client cost.
-		foreach ( array( ".css", ".js", ".woff", ".eot", ".ttf", ".svg", ".png", ".jpg" ) as $asset ) {
+		foreach ( array( ".css", ".js", ".woff", ".eot", ".ttf", ".svg", ".png", ".jpg", ".gif", ".cur" ) as $asset ) {
 			if ( strpos( basename( $_SERVER["REQUEST_URI"] ), $asset ) !== FALSE ) {
 				return false;
 			}
@@ -154,6 +154,7 @@ class WP_Pigeon_Api {
 
 			$pigeon = array(
 				'allowed' => $response['status'] == "redirect" ? 0 : 1,
+				'paywalled' => isset($response['paywalled']) ? $response['paywalled'] : 0,
 				'user_status' => 0,
 				'meter_limit' => $response['meter_limit'],
 				'meter' => $response['meter'] >= $response['meter_limit'] ? $response['meter_limit'] : $response['meter'], // Accommodate for interval
