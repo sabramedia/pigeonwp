@@ -23,15 +23,18 @@ if ( ! function_exists( 'get_pigeon_value' ) ) {
 
 	}
 }
-if ( ! function_exists( 'the_pigeon_values' ) ) {
+if ( ! function_exists( 'get_pigeon_post_meta' ) ) {
 
 	/**
 	 * Get Pigeon metadata in a post loop
 	 *
 	 * @since     1.4.4
 	 */
-	function get_pigeon_post_meta() {
-		global $post;
+	function get_pigeon_post_meta( $post_id = NULL ) {
+		if( ! $post_id ){
+			global $post;
+			$post_id = $post->ID;
+		}
 
 		// Set defaults
 		$pigeon_values = array(
@@ -39,7 +42,7 @@ if ( ! function_exists( 'the_pigeon_values' ) ) {
 			"content_access"=>1,
 			"content_prompt"=>0
 		);
-		foreach( get_post_meta($post->ID) as $key=>$pm ){
+		foreach( get_post_meta($post_id) as $key=>$pm ){
 			if(strpos($key,"_wp_pigeon_") !== FALSE ){
 				$pigeon_values[str_replace("_wp_pigeon_","",$key)] = $pm[0];
 			}
