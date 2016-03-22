@@ -79,8 +79,10 @@ class WP_Pigeon_Admin {
 	 * @since     1.0.0
 	 */
 	public function add_meta_box() {
-		
-		foreach ( array( 'post', 'page' ) as $post_type )
+		$options = get_option( 'wp_pigeon_settings' );
+		$custom_post_types = $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array();
+
+		foreach ( array_merge( array( 'post', 'page' ), $custom_post_types) as $post_type )
 			add_meta_box( 'wp_pigeon', 'Pigeon Settings', array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
 	
 	}
@@ -267,6 +269,14 @@ class WP_Pigeon_Admin {
 			'pigeon_content_value',
 			__( 'Credit Value', $this->plugin_slug ),
 			array( $this, 'setting_pigeon_content_value_render' ),
+			'plugin_options',
+			'settings_section_content'
+		);
+
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_content_post_types',
+			__( 'Post Types', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_content_post_type_render' ),
 			'plugin_options',
 			'settings_section_content'
 		);
@@ -477,6 +487,41 @@ class WP_Pigeon_Admin {
 		</div>
 	<?php
 	}
+
+	/* Content value list
+	 *
+	 * @since    1.4.0
+	 */
+	public function setting_pigeon_content_post_type_render() {
+		$options = get_option( 'wp_pigeon_settings' );
+
+		// preset empty array if not set
+		if( !isset($options['pigeon_content_post_types']) )
+			$options['pigeon_content_value'] = array("");
+
+		$post_types = get_post_types( array("public"=>true,"_builtin"=>false), "names", "and" );
+
+		if( $post_types ){
+
+		$post_type_options = $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array();
+
+		foreach( $post_types as $option ){
+			$checked = false;
+			if( in_array( $option, $post_type_options))
+				$checked = true;
+	?>
+		<div class="pigeon-content-post-type-option">
+			<input type='checkbox' name='wp_pigeon_settings[pigeon_content_post_types][]' value='<?php echo $option; ?>'<?php echo $checked ? " checked" : ""; ?> /> <?php echo $option; ?>
+		</div>
+	<?php
+		}
+		}else{
+	?>
+		<div class="pigeon-add-post-type">
+			There are no custom post types available.
+		</div>
+	<?php
+	}}
 	
 
 	/**
