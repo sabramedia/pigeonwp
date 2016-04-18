@@ -29,7 +29,7 @@ class WP_Pigeon_Api {
 		// Get the content access setting
 		$this->pigeon_settings['content_id'] = isset($parameters['content_id']) ? $parameters['content_id'] : 0;
 		$this->pigeon_settings['content_access'] = $parameters['content_access'];
-		$this->pigeon_settings['content_title'] = empty($parameters['content_title']) ? "" : $parameters['content_title'];
+		$this->pigeon_settings['content_title'] = empty($parameters['content_title']) ? "" : urlencode($parameters['content_title']);
 		$this->pigeon_settings['content_value'] = empty($parameters['content_value']) ? 0 : $parameters['content_value'];
 		$this->pigeon_settings['content_prompt'] = isset($parameters['content_prompt']) ? $parameters['content_prompt'] : 0;
 
