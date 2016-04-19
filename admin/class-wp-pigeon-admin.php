@@ -80,7 +80,7 @@ class WP_Pigeon_Admin {
 	 */
 	public function add_meta_box() {
 		$options = get_option( 'wp_pigeon_settings' );
-		$custom_post_types = $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array();
+		$custom_post_types = array_key_exists("pigeon_content_post_types", $options) && $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array();
 
 		foreach ( array_merge( array( 'post', 'page' ), $custom_post_types) as $post_type )
 			add_meta_box( 'wp_pigeon', 'Pigeon Settings', array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
