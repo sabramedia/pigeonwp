@@ -207,12 +207,15 @@ class WP_Pigeon {
 
 		// TODO Removed the PigeonClass check... this was done for adBlockers, but seems to be causing an issue with Bing.
 		//if( typeof PigeonClass !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
+		$pigeon_session = md5( $this->pigeon_settings['subdomain'] );
 		echo "
 		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
 			apiUser:'".$this->pigeon_settings['user']."',
 			apiSecret:'".$this->pigeon_settings['secret']."',
-			fingerprint:true
+			fingerprint:false,
+			cid: ".( array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
+			cha: ".( array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ? "'".$_COOKIE[$pigeon_session . "_hash"]."'" : "null" ) ."
 		});
 		";
 
@@ -240,7 +243,13 @@ class WP_Pigeon {
 				}
 			}
 
-			if( $this->pigeon_settings["soundcloud"] && ! $this->pigeon_values["user_status"]  ){
+			if( $this->pigeon_settings["soundcloud"] &&
+					(
+					! $this->pigeon_values["user_status"] ||
+					// Check user status for pages that aren't paywalled
+					($this->pigeon_values["profile"] && !$this->pigeon_values["profile"]["status"])
+					)
+			){
 			echo "
 			jQuery(document).ready(function(){
 				jQuery('iframe').not('.pigeon-free').each(function(i,el){
@@ -248,8 +257,11 @@ class WP_Pigeon {
 						var widget = SC.Widget(el);
 						widget.bind(SC.Widget.Events.PLAY,function(){
 							this.pause();
-							Pigeon.widget.promotionDialog('open');
+							// if logged in then load the user account page
+							Pigeon.widget.promotionDialog('open', ".($this->pigeon_values["profile"] ? "{'route_user_account':1}" : "null" ).");
 						});
+
+						widget.unbind(SC.Widget.Events.CLICK_DOWNLOAD);
 					}
 				});
 			});
@@ -282,13 +294,14 @@ class WP_Pigeon {
 				jQuery(document).ready(function(){
 					Pigeon.paywallPromise.done(function(data){
 
-						if( ! data.user_status ){
+						if( ! data.user_status || (data.profile && !data.profile.status)){
 							jQuery('iframe').not('.pigeon-free').each(function(i,el){
 								if( el.src.search('soundcloud.com') != -1 ){
 									var widget = SC.Widget(el);
 									widget.bind(SC.Widget.Events.PLAY,function(){
 										this.pause();
-										Pigeon.widget.promotionDialog('open');
+										// if logged in then load the user account page
+										Pigeon.widget.promotionDialog('open', (data.profile ? {'route_user_account':1} : null));
 									});
 								}
 							});
