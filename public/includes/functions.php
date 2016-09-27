@@ -22,6 +22,18 @@ if ( ! function_exists( 'get_pigeon_value' ) ) {
 		return false;
 
 	}
+
+	function get_pigeon_values( ) {
+
+		$pigeon_obj = WP_Pigeon::get_instance();
+
+		if ( is_object( $pigeon_obj ) ) {
+			return $pigeon_values = $pigeon_obj->get_pigeon_values();
+		}
+
+		return false;
+
+	}
 }
 if ( ! function_exists( 'get_pigeon_post_meta' ) ) {
 
@@ -38,6 +50,7 @@ if ( ! function_exists( 'get_pigeon_post_meta' ) ) {
 
 		// Set defaults
 		$pigeon_values = array(
+			"content_price"=>0,
 			"content_value"=>0,
 			"content_access"=>1,
 			"content_prompt"=>0

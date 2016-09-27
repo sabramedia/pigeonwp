@@ -97,6 +97,7 @@ class WP_Pigeon_Admin {
 		wp_nonce_field( 'wp_pigeon', 'wp_pigeon_nonce' );
 
 		$access_value = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+		$content_price = get_post_meta( $post->ID, '_wp_pigeon_content_price', true );
 		$content_value = get_post_meta( $post->ID, '_wp_pigeon_content_value', true );
 		$content_prompt = get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
 
@@ -125,6 +126,11 @@ class WP_Pigeon_Admin {
 			return $post_id;
 
 		$pigeon_content_access = intval( $_POST['pigeon_content_access'] );
+
+		if( array_key_exists('pigeon_content_price', $_POST)){
+			update_post_meta( $post_id, '_wp_pigeon_content_price', $_POST['pigeon_content_price'] );
+		}
+
 		if( array_key_exists('pigeon_content_value', $_POST)){
 			$pigeon_content_value = intval( $_POST['pigeon_content_value'] );
 			update_post_meta( $post_id, '_wp_pigeon_content_value', $pigeon_content_value );
@@ -255,6 +261,14 @@ class WP_Pigeon_Admin {
 			array( $this, 'setting_pigeon_api_secret_key_render' ),
 			'plugin_options',
 			'settings_section_api'
+		);
+
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_content_value_pricing',
+			__( 'Pricing Value', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_content_value_pricing_render' ),
+			'plugin_options',
+			'settings_section_content'
 		);
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
@@ -444,6 +458,24 @@ class WP_Pigeon_Admin {
 
 
 
+	/* Content value pricing on or off
+	 *
+	 * @since    1.4.7
+	 */
+	public function setting_pigeon_content_value_pricing_render() {
+
+		$options = get_option( 'wp_pigeon_settings' );
+		$options['pigeon_content_value_pricing'] = array_key_exists("pigeon_content_value_pricing", $options) ? $options['pigeon_content_value_pricing'] : 2;
+		$html  = '<input type="radio" id="value_pricing_enabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="1"' . checked( 1, $options['pigeon_content_value_pricing'], false ) . '/>';
+		$html .= '<label for="value_pricing_enabled">Enabled</label> ';
+
+		$html .= '<input type="radio" id="value_pricing_disabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="2"' . checked( 2, $options['pigeon_content_value_pricing'], false ) . '/>';
+		$html .= '<label for="value_pricing_disabled">Disabled</label>';
+
+		echo $html;
+
+	}
+
 	/* Content value meter on or off
 	 *
 	 * @since    1.4.0
@@ -452,6 +484,7 @@ class WP_Pigeon_Admin {
 
 		$options = get_option( 'wp_pigeon_settings' );
 
+		$options['pigeon_content_value_meter'] = array_key_exists("pigeon_content_value_meter", $options) ? $options['pigeon_content_value_meter'] : 2;
 		$html  = '<input type="radio" id="value_meter_enabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="1"' . checked( 1, $options['pigeon_content_value_meter'], false ) . '/>';
 		$html .= '<label for="value_meter_enabled">Enabled</label> ';
 

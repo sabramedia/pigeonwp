@@ -30,6 +30,8 @@ class WP_Pigeon_Api {
 		$this->pigeon_settings['content_id'] = isset($parameters['content_id']) ? $parameters['content_id'] : 0;
 		$this->pigeon_settings['content_access'] = $parameters['content_access'];
 		$this->pigeon_settings['content_title'] = empty($parameters['content_title']) ? "" : urlencode($parameters['content_title']);
+		$this->pigeon_settings['content_date'] = empty($parameters['content_date']) ? "" : urlencode($parameters['content_date']);
+		$this->pigeon_settings['content_price'] = empty($parameters['content_price']) ? 0 : $parameters['content_price'];
 		$this->pigeon_settings['content_value'] = empty($parameters['content_value']) ? 0 : $parameters['content_value'];
 		$this->pigeon_settings['content_prompt'] = isset($parameters['content_prompt']) ? $parameters['content_prompt'] : 0;
 
@@ -166,6 +168,7 @@ class WP_Pigeon_Api {
 				$pigeon['credits'] = $response['credits'];
 
 
+			$pigeon['content_price'] = $this->pigeon_settings['content_price'];
 			$pigeon['content_value'] = $this->pigeon_settings['content_value'];
 
 			if ( $response['status'] == 'redirect' && $this->pigeon_settings['redirect'] ) {

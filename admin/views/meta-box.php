@@ -12,6 +12,20 @@
 		</td>
 	</tr>
 
+
+<?php if( isset($options['pigeon_content_value_pricing']) && $options['pigeon_content_value_pricing'] == 1 ){ ?>
+	<tr>
+		<td>
+			<label for="pigeon-content-price">Price
+				<div style="font-size:xx-small; margin-top: -5px;"><em>(e.g., 4.95)</em></div>
+			</label>
+		</td>
+		<td>
+			<input type="text" name="pigeon_content_price" value="<?php echo $content_price; ?>" id="pigeon-content-price" style="width:95px;" />
+		</td>
+	</tr>
+<?php } ?>
+
 <?php if( isset($options['pigeon_content_value_meter']) && $options['pigeon_content_value_meter'] == 1 && isset($options['pigeon_content_value']) ){ ?>
 	<tr>
 		<td>
