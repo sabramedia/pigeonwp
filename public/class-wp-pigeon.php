@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.6';
+	const VERSION = '1.4.7';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -63,6 +63,15 @@ class WP_Pigeon {
 	public $pigeon_content_access = NULL;
 
 	/**
+	 * Pigeon content price override from templates, takes precedence over admin interface setting control.
+	 *
+	 * @since    1.4.7
+	 *
+	 * @var      int
+	 */
+	public $pigeon_content_price = NULL;
+
+	/**
 	 * Pigeon content value override from templates, takes precedence over admin interface setting control.
 	 *
 	 * @since    1.4.0
@@ -97,6 +106,15 @@ class WP_Pigeon {
 	 * @var      int
 	 */
 	public $pigeon_content_title = NULL;
+
+	/**
+	 * Pigeon content date
+	 *
+	 * @since    1.4.7
+	 *
+	 * @var      string
+	 */
+	public $pigeon_content_date = NULL;
 
 
 	/**
@@ -232,10 +250,12 @@ class WP_Pigeon {
 
 			// If the modal is set then pop it up
 			if( !$this->pigeon_values["allowed"] && $this->pigeon_settings['paywall_interrupt'] == "3" ){
-				if( $this->pigeon_settings['content_value'] ){
+				if( $this->pigeon_settings['content_value'] || $this->pigeon_settings['content_price'] ){
 					echo "Pigeon.widget.promotionDialog('open',{
 						content_id:'".$this->pigeon_settings['content_id']."',
 						content_title:'".urlencode($this->pigeon_settings['content_title'])."',
+						content_date:'".urlencode($this->pigeon_settings['content_date'])."',
+						content_price:'".$this->pigeon_settings['content_price']."',
 						content_value:'".$this->pigeon_settings['content_value']."'
 					});";
 				}else{
@@ -254,7 +274,16 @@ class WP_Pigeon {
 			jQuery(document).ready(function(){
 				jQuery('iframe').not('.pigeon-free').each(function(i,el){
 					if( el.src.search('soundcloud.com') != -1 ){
+						jQuery(el).attr('sandbox','allow-same-origin allow-scripts');
+						var iWidth = jQuery(el).width();
+						var iHeight = jQuery(el).height();
+						var shield = $('<div style=\"width:'+iWidth+'px; height:'+iHeight+'px; margin-top: -'+iHeight+'px; position:relative;\"></div>');
+						shield.click(function(){
+							Pigeon.widget.promotionDialog('open', ".($this->pigeon_values["profile"] ? "{'route_user_account':1}" : "null" ).");
+						});
+						jQuery(el).after(shield);
 						var widget = SC.Widget(el);
+
 						widget.bind(SC.Widget.Events.PLAY,function(){
 							this.pause();
 							// if logged in then load the user account page
@@ -283,6 +312,8 @@ class WP_Pigeon {
 					free:".($this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access']).",
 					contentId:".($this->pigeon_content_id ? $this->pigeon_content_id : empty($this->pigeon_settings['content_id']) ? 0 : $this->pigeon_settings['content_id']).",
 					contentTitle:'".urlencode($this->pigeon_content_title ? $this->pigeon_content_title : empty($this->pigeon_settings['content_title']) ? "" : $this->pigeon_settings['content_title'] )."',
+					contentDate:'".urlencode($this->pigeon_content_date ? $this->pigeon_content_date : empty($this->pigeon_settings['content_date']) ? "" : $this->pigeon_settings['content_date'] )."',
+					contentPrice:'".($this->pigeon_content_price ? $this->pigeon_content_price : empty($this->pigeon_settings['content_price']) ? 0 : $this->pigeon_settings['content_price'])."',
 					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value']).",
 					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt'])."
 				});
@@ -364,7 +395,11 @@ class WP_Pigeon {
 
 			$this->pigeon_settings['content_id'] = $post->ID;
 			$this->pigeon_settings['content_title'] = $post->post_title;
+			$this->pigeon_settings['content_date'] = $post->post_date_gmt;
 			$this->pigeon_settings['content_access'] = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+
+			// Send zero dollar if the value meter is disabled
+			$this->pigeon_settings['content_price'] = $admin_options["pigeon_content_value_pricing"] == 1 ? get_post_meta( $post->ID, '_wp_pigeon_content_price', true ) : 0;
 
 			// Send zero value if the value meter is disabled
 			$this->pigeon_settings['content_value'] = $admin_options["pigeon_content_value_meter"] == 1 ? (int)get_post_meta( $post->ID, '_wp_pigeon_content_value', true ) : 0;
