@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.7';
+	const VERSION = '1.4.8';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -136,6 +136,9 @@ class WP_Pigeon {
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+
+		// Load Shortcodes
+		add_action( 'init', array( $this, 'load_pigeon_shortcodes' ) );
 
 		// On each request, we need to make a call to Pigeon
 		add_action( 'wp', array( $this, 'make_pigeon_request' ) );
@@ -373,6 +376,120 @@ class WP_Pigeon {
 		}
 
 		add_action("wp_head", array($this, 'init_pigeon_js') );
+	}
+
+	/**
+	 * Load Pigeon Shortcodes
+	 *
+	 * @since    1.4.8
+	 */
+
+	public function load_pigeon_shortcodes()
+	{
+		function pigeon_protect_shortcode($atts=[], $content=null)
+		{
+			$pigeon_obj = WP_Pigeon::get_instance();
+			// Handle shortcode differently base on the paywall mode
+
+			// Server Side plugin
+			if( $pigeon_obj->pigeon_settings["paywall"] == 1 ){
+				if( ! $pigeon_obj->pigeon_values["allowed"] ){
+					$content = "";
+				}else{
+					// run shortcode parser recursively
+					$content = do_shortcode($content);
+				}
+			}
+
+			// JS plugin
+			if( $pigeon_obj->pigeon_settings["paywall"] == 2 ){
+
+				// run shortcode parser recursively
+				$content = do_shortcode($content);
+				$content = '<div class="pigeon-blur">'.$content.'</div>';
+			}
+
+			return $content;
+		}
+
+		add_shortcode('pigeon_protect', 'pigeon_protect_shortcode');
+
+		// Pigeon display block and attribute conditions
+
+		function pigeon_display_shortcode($atts=[], $content=null, $tag='')
+		{
+			$pigeon_obj = WP_Pigeon::get_instance();
+
+			// normalize attribute keys, lowercase
+			$atts = array_change_key_case((array)$atts, CASE_LOWER);
+
+			// override default attributes with user attributes
+			$pigeon_atts = shortcode_atts([
+							 'access' => 'disabled',
+						 ], $atts, $tag);
+
+			// Handle shortcode differently base on the paywall mode
+
+
+			$o = '';
+
+			// Server Side plugin
+			if( $pigeon_obj->pigeon_settings["paywall"] == 1 ){
+
+				$display_content = FALSE;
+				foreach($pigeon_atts as $key=>$val){
+					switch($key){
+						case 'access':
+							$user_allowed = $pigeon_obj->pigeon_values["allowed"];
+							if( !$user_allowed && $val == "disabled" ){
+								$display_content = TRUE;
+							}elseif( $user_allowed && $val == "enabled"){
+								$display_content = TRUE;
+							}
+
+							break;
+					}
+				}
+
+				if( $display_content ){
+					// run shortcode parser recursively
+					// enclosing tags
+					if (!is_null($content)) {
+						// run shortcode parser recursively
+						$content = do_shortcode($content);
+
+						// secure output by executing the_content filter hook on $content
+						$o .= apply_filters('the_content', $content);
+					}
+				}
+			}
+
+			// JS plugin
+			if( $pigeon_obj->pigeon_settings["paywall"] == 2 ){
+				// Develop attr string
+				$attr_str = '';
+
+				foreach($pigeon_atts as $key=>$val){
+					$attr_str .= ' data-'.$key.'="'.$val.'"';
+				}
+
+				// run shortcode parser recursivel
+				// Handle display conditions form the js plugin
+				$o .= '<div class="pigeon-message" style="display:none;"'.$attr_str.'>';
+				if (!is_null($content)) {
+					// run shortcode parser recursively
+					$content = do_shortcode($content);
+
+					// secure output by executing the_content filter hook on $content
+					$o .= apply_filters('the_content', $content);
+				}
+				$o .= '</div>';
+			}
+
+			return $o;
+		}
+
+		add_shortcode('pigeon_display_when', 'pigeon_display_shortcode');
 	}
 
 	/**
