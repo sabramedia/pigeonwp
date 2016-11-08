@@ -161,7 +161,8 @@ class WP_Pigeon_Api {
 				'meter_limit' => $response['meter_limit'],
 				'meter' => $response['meter'] >= $response['meter_limit'] ? $response['meter_limit'] : $response['meter'], // Accommodate for interval
 				'profile' => $response['profile'], // User profile
-				'ssl' => $response["ssl"] // Need to know if subdomain is secure or not.
+				'ssl' => $response["ssl"], // Need to know if subdomain is secure or not.
+				'force_content_modal' => array_key_exists("force_content_modal",$response) ? $response["force_content_modal"] : 0 // Force content modal even if a content value isn't turned on
 			);
 
 			if( array_key_exists("credits", $response) )
