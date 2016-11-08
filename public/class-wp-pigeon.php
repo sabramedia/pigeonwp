@@ -253,7 +253,7 @@ class WP_Pigeon {
 
 			// If the modal is set then pop it up
 			if( !$this->pigeon_values["allowed"] && $this->pigeon_settings['paywall_interrupt'] == "3" ){
-				if( $this->pigeon_settings['content_value'] || $this->pigeon_settings['content_price'] ){
+				if( $this->pigeon_settings['content_value'] || $this->pigeon_settings['content_price'] || $this->pigeon_values['force_content_modal'] ){
 					echo "Pigeon.widget.promotionDialog('open',{
 						content_id:'".$this->pigeon_settings['content_id']."',
 						content_title:'".urlencode($this->pigeon_settings['content_title'])."',
