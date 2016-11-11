@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.8';
+	const VERSION = '1.4.9';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -309,10 +309,17 @@ class WP_Pigeon {
 				case "3": $paywall_iterrupt = "'modal'"; break;
 			}
 
+			$is_page_free = $this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access'];
+
+			// Don't count the 404 pages.
+			if( is_404() ){
+				$is_page_free = 1;
+			}
+
 			echo "
 				Pigeon.paywall({
 					redirect:".$paywall_iterrupt.",
-					free:".($this->pigeon_content_access ? $this->pigeon_content_access : $this->pigeon_settings['content_access']).",
+					free:".$is_page_free.",
 					contentId:".($this->pigeon_content_id ? $this->pigeon_content_id : empty($this->pigeon_settings['content_id']) ? 0 : $this->pigeon_settings['content_id']).",
 					contentTitle:'".urlencode($this->pigeon_content_title ? $this->pigeon_content_title : empty($this->pigeon_settings['content_title']) ? "" : $this->pigeon_settings['content_title'] )."',
 					contentDate:'".urlencode($this->pigeon_content_date ? $this->pigeon_content_date : empty($this->pigeon_settings['content_date']) ? "" : $this->pigeon_settings['content_date'] )."',
@@ -490,6 +497,39 @@ class WP_Pigeon {
 		}
 
 		add_shortcode('pigeon_display_when', 'pigeon_display_shortcode');
+
+		function pigeon_content_expires_shortcode($atts=[], $content=null, $tag='')
+		{
+			$pigeon_obj = WP_Pigeon::get_instance();
+
+			// normalize attribute keys, lowercase
+			$atts = array_change_key_case((array)$atts, CASE_LOWER);
+
+			$pigeon_atts = shortcode_atts([
+				 'format' => 'F j, Y g:i A T',
+			 ], $atts, $tag);
+
+			// Handle shortcode differently base on the paywall mode
+
+			// Server Side plugin
+			if( $pigeon_obj->pigeon_settings["paywall"] == 1 ){
+				if( array_key_exists("content_expires",$pigeon_obj->pigeon_values) ){
+					$date = new DateTime($pigeon_obj->pigeon_values["content_expires"]);
+					$content = $date->format($pigeon_atts["format"]);
+				}
+			}
+
+			// JS plugin
+			if( $pigeon_obj->pigeon_settings["paywall"] == 2 ){
+
+				// run shortcode parser recursively
+				$content = '<div class="pigeon-content-expires" data-format="'.$pigeon_atts["format"].'"></div>';
+			}
+
+			return $content;
+		}
+
+		add_shortcode('pigeon_content_expires', 'pigeon_content_expires_shortcode');
 	}
 
 	/**

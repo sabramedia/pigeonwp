@@ -168,6 +168,9 @@ class WP_Pigeon_Api {
 			if( array_key_exists("credits", $response) )
 				$pigeon['credits'] = $response['credits'];
 
+			if( array_key_exists("content_expires", $response) )
+				$pigeon['content_expires'] = $response['content_expires'];
+
 
 			$pigeon['content_price'] = $this->pigeon_settings['content_price'];
 			$pigeon['content_value'] = $this->pigeon_settings['content_value'];
