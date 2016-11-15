@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.5.0';
+	const VERSION = '1.5.1';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -425,6 +425,7 @@ class WP_Pigeon {
 
 	public function load_pigeon_shortcodes()
 	{
+		libxml_use_internal_errors(true);// TODO Turns off warnings for loadHTML
 		function pigeon_protect_shortcode($atts=[], $content=null)
 		{
 			$pigeon_obj = WP_Pigeon::get_instance();
@@ -435,6 +436,8 @@ class WP_Pigeon {
 				if( ! $pigeon_obj->pigeon_values["allowed"] ){
 					$content = "";
 				}else{
+					ini_set( "display_errors", TRUE );
+					$content = $pigeon_obj::parse_anchors($content,$pigeon_obj->pigeon_values["profile"]["customer_id"]);
 					// run shortcode parser recursively
 					$content = do_shortcode($content);
 				}
@@ -666,6 +669,44 @@ class WP_Pigeon {
 		}else{
 			$this->pigeon_values = $this->pigeon_settings;
 		}
+	}
+
+	// HELPERS
+	
+	/**
+	 * Parse anchors allows for securing of PDF file between pigeon_protect shortcodes
+	 *
+	 * @since    1.5.1
+	 */
+
+	static public function parse_anchors( $html_string, $customer_id )
+	{
+		$dom = new DOMDocument();
+		$dom->loadHTML($html_string);
+		$anchor_array = $dom->getElementsByTagName("a");
+
+		// All tracker links developed above have an attribute of rel=trk, so only convert anchor URLs without this attribute and value
+		foreach($anchor_array as $anchor){
+			$parse_anchor = TRUE;
+
+			foreach($anchor->attributes as $name=>$node){
+				if( $name == "href" ){
+					if(strpos($node->value, "#") === 0 )
+						$parse_anchor = FALSE;
+
+					if( strpos($node->value,".pdf") === FALSE )
+						$parse_anchor = FALSE;
+
+					$anchor_href = plugin_dir_url( __FILE__ )."download.php?auth=".base64_encode($node->value."?cuid=".$customer_id);
+				}
+			}
+
+			if( $parse_anchor){
+				$anchor->setAttribute("href",$anchor_href);
+			}
+		}
+
+		return $dom->saveHTML();
 	}
 
 	// Used for unique strings with low security requirements.
