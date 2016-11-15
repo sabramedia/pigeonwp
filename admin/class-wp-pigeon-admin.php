@@ -153,8 +153,8 @@ class WP_Pigeon_Admin {
 	public function add_plugin_admin_menu() {
 
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'Pigeon Settings', $this->plugin_slug ),
-			__( 'Pigeon Settings', $this->plugin_slug ),
+			__( 'Pigeon', $this->plugin_slug ),
+			__( 'Pigeon', $this->plugin_slug ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
