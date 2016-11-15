@@ -295,6 +295,14 @@ class WP_Pigeon_Admin {
 			'settings_section_content'
 		);
 
+		$this->plugin_screen_hook_suffix = add_settings_field(
+			'pigeon_wp_sso',
+			__( 'Single Sign-on (WP to Pigeon)', $this->plugin_slug ),
+			array( $this, 'setting_pigeon_wp_sso' ),
+			'plugin_options',
+			'settings_section_api'
+		);
+
 
 	}
 	
@@ -555,6 +563,28 @@ class WP_Pigeon_Admin {
 		</div>
 	<?php
 	}}
+
+
+	/* Content value meter on or off
+	 *
+	 * @since    1.5.0
+	 */
+	public function setting_pigeon_wp_sso() {
+
+		$options = get_option( 'wp_pigeon_settings' );
+
+		$options['pigeon_wp_sso'] = array_key_exists("pigeon_wp_sso", $options) ? $options['pigeon_wp_sso'] : 2;
+		$html  = '<input type="radio" id="value_sso_enabled" class="pigeon-wp-sso" name="wp_pigeon_settings[pigeon_wp_sso]" value="1"' . checked( 1, $options['pigeon_wp_sso'], false ) . '/>';
+		$html .= '<label for="value_sso_enabled">Enabled</label> ';
+
+		$html .= '<input type="radio" id="value_sso_disabled" class="pigeon-wp-sso" name="wp_pigeon_settings[pigeon_wp_sso]" value="2"' . checked( 2, $options['pigeon_wp_sso'], false ) . '/>';
+		$html .= '<label for="value_sso_disabled">Disabled</label>';
+
+		$html .= '<p class="description">Enable when you want WordPress to manage your user profile data instead of Pigeon.</p>';
+
+		echo $html;
+
+	}
 	
 
 	/**

@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.4.9';
+	const VERSION = '1.5.0';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -116,6 +116,15 @@ class WP_Pigeon {
 	 */
 	public $pigeon_content_date = NULL;
 
+	/**
+	 * Pigeon SDK Class
+	 *
+	 * @since    1.5
+	 *
+	 * @var      string
+	 */
+	public $pigeon_sdk = NULL;
+
 
 	/**
 	 * Instance of this class.
@@ -136,6 +145,10 @@ class WP_Pigeon {
 
 		// Load plugin text domain
 		add_action( 'init', array( $this, 'load_plugin_textdomain' ) );
+
+		// Load SSO
+		add_action( 'init', array( $this, 'load_pigeon_sdk' ) );
+		add_action( 'init', array( $this, 'load_sso' ) );
 
 		// Load Shortcodes
 		add_action( 'init', array( $this, 'load_pigeon_shortcodes' ) );
@@ -211,6 +224,27 @@ class WP_Pigeon {
 	}
 
 	/**
+	 * Load the Pigeon Direct API SDK
+	 *
+	 * @since    1.5.0
+	 */
+	public function load_pigeon_sdk()
+	{
+		$admin_options = get_option( 'wp_pigeon_settings' );
+		if( $admin_options['pigeon_api_secret_key'] && $admin_options['pigeon_api_user'] ){
+			require_once( plugin_dir_path( __FILE__ ). "../sdk/Pigeon.php");
+
+			Pigeon_Configuration::clientId($admin_options['pigeon_api_user']);
+			Pigeon_Configuration::apiKey($admin_options['pigeon_api_secret_key']);
+			Pigeon_Configuration::pigeonDomain($admin_options['pigeon_subdomain']);
+			$this->pigeon_sdk = new Pigeon();
+
+			// Load SSO here
+			add_action( 'init', array( $this, 'load_sso' ) );
+		}
+	}
+
+	/**
 	 * Load Pigeon Functions
 	 *
 	 * @since    1.2.0
@@ -232,8 +266,6 @@ class WP_Pigeon {
 		echo "
 		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
-			apiUser:'".$this->pigeon_settings['user']."',
-			apiSecret:'".$this->pigeon_settings['secret']."',
 			fingerprint:false,
 			cid: ".( array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
 			cha: ".( array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ? "'".$_COOKIE[$pigeon_session . "_hash"]."'" : "null" ) ."
@@ -594,9 +626,104 @@ class WP_Pigeon {
 		if( $this->pigeon_settings['paywall'] == 1 ){
 			$pigeon_api = new WP_Pigeon_Api;
 			$this->pigeon_values = $pigeon_api->exec( $this->pigeon_settings );
+//			print_r($admin_options);
+//			print_r($this->pigeon_values);
+			// If SSO and the user is not logged in on Pigeon, then make sure WP is logged out
+			if( $admin_options["pigeon_wp_sso"] == 1 ){
+				if( ! $this->pigeon_values["user_status"]  ){
+					if( is_user_logged_in() ){
+						wp_logout();
+						header("Refresh:0");
+					}
+				}else{
+					if( ! is_user_logged_in() ){
+						$found_users = get_users(array("meta_key"=>"pigeon_customer_id","meta_value"=>$this->pigeon_values["profile"]["customer_id"],"number"=>'1'));
+						if( count($found_users) == 1 ){
+							wp_set_current_user( $found_users[0]->ID, $found_users[0]->user_login );
+							wp_set_auth_cookie( $found_users[0]->ID );
+							do_action( 'wp_login', $found_users[0]->user_login );
+						}
+					}
+				}
+			}
+
 		}else{
 			$this->pigeon_values = $this->pigeon_settings;
 		}
 	}
 
+
+	/**
+	 * Single Sign-on in server mode only
+	 *
+	 * @since    1.5.0
+	 */
+
+	public function load_sso()
+	{
+		$admin_options = get_option( 'wp_pigeon_settings' );
+
+		if( array_key_exists("pigeon_wp_sso",$admin_options) && $admin_options["pigeon_wp_sso"] == 1 ){
+			if( ! $this->pigeon_sdk ){
+				return TRUE;
+			}
+
+			// Logout WP session if the
+
+			add_action('profile_update',array( $this, 'sso_user_sync'));
+			add_action('user_register',array( $this, 'sso_user_sync'));
+			add_action('wp_login', array($this, 'sso_user_login'), 10, 2);
+			add_action('clear_auth_cookie', array($this, 'sso_user_logout'));
+		}
+	}
+
+	function sso_user_sync( $user_id )
+	{
+		$pigeon_customer_id = get_user_meta($user_id,'pigeon_customer_id', TRUE);
+		// If the pigeon customer token is not set, look for customer by email, if not found then create and set new user
+		$user_data = get_userdata($user_id);
+
+		if( ! $pigeon_customer_id ){
+
+			$response = $this->pigeon_sdk->Customer->search(array("search"=>$user_data->user_email,"limit"=>1));
+			if( $response->results ){
+				$pigeon_customer_id = $response->results[0]->id;
+				add_user_meta($user_id,'pigeon_customer_id',$pigeon_customer_id);
+			}else{
+				$response = $this->pigeon_sdk->Customer->create(array(
+					"email"=>$user_data->user_email,
+					"display_name"=>$user_data->display_name,
+					"send_notice"=>FALSE
+				));
+
+				$pigeon_customer_id = $response->customer->id;
+				add_user_meta($user_id,'pigeon_customer_id',$pigeon_customer_id);
+			}
+
+		}else{
+			$this->pigeon_sdk->Customer->update($pigeon_customer_id,array(
+				"email"=>$user_data->user_email,
+				"display_name"=>$user_data->display_name
+			));
+		}
+
+	}
+
+	public function sso_user_login($user_login, $wp_user)
+	{
+		$pigeon_customer_id = get_user_meta($wp_user->ID,'pigeon_customer_id', TRUE);
+		if( $pigeon_customer_id ){
+			$this->pigeon_sdk->Customer->sessionLogin($pigeon_customer_id);
+		}
+	}
+
+	public function sso_user_logout()
+	{
+		$userinfo = wp_get_current_user();
+		$pigeon_customer_id = get_user_meta($userinfo->ID,'pigeon_customer_id', TRUE);
+		if( $pigeon_customer_id ){
+			$this->pigeon_sdk->Customer->sessionLogout($pigeon_customer_id);
+		}
+
+	}
 }
