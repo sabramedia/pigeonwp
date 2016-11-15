@@ -639,10 +639,26 @@ class WP_Pigeon {
 					if( ! is_user_logged_in() ){
 						$found_users = get_users(array("meta_key"=>"pigeon_customer_id","meta_value"=>$this->pigeon_values["profile"]["customer_id"],"number"=>'1'));
 						if( count($found_users) == 1 ){
-							wp_set_current_user( $found_users[0]->ID, $found_users[0]->user_login );
-							wp_set_auth_cookie( $found_users[0]->ID );
-							do_action( 'wp_login', $found_users[0]->user_login );
+							$user_id = $found_users[0]->ID;
+							$user_login = $found_users[0]->user_login;
+						// Create new account and sync it
+						}else{
+							$response = $this->pigeon_sdk->Customer->find($this->pigeon_values["profile"]["customer_id"]);
+							$user_id = wp_insert_user( array(
+								"user_login"=>$response->customer->email,
+								"user_email"=>$response->customer->email,
+								"user_pass"=> self::generate_random_string(),
+								"display_name"=> $response->customer->display_name,
+								"first_name"=> $response->customer->first_name,
+								"last_name"=> $response->customer->last_name,
+							) );
+							add_user_meta($user_id,'pigeon_customer_id',$this->pigeon_values["profile"]["customer_id"]);
+							$user_login = $response->customer->email;
 						}
+
+						wp_set_current_user( $user_id, $user_login );
+						wp_set_auth_cookie( $user_id );
+						do_action( 'wp_login', $user_login );
 					}
 				}
 			}
@@ -650,6 +666,17 @@ class WP_Pigeon {
 		}else{
 			$this->pigeon_values = $this->pigeon_settings;
 		}
+	}
+
+	// Used for unique strings with low security requirements.
+	static public function generate_random_string( $length = 10 ) {
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+		$characters_length = strlen($characters);
+		$random_string = '';
+		for ($i = 0; $i < $length; $i++) {
+			$random_string .= $characters[rand(0, $characters_length - 1)];
+		}
+		return $random_string;
 	}
 
 
