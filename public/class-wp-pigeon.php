@@ -635,8 +635,12 @@ class WP_Pigeon {
 			if( $admin_options["pigeon_wp_sso"] == 1 ){
 				if( ! $this->pigeon_values["profile"]  ){
 					if( is_user_logged_in() ){
-						wp_logout();
-						header("Refresh:0");
+						// Only logout accounts that are linked by pigeon_customer_id
+						$pigeon_customer_id = get_user_meta(get_current_user_id(),'pigeon_customer_id', TRUE);
+						if( $pigeon_customer_id ){
+							wp_logout();
+							header("Refresh:0");
+						}
 					}
 				}else{
 					if( ! is_user_logged_in() ){
