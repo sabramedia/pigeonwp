@@ -1,6 +1,4 @@
 <?php
-
-set_time_limit("5");
 /**
  * Pigeon PHP Library
  *
@@ -136,5 +134,4 @@ class Pigeon
 		return array("status"=>(int)$response->headers["Status-Code"], "body"=>json_decode( $response->body ));
 	}
 }
-
 ?>
