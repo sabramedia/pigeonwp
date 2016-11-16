@@ -636,6 +636,7 @@ class WP_Pigeon {
 //			print_r($this->pigeon_values);
 			// If SSO and the user is not logged in on Pigeon, then make sure WP is logged out
 			if( $admin_options["pigeon_wp_sso"] == 1 ){
+
 				if( ! $this->pigeon_values["profile"]  ){
 					if( is_user_logged_in() ){
 						// Only logout accounts that are linked by pigeon_customer_id
@@ -669,6 +670,12 @@ class WP_Pigeon {
 						wp_set_current_user( $user_id, $user_login );
 						wp_set_auth_cookie( $user_id );
 						do_action( 'wp_login', $user_login );
+
+					// Log the user out because SSO says logins must match
+					// The reload will run the code above
+					}else{
+						wp_logout();
+						header("Refresh:0");
 					}
 				}
 			}
