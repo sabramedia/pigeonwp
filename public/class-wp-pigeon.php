@@ -633,7 +633,7 @@ class WP_Pigeon {
 //			print_r($this->pigeon_values);
 			// If SSO and the user is not logged in on Pigeon, then make sure WP is logged out
 			if( $admin_options["pigeon_wp_sso"] == 1 ){
-				if( ! $this->pigeon_values["user_status"]  ){
+				if( ! $this->pigeon_values["profile"]  ){
 					if( is_user_logged_in() ){
 						wp_logout();
 						header("Refresh:0");
