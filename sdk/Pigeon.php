@@ -127,7 +127,7 @@ class Pigeon
 
 
 
-		$response = $curl->{$curl_method}("http://" . Pigeon_Configuration::get("pigeon_domain") . "/api". $api_path, $prepared);
+		$response = $curl->{$curl_method}("https://" . Pigeon_Configuration::get("pigeon_domain") . "/api". $api_path, $prepared);
 
 //		print_r($response->headers);
 //		print_r($curl->getInfo());
