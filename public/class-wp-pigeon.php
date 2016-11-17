@@ -642,7 +642,7 @@ class WP_Pigeon {
 						// Only logout accounts that are linked by pigeon_customer_id
 						$pigeon_customer_id = get_user_meta(get_current_user_id(),'pigeon_customer_id', TRUE);
 						if( $pigeon_customer_id ){
-							echo "<!-- PIGEON ".$pigeon_customer_id." -->";
+							echo "<!-- PIGEON HAS PROFILE".$pigeon_customer_id." -->";
 						}
 					}
 				}else{
@@ -676,7 +676,7 @@ class WP_Pigeon {
 						// Only logout accounts that are linked by pigeon_customer_id
 						$pigeon_customer_id = get_user_meta(get_current_user_id(),'pigeon_customer_id', TRUE);
 						if( $pigeon_customer_id ){
-							echo "<!-- PIGEON ".$pigeon_customer_id." -->";
+							echo "<!-- PIGEON NO PROFILE".$pigeon_customer_id." -->";
 						}
 					}
 				}
