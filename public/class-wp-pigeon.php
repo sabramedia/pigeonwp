@@ -783,10 +783,6 @@ class WP_Pigeon {
 			}
 
 		}else{
-			echo "<!--";
-			print_r($_POST);
-			echo "-->";
-			return;
 			$this->pigeon_sdk->Customer->update($pigeon_customer_id,array(
 				"email"=>$user_data->user_email,
 				"display_name"=>$user_data->display_name
