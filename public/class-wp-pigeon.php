@@ -674,8 +674,12 @@ class WP_Pigeon {
 					// Log the user out because SSO says logins must match
 					// The reload will run the code above
 					}else{
-						wp_logout();
-						header("Refresh:0");
+						// Only logout accounts that are linked by pigeon_customer_id
+						$pigeon_customer_id = get_user_meta(get_current_user_id(),'pigeon_customer_id', TRUE);
+						if( $pigeon_customer_id ){
+							wp_logout();
+							header("Refresh:0");
+						}
 					}
 				}
 			}
