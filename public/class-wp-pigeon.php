@@ -576,6 +576,14 @@ class WP_Pigeon {
 	 * @since    1.0.0
 	 */
 	public function make_pigeon_request() {
+
+		// Avoid sending assets to the Pigeon server. Will reduce impression load and client cost.
+		foreach ( array( ".css", ".js", ".woff", ".eot", ".ttf", ".svg", ".png", ".jpg", ".gif", ".cur" ) as $asset ) {
+			if ( strpos( basename( $_SERVER["REQUEST_URI"] ), $asset ) !== FALSE ) {
+				return;
+			}
+		}
+
 		$admin_options = get_option( 'wp_pigeon_settings' );
 
 		if ( is_admin() )
