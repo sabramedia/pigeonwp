@@ -661,27 +661,40 @@ class WP_Pigeon {
 				}else{
 					if( ! is_user_logged_in() ){
 						$found_users = get_users(array("meta_key"=>"pigeon_customer_id","meta_value"=>$this->pigeon_values["profile"]["customer_id"],"number"=>'1'));
+
 						if( count($found_users) == 1 ){
 							$user_id = $found_users[0]->ID;
 							$user_login = $found_users[0]->user_login;
 						// Create new account and sync it
 						}else{
-							$response = $this->pigeon_sdk->Customer->find($this->pigeon_values["profile"]["customer_id"]);
-							$user_id = wp_insert_user( array(
-								"user_login"=>$response->customer->email,
-								"user_email"=>$response->customer->email,
-								"user_pass"=> self::generate_random_string(),
-								"display_name"=> $response->customer->display_name,
-								"first_name"=> $response->customer->first_name,
-								"last_name"=> $response->customer->last_name,
-							) );
-							add_user_meta($user_id,'pigeon_customer_id',$this->pigeon_values["profile"]["customer_id"]);
-							$user_login = $response->customer->email;
+							// Look for account by internal id or email to try to sync the accounts
+							if( $wp_user = get_user_by("id",$this->pigeon_values["profile"]["internal_id"]) ){
+								$user_id = $wp_user->ID;
+							}elseif( $wp_user = get_user_by("email",$this->pigeon_values["profile"]["email"]) ){
+								$user_id = $wp_user->ID;
+								$this->pigeon_sdk->Customer->update($this->pigeon_values["profile"]["customer_id"],array("internal_id"=>$user_id));
+							}else{
+								$response = $this->pigeon_sdk->Customer->find($this->pigeon_values["profile"]["customer_id"]);
+								$user_id = wp_insert_user( array(
+									"user_login"=>$response->customer->email,
+									"user_email"=>$response->customer->email,
+									"user_pass"=> self::generate_random_string(),
+									"display_name"=> $response->customer->display_name,
+									"first_name"=> $response->customer->first_name,
+									"last_name"=> $response->customer->last_name
+								) );
+								$this->pigeon_sdk->Customer->update($this->pigeon_values["profile"]["customer_id"],array("internal_id"=>$user_id));
+							}
+							if( $user_id ){
+								add_user_meta($user_id,'pigeon_customer_id',$this->pigeon_values["profile"]["customer_id"]);
+								$user_login = $response->customer->email;
+							}
 						}
-
-						wp_set_current_user( $user_id, $user_login );
-						wp_set_auth_cookie( $user_id );
-						do_action( 'wp_login', $user_login );
+						if( $user_id ){
+							wp_set_current_user( $user_id, $user_login );
+							wp_set_auth_cookie( $user_id );
+							do_action( 'wp_login', $user_login );
+						}
 
 					// Log the user out because SSO says logins must match
 					// The reload will run the code above
@@ -791,6 +804,7 @@ class WP_Pigeon {
 			}else{
 				$response = $this->pigeon_sdk->Customer->create(array(
 					"email"=>$user_data->user_email,
+					"wp_password"=>$user_data->user_pass,
 					"display_name"=>$user_data->display_name,
 					"send_notice"=>FALSE
 				));
@@ -802,6 +816,7 @@ class WP_Pigeon {
 		}else{
 			$this->pigeon_sdk->Customer->update($pigeon_customer_id,array(
 				"email"=>$user_data->user_email,
+				"wp_password"=>$user_data->user_pass,
 				"display_name"=>$user_data->display_name
 			));
 		}

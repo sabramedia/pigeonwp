@@ -16,7 +16,7 @@ class Pigeon_Customer extends Pigeon
 
 	public function create( $input, $force_auth = FALSE )
 	{
-		if( !array_key_exists("email", $input) ){
+		if( !isset($input["customer_id"]) && !array_key_exists("email", $input) ){
 			throw new Exception("An email is required for account creation");
 		}
 
