@@ -141,9 +141,15 @@ class WP_Pigeon_Api {
 			// POST current page data to pigeon server
 			$response = json_decode( $this->send( 'action=validate&json=' . json_encode( $this->pigeon_data ) ), TRUE );
 
+			// Check if Pigeon server is sending a force_redirect command
+			if( array_key_exists("force_redirect", $response) && $response["force_redirect"] ){
+				header( 'Location: ' . $response['redirect'] );
+				exit;
+			}
+
 			if ( array_key_exists( 'reset_cookie', $response ) ){
 				header( 'Location: ' . $this->pigeon_api . '?action=validate&set_cookie=1&reset=1&redirect_url=' . urlencode( $this->pigeon_current_page ) );
-				exit();
+				exit;
 			}
 
 			$pigeon = array(
