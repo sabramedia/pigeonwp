@@ -439,7 +439,7 @@ class WP_Pigeon {
 				if( ! $pigeon_obj->pigeon_values["allowed"] ){
 					$content = "";
 				}else{
-					ini_set( "display_errors", TRUE );
+//					ini_set( "display_errors", TRUE );
 					$content = $pigeon_obj::parse_anchors($content,$pigeon_obj->pigeon_values["profile"]["customer_id"]);
 					// run shortcode parser recursively
 					$content = do_shortcode($content);
@@ -454,7 +454,7 @@ class WP_Pigeon {
 				$content = '<div class="pigeon-blur">'.$content.'</div>';
 			}
 
-			return $content;
+			return apply_filters('the_content', $content);
 		}
 
 		add_shortcode('pigeon_protect', 'pigeon_protect_shortcode');
@@ -726,7 +726,7 @@ class WP_Pigeon {
 	static public function parse_anchors( $html_string, $customer_id )
 	{
 		$dom = new DOMDocument();
-		$dom->loadHTML($html_string);
+		$dom->loadHTML('<meta http-equiv="content-type" content="text/html; charset=utf-8">'.$html_string, LIBXML_HTML_NODEFDTD);
 		$anchor_array = $dom->getElementsByTagName("a");
 
 		// All tracker links developed above have an attribute of rel=trk, so only convert anchor URLs without this attribute and value
