@@ -786,6 +786,7 @@ class WP_Pigeon {
 			add_action('user_register',array( $this, 'sso_user_sync'));
 			add_action('wp_login', array($this, 'sso_user_login'), 10, 2);
 			add_action('clear_auth_cookie', array($this, 'sso_user_logout'));
+			add_action('wp_logout', array($this, 'sso_user_logout'));
 		}
 	}
 
