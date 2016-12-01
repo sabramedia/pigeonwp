@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.5.2';
+	const VERSION = '1.5.3';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -726,6 +726,7 @@ class WP_Pigeon {
 	static public function parse_anchors( $html_string, $customer_id )
 	{
 		$dom = new DOMDocument();
+
 		$dom->loadHTML('<meta http-equiv="content-type" content="text/html; charset=utf-8">'.$html_string, LIBXML_HTML_NODEFDTD);
 		$anchor_array = $dom->getElementsByTagName("a");
 
@@ -745,12 +746,20 @@ class WP_Pigeon {
 				}
 			}
 
-			if( $parse_anchor){
+			if( $parse_anchor ){
 				$anchor->setAttribute("href",$anchor_href);
 			}
 		}
 
-		return $dom->saveHTML();
+		$body = $dom->getElementsByTagName('body')->item(0);
+		// perform innerhtml on $body by enumerating child nodes
+		// and saving them individually
+		$html = "";
+		foreach ($body->childNodes as $childNode) {
+		  $html .= $dom->saveHTML($childNode);
+		}
+
+		return $html;
 	}
 
 	// Used for unique strings with low security requirements.
