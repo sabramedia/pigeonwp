@@ -259,7 +259,7 @@ class WP_Pigeon {
 	public function init_pigeon_js()
 	{
 		if( isset($this->pigeon_settings['subdomain']) )
-			echo '<script type="text/javascript" src="//'.$this->pigeon_settings['subdomain'].'/c/assets/pigeon-1.5.1.min.js"></script>';
+			echo '<script type="text/javascript" src="//'.$this->pigeon_settings['subdomain'].'/c/assets/pigeon-1.5.2.min.js"></script>';
 
 		echo '<script type="text/javascript">';
 
@@ -269,7 +269,7 @@ class WP_Pigeon {
 		echo "
 		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
-			fingerprint:false,
+			fingerprint:true,
 			cid: ".( array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
 			cha: ".( array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ? "'".$_COOKIE[$pigeon_session . "_hash"]."'" : "null" ) ."
 		});
@@ -411,7 +411,7 @@ class WP_Pigeon {
 	public function load_pigeon_js() {
 
 //		if( isset($this->pigeon_settings['subdomain']) )
-//			wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.5.1.min.js",array("jquery"), self::VERSION );
+//			wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.5.2.min.js",array("jquery"), self::VERSION );
 
 		if( isset($this->pigeon_settings["soundcloud"] ) && $this->pigeon_settings["soundcloud"] ){
 			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
