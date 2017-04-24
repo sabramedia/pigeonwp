@@ -519,7 +519,7 @@ class WP_Pigeon {
 				}
 
 				// run shortcode parser recursivel
-				// Handle display conditions form the js plugin
+				// Handle display conditions from the js plugin
 				$o .= '<div class="pigeon-message" style="display:none;"'.$attr_str.'>';
 				if (!is_null($content)) {
 					// run shortcode parser recursively
