@@ -270,8 +270,8 @@ class WP_Pigeon {
 		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
 			fingerprint:true,
-			cid: ".( array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
-			cha: ".( array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ? "'".$_COOKIE[$pigeon_session . "_hash"]."'" : "null" ) ."
+			cid: ".( $this->pigeon_settings["paywall"] == 1 && array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
+			cha: ".( $this->pigeon_settings["paywall"] == 1 && array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ? "'".$_COOKIE[$pigeon_session . "_hash"]."'" : "null" ) ."
 		});
 		";
 
@@ -849,5 +849,25 @@ class WP_Pigeon {
 			$this->pigeon_sdk->Customer->sessionLogout($pigeon_customer_id);
 		}
 
+	}
+
+	public function set_status_by_post_type( $post_type, $status="" )
+	{
+		$wpdb = $GLOBALS["wpdb"];
+
+		$query = "SELECT
+					*
+					FROM
+					  ".$wpdb->prefix."posts
+				   WHERE
+					  post_type='".$post_type."'";
+
+		$posts = $wpdb->get_results( $query, ARRAY_A );
+
+		$pigeon_content_access = intval( $status );
+
+		foreach($posts as $post ){
+			update_post_meta( $post["ID"], '_wp_pigeon_content_access', $pigeon_content_access );
+		}
 	}
 }

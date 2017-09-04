@@ -613,5 +613,4 @@ class WP_Pigeon_Admin {
 		);
 
 	}
-
 }
