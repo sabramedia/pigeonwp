@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.5.3';
+	const VERSION = '1.5.4';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -266,6 +266,7 @@ class WP_Pigeon {
 		// TODO Removed the PigeonClass check... this was done for adBlockers, but seems to be causing an issue with Bing.
 		//if( typeof PigeonClass !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
 		$pigeon_session = md5( $this->pigeon_settings['subdomain'] );
+
 		echo "
 		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
@@ -364,6 +365,14 @@ class WP_Pigeon {
 				});
 
 				Pigeon.widget.status();";
+
+			if( isset($this->reload_page) ){
+				echo "
+				Pigeon.paywallPromise.done(function(data){
+					location.reload();
+				});
+				";
+			}
 
 			if( $this->pigeon_settings["soundcloud"] ){
 				echo "
@@ -639,6 +648,15 @@ class WP_Pigeon {
 
 		// Secret key
 		$this->pigeon_settings['secret'] = $admin_options["pigeon_api_secret_key"];
+
+		// If the cookie is not set and we are in server mode, let js set the cookie so the fingerprint is checked.
+		$pigeon_session = md5( $this->pigeon_settings['subdomain'] );
+
+		if( $this->pigeon_settings["paywall"] == 1 && ! array_key_exists( $pigeon_session . "_id", $_COOKIE ) && !array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ){
+			$this->pigeon_settings["paywall"] = 2;
+			// In order to utilize server-side security reload the page
+			$this->reload_page = TRUE;
+		}
 
 		// Make the request
 		if( $this->pigeon_settings['paywall'] == 1 ){
