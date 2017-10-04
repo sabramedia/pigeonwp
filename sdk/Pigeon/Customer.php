@@ -79,7 +79,15 @@ class Pigeon_Customer extends Pigeon
 
 	public function login( $email, $password )
 	{
-		$response = $this->post("/customer/login", array("email"=>$email,"password"=>$password));
+		$send_array = array("email"=>$email,"password"=>$password);
+
+		$unique_session = md5(Pigeon_Configuration::get("pigeon_domain"));
+		if( array_key_exists($unique_session."_id", $_COOKIE) && array_key_exists($unique_session."_hash", $_COOKIE) ){
+			$send_array["session_id"] = $_COOKIE[$unique_session."_id"];
+			$send_array["session_hash"] = $_COOKIE[$unique_session."_hash"];
+		}
+
+		$response = $this->post("/customer/login", $send_array);
 		if( isset($response->customer->id) ){
 			self::setLocalSession($response->session->id, $response->session->hash, $response->session->timeout);
 		}
