@@ -460,7 +460,7 @@ class WP_Pigeon {
 
 				// run shortcode parser recursively
 				$content = do_shortcode($content);
-				$content = '<div class="pigeon-blur">'.$content.'</div>';
+				$content = '<div class="pigeon-remove">'.$content.'</div>';
 			}
 
 			return apply_filters('the_content', $content);
@@ -587,7 +587,7 @@ class WP_Pigeon {
 	public function make_pigeon_request() {
 
 		// Avoid sending assets to the Pigeon server. Will reduce impression load and client cost.
-		foreach ( array( ".css", ".js", ".woff", ".eot", ".ttf", ".svg", ".png", ".jpg", ".gif", ".cur" ) as $asset ) {
+		foreach ( array( ".css", ".js", ".woff", ".eot", ".ttf", ".svg", ".png", ".jpg", ".gif", ".cur", "css?" ) as $asset ) {
 			if ( strpos( basename( $_SERVER["REQUEST_URI"] ), $asset ) !== FALSE ) {
 				return;
 			}
