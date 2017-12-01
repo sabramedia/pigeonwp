@@ -39,7 +39,7 @@ class WP_Pigeon_Api {
 
 		$this->pigeon_current_page = 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'];
 		$this->pigeon_subdomain = $parameters['subdomain'];
-		$this->pigeon_api = 'http://' . $this->pigeon_subdomain . '/action/public/vo/pigeon-server';
+		$this->pigeon_api = 'https://' . $this->pigeon_subdomain . '/action/public/vo/pigeon-server';
 		$this->pigeon_session = md5( $this->pigeon_subdomain );
 
 		$this->pigeon_data['user'] = $parameters['user'];
