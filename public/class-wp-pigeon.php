@@ -773,8 +773,10 @@ class WP_Pigeon {
 		// perform innerhtml on $body by enumerating child nodes
 		// and saving them individually
 		$html = "";
-		foreach ($body->childNodes as $childNode) {
-		  $html .= $dom->saveHTML($childNode);
+		if($body->childNodes) {
+			foreach ($body->childNodes as $childNode) {
+				$html .= $dom->saveHTML($childNode);
+			}
 		}
 
 		return $html;
