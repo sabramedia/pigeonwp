@@ -769,17 +769,19 @@ class WP_Pigeon {
 			}
 		}
 
-		$body = $dom->getElementsByTagName('body')->item(0);
-		// perform innerhtml on $body by enumerating child nodes
-		// and saving them individually
-		$html = "";
-		if($body->childNodes) {
-			foreach ($body->childNodes as $childNode) {
-				$html .= $dom->saveHTML($childNode);
-			}
-		}
+		return $dom->saveHTML();
 
-		return $html;
+//		$body = $dom->getElementsByTagName('body')->item(0);
+//		// perform innerhtml on $body by enumerating child nodes
+//		// and saving them individually
+//		$html = "";
+//		if($body->childNodes) {
+//			foreach ($body->childNodes as $childNode) {
+//				$html .= $dom->saveHTML($childNode);
+//			}
+//		}
+//
+//		return $html;
 	}
 
 	// Used for unique strings with low security requirements.
