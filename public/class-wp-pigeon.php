@@ -301,40 +301,6 @@ class WP_Pigeon {
 					echo "Pigeon.widget.promotionDialog('open');";
 				}
 			}
-
-			if( $this->pigeon_settings["soundcloud"] &&
-					(
-					! $this->pigeon_values["user_status"] ||
-					// Check user status for pages that aren't paywalled
-					($this->pigeon_values["profile"] && !$this->pigeon_values["profile"]["status"])
-					)
-			){
-			echo "
-			jQuery(document).ready(function(){
-				jQuery('iframe').not('.pigeon-free').each(function(i,el){
-					if( el.src.search('soundcloud.com') != -1 ){
-						jQuery(el).attr('sandbox','allow-same-origin allow-scripts');
-						var iWidth = jQuery(el).width();
-						var iHeight = jQuery(el).height();
-						var shield = $('<div style=\"width:'+iWidth+'px; height:'+iHeight+'px; margin-top: -'+iHeight+'px; position:relative;\"></div>');
-						shield.click(function(){
-							Pigeon.widget.promotionDialog('open', ".($this->pigeon_values["profile"] ? "{'route_user_account':1}" : "null" ).");
-						});
-						jQuery(el).after(shield);
-						var widget = SC.Widget(el);
-
-						widget.bind(SC.Widget.Events.PLAY,function(){
-							this.pause();
-							// if logged in then load the user account page
-							Pigeon.widget.promotionDialog('open', ".($this->pigeon_values["profile"] ? "{'route_user_account':1}" : "null" ).");
-						});
-
-						widget.unbind(SC.Widget.Events.CLICK_DOWNLOAD);
-					}
-				});
-			});
-			";
-			}
 		}
 
 		// JS Plugin
@@ -373,28 +339,6 @@ class WP_Pigeon {
 				});
 				";
 			}
-
-			if( $this->pigeon_settings["soundcloud"] ){
-				echo "
-				jQuery(document).ready(function(){
-					Pigeon.paywallPromise.done(function(data){
-
-						if( ! data.user_status || (data.profile && !data.profile.status)){
-							jQuery('iframe').not('.pigeon-free').each(function(i,el){
-								if( el.src.search('soundcloud.com') != -1 ){
-									var widget = SC.Widget(el);
-									widget.bind(SC.Widget.Events.PLAY,function(){
-										this.pause();
-										// if logged in then load the user account page
-										Pigeon.widget.promotionDialog('open', (data.profile ? {'route_user_account':1} : null));
-									});
-								}
-							});
-						}
-					});
-				});
-				";
-			}
 		}
 
 		echo '
@@ -421,10 +365,6 @@ class WP_Pigeon {
 
 //		if( isset($this->pigeon_settings['subdomain']) )
 //			wp_enqueue_script("pigeon", "//".$this->pigeon_settings['subdomain']."/c/assets/pigeon-1.5.2.min.js",array("jquery"), self::VERSION );
-
-		if( isset($this->pigeon_settings["soundcloud"] ) && $this->pigeon_settings["soundcloud"] ){
-			wp_enqueue_script("soundcloud", "//w.soundcloud.com/player/api.js",array("pigeon"), self::VERSION);
-		}
 
 		add_action("wp_head", array($this, 'init_pigeon_js') );
 	}
@@ -630,9 +570,6 @@ class WP_Pigeon {
 
 		// Redirect setting (this could be already set via our functions)
 		$this->pigeon_settings['redirect'] = $admin_options["pigeon_paywall_interrupt"] ? ( $admin_options["pigeon_paywall_interrupt"] == 1 ? TRUE : FALSE ) : TRUE;
-
-		// Set Soundcloud option
-		$this->pigeon_settings['soundcloud'] = $admin_options["pigeon_soundcloud"] ? ( $admin_options["pigeon_soundcloud"] == 1 ? TRUE : FALSE ) : TRUE;
 
 		// Paywall implementation
 		$this->pigeon_settings['paywall'] = $admin_options["pigeon_paywall"];
