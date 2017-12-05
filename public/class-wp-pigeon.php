@@ -746,7 +746,7 @@ class WP_Pigeon {
 	{
 		$admin_options = get_option( 'wp_pigeon_settings' );
 
-		if( array_key_exists("pigeon_wp_sso",$admin_options) && $admin_options["pigeon_wp_sso"] == 1 ){
+		if( $admin_options && array_key_exists("pigeon_wp_sso",$admin_options) && $admin_options["pigeon_wp_sso"] == 1 ){
 			if( ! $this->pigeon_sdk ){
 				return TRUE;
 			}
