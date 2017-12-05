@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.5.5';
+	const VERSION = '1.5.6';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -259,19 +259,22 @@ class WP_Pigeon {
 	public function init_pigeon_js()
 	{
 		if( isset($this->pigeon_settings['subdomain']) )
-			echo '<script type="text/javascript" src="//'.$this->pigeon_settings['subdomain'].'/c/assets/pigeon-1.5.2.min.js"></script>';
+			echo '<script type="text/javascript" src="//'.$this->pigeon_settings['subdomain'].'/c/assets/pigeon-1.5.3.min.js"></script>';
 
 		echo '<script type="text/javascript">';
 
 		// TODO Removed the PigeonClass check... this was done for adBlockers, but seems to be causing an issue with Bing.
 		//if( typeof PigeonClass !== 'function' ){ window.location.href = 'http://".$this->pigeon_settings['subdomain']."/no-script'; }
 		$pigeon_session = md5( $this->pigeon_settings['subdomain'] );
-
 		echo "
 		var Pigeon = new PigeonClass({
 			subdomain:'".$this->pigeon_settings['subdomain']."',
 			fingerprint:true,
-			cid: ".( $this->pigeon_settings["paywall"] == 1 && array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
+			".(
+				// If paywall is js and primary domain is not found in the subdomain, then use iFrame for SSO IDP
+				$this->pigeon_settings["paywall"] == 2 && strstr($this->pigeon_settings['subdomain'],$_SERVER["HTTP_HOST"]) === FALSE ? "idp:true,\n\t\t\t" : ""
+			)
+			."cid: ".( $this->pigeon_settings["paywall"] == 1 && array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
 			cha: ".( $this->pigeon_settings["paywall"] == 1 && array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ? "'".$_COOKIE[$pigeon_session . "_hash"]."'" : "null" ) ."
 		});
 		";
