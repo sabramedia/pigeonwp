@@ -272,7 +272,7 @@ class WP_Pigeon {
 			fingerprint:true,
 			".(
 				// If paywall is js and primary domain is not found in the subdomain, then use iFrame for SSO IDP
-				$this->pigeon_settings["paywall"] == 2 && strstr($this->pigeon_settings['subdomain'],$_SERVER["HTTP_HOST"]) === FALSE ? "idp:true,\n\t\t\t" : ""
+				$this->pigeon_settings["paywall"] == 2 && strstr($this->pigeon_settings['subdomain'],str_replace("www.","",$_SERVER["HTTP_HOST"])) === FALSE ? "idp:true,\n\t\t\t" : ""
 			)
 			."cid: ".( $this->pigeon_settings["paywall"] == 1 && array_key_exists( $pigeon_session . "_id", $_COOKIE ) ? $_COOKIE[$pigeon_session . "_id"] : "null" ) .",
 			cha: ".( $this->pigeon_settings["paywall"] == 1 && array_key_exists( $pigeon_session . "_hash", $_COOKIE ) ? "'".$_COOKIE[$pigeon_session . "_hash"]."'" : "null" ) ."
