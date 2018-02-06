@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.5.6';
+	const VERSION = '1.5.7';
 
 	/**
 	 * Unique identifier for the plugin.
@@ -403,7 +403,7 @@ class WP_Pigeon {
 
 				// run shortcode parser recursively
 				$content = do_shortcode($content);
-				$content = '<div class="pigeon-remove">'.$content.'</div>';
+				$content = '<div class="pigeon-remove">'.$content.'</div><div class="pigeon-context-promotion" style="display:none;"><p>This page is available to subscribers. <a href="#" class="pigeon-open">Click here to sign in or get access</a>.</p></div>';
 			}
 
 			return apply_filters('the_content', $content);
