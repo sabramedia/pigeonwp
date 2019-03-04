@@ -87,3 +87,73 @@ if ( ! function_exists( 'set_pigeon_access' ) ) {
 		return false;
 	}
 }
+
+
+/**
+ * Update RSS feeds with Pigeon Access meta data
+ *
+ * @since     1.5.8
+ */
+if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
+
+	function parse_pigeon_access_rss()
+	{
+
+		$url_array = [];
+		foreach(get_posts() as $post ){
+			$url_array[$post->ID] = get_permalink($post->ID);
+		}
+
+		$admin_options = get_option( 'wp_pigeon_settings' );
+		$pigeon_subdomain = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
+		$ch = curl_init();
+
+		curl_setopt_array(
+			$ch,
+			array(
+				CURLOPT_URL => $pigeon_subdomain.'/action/public/vo/pigeon-server',
+				CURLOPT_TIMEOUT => 15,
+				CURLOPT_VERBOSE => 1,
+				CURLOPT_COOKIE => 1,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_POST => 1,
+				CURLOPT_USERAGENT => ( array_key_exists( 'HTTP_USER_AGENT', $_SERVER ) ? $_SERVER['HTTP_USER_AGENT'] : '' ),
+				CURLOPT_POSTFIELDS => 'action=check_urls&json=' . json_encode( $url_array )
+			)
+		);
+
+		$response = json_decode(curl_exec( $ch ),TRUE);
+		echo "\t<pigeonServer>\n";
+		foreach( $url_array as $key=>$url ){
+			echo "\t\t<item id=\"{$key}\" access=\"{$response[$key]}\">{$url}</item>\n";
+		}
+		echo "\t</pigeonServer>\n";
+
+		return ;
+	}
+
+	add_action('rss2_head', 'parse_pigeon_access_rss');
+
+	if ( ! function_exists( 'add_pigeon_field_to_rss' ) ) {
+
+		function add_pigeon_field_to_rss()
+		{
+			global $post,$response;
+
+			$pigeon_meta_values = get_pigeon_post_meta($post->ID);
+			$pigeon_access = 1; // public by default
+			if (array_key_exists("content_access",$pigeon_meta_values) ) {
+				$pigeon_access = $pigeon_meta_values["content_access"];
+			}else{
+				// If the content_access is not set locally then grab the Pigeon Server version
+				$pigeon_access = $response[$post->ID];
+			}
+
+			echo "\t\t<pigeonAccess>{$pigeon_access}</pigeonAccess>\n";
+		}
+
+		add_action('rss2_item', 'add_pigeon_field_to_rss');
+		add_action('rss_item', 'add_pigeon_field_to_rss');
+	}
+}
