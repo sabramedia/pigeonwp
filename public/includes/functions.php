@@ -150,7 +150,7 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 				$pigeon_access = $response[$post->ID];
 			}
 
-			echo "\t\t<pigeonAccess>{$pigeon_access}</pigeonAccess>\n";
+			echo "\n\t\t<pigeonAccess>{$pigeon_access}</pigeonAccess>\n";
 		}
 
 		add_action('rss2_item', 'add_pigeon_field_to_rss');
