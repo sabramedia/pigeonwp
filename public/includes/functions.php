@@ -100,7 +100,9 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 	{
 
 		$url_array = [];
-		foreach(get_posts() as $post ){
+		global $wp_query;
+
+		foreach($wp_query->get_posts() as $post ){
 			$url_array[$post->ID] = get_permalink($post->ID);
 		}
 
@@ -126,7 +128,8 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 		$response = json_decode(curl_exec( $ch ),TRUE);
 		echo "\t<pigeonServer>\n";
 		foreach( $url_array as $key=>$url ){
-			echo "\t\t<item id=\"{$key}\" access=\"{$response[$key]}\">{$url}</item>\n";
+			$access = (int)$response[$key];
+			echo "\t\t<item id=\"{$key}\" access=\"{$access}\">{$url}</item>\n";
 		}
 		echo "\t</pigeonServer>\n";
 
@@ -142,12 +145,11 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 			global $post,$response;
 
 			$pigeon_meta_values = get_pigeon_post_meta($post->ID);
-			$pigeon_access = 1; // public by default
 			if (array_key_exists("content_access",$pigeon_meta_values) ) {
 				$pigeon_access = $pigeon_meta_values["content_access"];
 			}else{
 				// If the content_access is not set locally then grab the Pigeon Server version
-				$pigeon_access = $response[$post->ID];
+				$pigeon_access = isset($response[$post->ID]) ? $response[$post->ID] : 1; // Default to public if not set
 			}
 
 			echo "\n\t\t<pigeonAccess>{$pigeon_access}</pigeonAccess>\n";
