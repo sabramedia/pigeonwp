@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 require_once( $_SERVER['DOCUMENT_ROOT']."/wp-blog-header.php" );
 header("HTTP/1.1 200 OK");
 
