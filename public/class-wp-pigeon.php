@@ -259,7 +259,7 @@ class WP_Pigeon {
 	public function init_pigeon_js()
 	{
 		if( isset($this->pigeon_settings['subdomain']) )
-			echo '<script type="text/javascript" src="//'.$this->pigeon_settings['subdomain'].'/c/assets/pigeon-1.5.3.min.js"></script>';
+			echo '<script type="text/javascript" src="//'.$this->pigeon_settings['subdomain'].'/c/assets/pigeon.js"></script>';
 
 		echo '<script type="text/javascript">';
 
