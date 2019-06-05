@@ -8,7 +8,7 @@
  * @author    Your Name <email@example.com>
  * @license   GPL-2.0+
  * @link      http://pigeonpaywall.com/
- * @copyright 2014-2015 Sabramedia
+ * @copyright 2014-2019 Sabramedia
  *
  * @wordpress-plugin
  * Plugin Name:       Pigeon for WordPress
