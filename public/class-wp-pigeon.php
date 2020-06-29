@@ -581,7 +581,16 @@ class WP_Pigeon {
 		$this->pigeon_settings['paywall_interrupt'] = $admin_options["pigeon_paywall_interrupt"];
 
 		// Subdomain
+
+		// TODO STANDARDIZE THIS
+//		if( $this->ip_info() == "US"){
+//			$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
+//		}else{
+//			$this->pigeon_settings['subdomain'] = "account.catholicherald.co.uk";
+//		}
+
 		$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
+
 
 		// User
 		$this->pigeon_settings['user'] = $admin_options["pigeon_api_user"];
@@ -674,7 +683,7 @@ class WP_Pigeon {
 	}
 
 	// HELPERS
-	
+
 	/**
 	 * Parse anchors allows for securing of PDF file between pigeon_protect shortcodes
 	 *
@@ -684,7 +693,6 @@ class WP_Pigeon {
 	static public function parse_anchors( $html_string, $customer_id )
 	{
 		$dom = new DOMDocument();
-
 		$dom->loadHTML('<meta http-equiv="content-type" content="text/html; charset=utf-8">'.$html_string, LIBXML_HTML_NODEFDTD);
 		$anchor_array = $dom->getElementsByTagName("a");
 
@@ -812,6 +820,32 @@ class WP_Pigeon {
 		}
 
 	}
+
+	public function ip_info($ip = NULL, $purpose = "location", $deep_detect = TRUE)
+	{
+		if(array_key_exists("pi_geo_code", $_COOKIE)){
+			return $_COOKIE["pi_geo_code"];
+		}
+		if (filter_var($ip, FILTER_VALIDATE_IP) === FALSE) {
+			$ip = $_SERVER["REMOTE_ADDR"];
+			if ($deep_detect) {
+				if (array_key_exists("HTTP_X_FORWARDED_FOR",$_SERVER) && filter_var($_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP))
+					$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+				if (array_key_exists("HTTP_CLIENT_IP",$_SERVER) && filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP))
+					$ip = $_SERVER['HTTP_CLIENT_IP'];
+			}
+		}
+
+		$result = $this->pigeon_sdk->get("/customer/ip_info",["ip"=>$ip,"purpose"=>"country_code"]);
+		$user_geo_country_code = $result->data;
+		try{
+			setcookie( "pi_geo_code", $user_geo_country_code, time() + 3600*24, "/");
+		}catch( Exception $e ){
+			// fail silently
+		}
+		return $user_geo_country_code;
+	}
+
 
 	public function set_status_by_post_type( $post_type, $status="" )
 	{
