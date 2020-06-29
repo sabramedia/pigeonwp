@@ -330,7 +330,8 @@ class WP_Pigeon {
 					contentDate:'".urlencode($this->pigeon_content_date ? $this->pigeon_content_date : empty($this->pigeon_settings['content_date']) ? "" : $this->pigeon_settings['content_date'] )."',
 					contentPrice:".($this->pigeon_content_price ? $this->pigeon_content_price : empty($this->pigeon_settings['content_price']) ? 0 : preg_replace("/([^0-9\.]+)/","",$this->pigeon_settings['content_price'])).",
 					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value']).",
-					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt'])."
+					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt']).",
+					wpPostType: '".($this->pigeon_settings['wp_post_type'] ? $this->pigeon_settings['wp_post_type'] : "")."'
 				});
 
 				Pigeon.widget.status();";
@@ -556,6 +557,7 @@ class WP_Pigeon {
 			$this->pigeon_settings['content_title'] = $post->post_title;
 			$this->pigeon_settings['content_date'] = $post->post_date_gmt;
 			$this->pigeon_settings['content_access'] = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+			$this->pigeon_settings['wp_post_type'] = $post->post_type;
 
 			// Send zero dollar if the value meter is disabled
 			$this->pigeon_settings['content_price'] = $admin_options["pigeon_content_value_pricing"] == 1 ? get_post_meta( $post->ID, '_wp_pigeon_content_price', true ) : 0;
