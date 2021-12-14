@@ -325,12 +325,12 @@ class WP_Pigeon {
 				Pigeon.paywall({
 					redirect:".$paywall_iterrupt.",
 					free:".$is_page_free.",
-					contentId:".($this->pigeon_content_id ? $this->pigeon_content_id : empty($this->pigeon_settings['content_id']) ? 0 : $this->pigeon_settings['content_id']).",
-					contentTitle:'".urlencode($this->pigeon_content_title ? $this->pigeon_content_title : empty($this->pigeon_settings['content_title']) ? "" : $this->pigeon_settings['content_title'] )."',
-					contentDate:'".urlencode($this->pigeon_content_date ? $this->pigeon_content_date : empty($this->pigeon_settings['content_date']) ? "" : $this->pigeon_settings['content_date'] )."',
-					contentPrice:".($this->pigeon_content_price ? $this->pigeon_content_price : empty($this->pigeon_settings['content_price']) ? 0 : preg_replace("/([^0-9\.]+)/","",$this->pigeon_settings['content_price'])).",
-					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value']).",
-					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt']).",
+					contentId:".($this->pigeon_content_id ? $this->pigeon_content_id : (empty($this->pigeon_settings['content_id']) ? 0 : $this->pigeon_settings['content_id'])).",
+					contentTitle:'".urlencode($this->pigeon_content_title ? $this->pigeon_content_title : (empty($this->pigeon_settings['content_title']) ? "" : $this->pigeon_settings['content_title'] ))."',
+					contentDate:'".urlencode($this->pigeon_content_date ? $this->pigeon_content_date : (empty($this->pigeon_settings['content_date']) ? "" : $this->pigeon_settings['content_date'] ))."',
+					contentPrice:".($this->pigeon_content_price ? $this->pigeon_content_price : (empty($this->pigeon_settings['content_price']) ? 0 : preg_replace("/([^0-9\.]+)/","",$this->pigeon_settings['content_price']))).",
+					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : (empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value'])).",
+					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : (empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt'])).",
 					wpPostType: '".($this->pigeon_settings['wp_post_type'] ? $this->pigeon_settings['wp_post_type'] : "")."'
 				});
 
