@@ -334,6 +334,7 @@ class WP_Pigeon_Admin {
 	 */
 	public function setting_pigeon_subdomain_render() {
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 	?>
 		
 		<input type='text' name='wp_pigeon_settings[pigeon_subdomain]' value='<?php echo $options['pigeon_subdomain']; ?>'>
@@ -350,6 +351,7 @@ class WP_Pigeon_Admin {
 	public function setting_pigeon_redirect_render() {
 		
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 		
 		$html  = '<input type="radio" id="redirect_enabled" name="wp_pigeon_settings[pigeon_redirect]" value="1"' . checked( 1, $options['pigeon_redirect'], false ) . '/>';
 		$html .= '<label for="redirect_enabled">Enabled</label> ';
@@ -370,6 +372,7 @@ class WP_Pigeon_Admin {
 	public function setting_pigeon_paywall_render() {
 
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 
 		$html  = '<input type="radio" id="paywall_server" name="wp_pigeon_settings[pigeon_paywall]" value="1"' . checked( 1, $options['pigeon_paywall'], false ) . '/>';
 		$html .= '<label for="paywall_server">Server</label> ';
@@ -390,6 +393,7 @@ class WP_Pigeon_Admin {
 	public function setting_pigeon_paywall_interrupt_render() {
 
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 
 		$html  = '<input type="radio" id="paywall_interrupt_redirect" name="wp_pigeon_settings[pigeon_paywall_interrupt]" value="1"' . checked( 1, $options['pigeon_paywall_interrupt'], false ) . '/>';
 		$html .= '<label for="paywall_server">Redirect</label> ';
@@ -413,6 +417,7 @@ class WP_Pigeon_Admin {
 	 */
 	public function setting_pigeon_api_user_render() {
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 	?>
 		
 		<input type='text' name='wp_pigeon_settings[pigeon_api_user]' value='<?php echo $options['pigeon_api_user']; ?>'>
@@ -428,6 +433,7 @@ class WP_Pigeon_Admin {
 	 */
 	public function setting_pigeon_api_secret_key_render() {
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 	?>
 		
 		<input type='text' name='wp_pigeon_settings[pigeon_api_secret_key]' value='<?php echo $options['pigeon_api_secret_key']; ?>'>
@@ -445,6 +451,7 @@ class WP_Pigeon_Admin {
 	public function setting_pigeon_content_value_pricing_render() {
 
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 		$options['pigeon_content_value_pricing'] = array_key_exists("pigeon_content_value_pricing", $options) ? $options['pigeon_content_value_pricing'] : 2;
 		$html  = '<input type="radio" id="value_pricing_enabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="1"' . checked( 1, $options['pigeon_content_value_pricing'], false ) . '/>';
 		$html .= '<label for="value_pricing_enabled">Enabled</label> ';
@@ -463,6 +470,7 @@ class WP_Pigeon_Admin {
 	public function setting_pigeon_content_value_meter_render() {
 
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 
 		$options['pigeon_content_value_meter'] = array_key_exists("pigeon_content_value_meter", $options) ? $options['pigeon_content_value_meter'] : 2;
 		$html  = '<input type="radio" id="value_meter_enabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="1"' . checked( 1, $options['pigeon_content_value_meter'], false ) . '/>';
@@ -481,6 +489,7 @@ class WP_Pigeon_Admin {
 	 */
 	public function setting_pigeon_content_value_render() {
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 
 		// preset empty array if not set
 		if( !isset($options['pigeon_content_value']) )
@@ -507,6 +516,7 @@ class WP_Pigeon_Admin {
 	 */
 	public function setting_pigeon_content_post_type_render() {
 		$options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
 
 		// preset empty array if not set
 		if( !isset($options['pigeon_content_post_types']) )
@@ -545,7 +555,8 @@ class WP_Pigeon_Admin {
 
 		$options = get_option( 'wp_pigeon_settings' );
 
-		$options['pigeon_wp_sso'] = array_key_exists("pigeon_wp_sso", $options) ? $options['pigeon_wp_sso'] : 2;
+
+        $options['pigeon_wp_sso'] = is_array($options) && array_key_exists("pigeon_wp_sso", $options) ? $options['pigeon_wp_sso'] : 2;
 		$html  = '<input type="radio" id="value_sso_enabled" class="pigeon-wp-sso" name="wp_pigeon_settings[pigeon_wp_sso]" value="1"' . checked( 1, $options['pigeon_wp_sso'], false ) . '/>';
 		$html .= '<label for="value_sso_enabled">Enabled</label> ';
 
