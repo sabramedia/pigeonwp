@@ -14,7 +14,7 @@
  * Plugin Name:       Pigeon for WordPress
  * Plugin URI:        http://pigeonpaywall.com/
  * Description:       The Pigeon Paywall plugin for WordPress
- * Version:           1.5.8
+ * Version:           1.5.9
  * Author:            Sabramedia
  * Text Domain:       wp-pigeon-locale
  * License:           GPL-2.0+
@@ -51,7 +51,7 @@ add_action( 'plugins_loaded', array( 'WP_Pigeon', 'get_instance' ) );
 /*
  * Set up the admin area
  */
-if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
+if ( is_admin() ) {
 
 	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-wp-pigeon-admin.php' );
 	add_action( 'plugins_loaded', array( 'WP_Pigeon_Admin', 'get_instance' ) );

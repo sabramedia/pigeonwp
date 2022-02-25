@@ -54,6 +54,8 @@ class WP_Pigeon_Admin {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box' ) );
 
+        // Load functions
+        add_action( 'admin_init', array( $this, 'load_pigeon_functions' ) );
 	}
 
 	/**
@@ -287,6 +289,14 @@ class WP_Pigeon_Admin {
 			'settings_section_content'
 		);
 
+        $this->plugin_screen_hook_suffix = add_settings_field(
+            'pigeon_content_pref_category',
+            __( 'Category Preferences', $this->plugin_slug ),
+            array( $this, 'setting_pigeon_content_category_render' ),
+            'plugin_options',
+            'settings_section_api'
+        );
+
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_wp_sso',
 			__( 'Single Sign-on (WP to Pigeon)', $this->plugin_slug ),
@@ -294,8 +304,6 @@ class WP_Pigeon_Admin {
 			'plugin_options',
 			'settings_section_api'
 		);
-
-
 	}
 	
 	/* Basic section settings callback
@@ -546,6 +554,36 @@ class WP_Pigeon_Admin {
 	<?php
 	}}
 
+    /* Content category preferences on or off
+     *
+     * @since    1.5.9
+     */
+    public function setting_pigeon_content_category_render()
+    {
+        $options = get_option( 'wp_pigeon_settings' );
+        $options = $options ? $options : [];
+
+        // TODO This may be a bit non-standard, but if the page loads with the plugin enabled, then run an api call to enable the plugin
+        if( isset($_GET["settings-updated"]) && $_GET["settings-updated"] == "true" ) {
+            if (array_key_exists("pigeon_content_pref_category", $options) && $options['pigeon_content_pref_category'] == 1) {
+                pigeon_category_enable();
+            }else{
+                pigeon_category_disable();
+            }
+        }
+
+        $options['pigeon_content_pref_category'] = array_key_exists("pigeon_content_pref_category", $options) ? $options['pigeon_content_pref_category'] : 2;
+        $html  = '<input type="radio" id="category_pref_enabled" class="pigeon-content-pref-category" name="wp_pigeon_settings[pigeon_content_pref_category]" value="1"' . checked( 1, $options['pigeon_content_pref_category'], false ) . '/>';
+        $html .= '<label for="category_pref_enabled">Enabled</label> ';
+
+        $html .= '<input type="radio" id="category_pref_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_pref_category]" value="2"' . checked( 2, $options['pigeon_content_pref_category'], false ) . '/>';
+        $html .= '<label for="category_pref_disabled">Disabled</label>';
+
+        $html .= '<p class="description">Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.</p>';
+
+        echo $html;
+
+    }
 
 	/* Content value meter on or off
 	 *
@@ -596,4 +634,36 @@ class WP_Pigeon_Admin {
 		);
 
 	}
+
+    /**
+     * Load Pigeon Functions
+     *
+     * @since    1.5.9
+     */
+    public function load_pigeon_functions() {
+        // Include our custom functions
+        require_once( plugin_dir_path( __FILE__ ) . 'includes/functions.php' );
+
+    }
+
+    /**
+     * Load the Pigeon Direct API SDK
+     *
+     * @since    1.5.9
+     */
+    public function load_pigeon_sdk()
+    {
+        $admin_options = get_option( 'wp_pigeon_settings' );
+        if( $admin_options['pigeon_api_secret_key'] && $admin_options['pigeon_api_user'] ){
+            require_once( plugin_dir_path( __FILE__ ). "../sdk/Pigeon.php");
+
+            Pigeon_Configuration::clientId($admin_options['pigeon_api_user']);
+            Pigeon_Configuration::apiKey($admin_options['pigeon_api_secret_key']);
+            Pigeon_Configuration::pigeonDomain($admin_options['pigeon_subdomain']);
+            $this->pigeon_sdk = new Pigeon();
+
+            // Load SSO here
+            add_action( 'init', array( $this, 'load_sdk' ) );
+        }
+    }
 }

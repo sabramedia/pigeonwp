@@ -2,7 +2,7 @@
 Contributors: 
 Tags: pigeon, paywall
 Requires at least: 3.5.1
-Tested up to: 3.6
+Tested up to: 5.4.9
 Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -32,6 +32,9 @@ Follow the instructions below to install the plugin
 4. Activate the plugin in the Plugin dashboard
 
 == Changelog ==
+
+= 1.5.9 =
+* Categories can be sent to Pigeon for registered users to set content preferences by category from the Pigeon user account
 
 = 1.4.5 =
 * Encoded content title properly for special characters.
