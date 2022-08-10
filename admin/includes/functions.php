@@ -43,27 +43,45 @@ if( array_key_exists("pigeon_content_pref_category", $options) && $options["pige
 function pigeon_category_enable()
 {
 	// Load the API class
-	require_once( plugin_dir_path( __FILE__ ). "../../sdk/Pigeon.php");
 	$admin_options = get_option( 'wp_pigeon_settings' );
-	Pigeon_Configuration::clientId($admin_options['pigeon_api_user']);
-	Pigeon_Configuration::apiKey($admin_options['pigeon_api_secret_key']);
-	Pigeon_Configuration::pigeonDomain($admin_options['pigeon_subdomain']);
+	if( $admin_options['pigeon_api_user'] && $admin_options['pigeon_api_secret_key'] ) {
+		try {
+			require_once(plugin_dir_path(__FILE__) . "../../sdk/Pigeon.php");
+			Pigeon_Configuration::clientId($admin_options['pigeon_api_user']);
+			Pigeon_Configuration::apiKey($admin_options['pigeon_api_secret_key']);
+			Pigeon_Configuration::pigeonDomain($admin_options['pigeon_subdomain']);
 
-	// Send the category array
-	$pigeon_sdk = new Pigeon();
-	$pigeon_sdk->post("/plugin/wp_preferences/enable_category_plugin", []);
+			// Send the category array
+			$pigeon_sdk = new Pigeon();
+			$pigeon_sdk->post("/plugin/wp_preferences/enable_category_plugin", []);
+			return TRUE;
+		}catch( Exception $e ){
+			return FALSE;
+		}
+	}else{
+		return FALSE;
+	}
 }
 
 function pigeon_category_disable()
 {
-	// Load the API class
-	require_once( plugin_dir_path( __FILE__ ). "../../sdk/Pigeon.php");
-	$admin_options = get_option( 'wp_pigeon_settings' );
-	Pigeon_Configuration::clientId($admin_options['pigeon_api_user']);
-	Pigeon_Configuration::apiKey($admin_options['pigeon_api_secret_key']);
-	Pigeon_Configuration::pigeonDomain($admin_options['pigeon_subdomain']);
+	$admin_options = get_option('wp_pigeon_settings');
+	if( $admin_options['pigeon_api_user'] && $admin_options['pigeon_api_secret_key'] ) {
+		try {
+			// Load the API class
+			require_once(plugin_dir_path(__FILE__) . "../../sdk/Pigeon.php");
+			Pigeon_Configuration::clientId($admin_options['pigeon_api_user']);
+			Pigeon_Configuration::apiKey($admin_options['pigeon_api_secret_key']);
+			Pigeon_Configuration::pigeonDomain($admin_options['pigeon_subdomain']);
 
-	// Send the category array
-	$pigeon_sdk = new Pigeon();
-	$pigeon_sdk->post("/plugin/wp_preferences/disable_category_plugin", []);
+			// Send the category array
+			$pigeon_sdk = new Pigeon();
+			$pigeon_sdk->post("/plugin/wp_preferences/disable_category_plugin", []);
+			return TRUE;
+		}catch( Exception $e ){
+			return FALSE;
+		}
+	}else{
+		return FALSE;
+	}
 }

@@ -251,7 +251,7 @@ class WP_Pigeon_Admin {
 		
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_api_secret_key', 
-			__( 'Secret Key', $this->plugin_slug ),  
+			__( 'Private Key', $this->plugin_slug ),
 			array( $this, 'setting_pigeon_api_secret_key_render' ),
 			'plugin_options',
 			'settings_section_api'
@@ -296,16 +296,16 @@ class WP_Pigeon_Admin {
             'plugin_options',
             'settings_section_api'
         );
-
-		$this->plugin_screen_hook_suffix = add_settings_field(
-			'pigeon_wp_sso',
-			__( 'Single Sign-on (WP to Pigeon)', $this->plugin_slug ),
-			array( $this, 'setting_pigeon_wp_sso' ),
-			'plugin_options',
-			'settings_section_api'
-		);
+//      TODO deprecate in favor of Pigeon being the primary identity provider.
+//		$this->plugin_screen_hook_suffix = add_settings_field(
+//			'pigeon_wp_sso',
+//			__( 'Single Sign-on (WP to Pigeon)', $this->plugin_slug ),
+//			array( $this, 'setting_pigeon_wp_sso' ),
+//			'plugin_options',
+//			'settings_section_api'
+//		);
 	}
-	
+
 	/* Basic section settings callback
 	 *
 	 * @since    1.1.0
@@ -315,7 +315,7 @@ class WP_Pigeon_Admin {
 		// echo __( 'Basic section description', $this->plugin_slug );
 
 	}
-	
+
 	/* API Section settings callback
 	 *
 	 * @since    1.1.0
@@ -334,8 +334,8 @@ class WP_Pigeon_Admin {
 		 echo __( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', $this->plugin_slug );
 
 	}
-	
-	
+
+
 	/* Pigeon subdomain callback
 	 *
 	 * @since    1.1.0
@@ -344,31 +344,31 @@ class WP_Pigeon_Admin {
 		$options = get_option( 'wp_pigeon_settings' );
         $options = $options ? $options : [];
 	?>
-		
+
 		<input type='text' name='wp_pigeon_settings[pigeon_subdomain]' value='<?php echo $options['pigeon_subdomain']; ?>'>
 		<p class="description">Defines the subdomain used for Pigeon.</p>
-	
+
 	<?php
 
 	}
-	
+
 	/* Pigeon redirect callback
 	 *
 	 * @since    1.1.0
 	 */
 	public function setting_pigeon_redirect_render() {
-		
+
 		$options = get_option( 'wp_pigeon_settings' );
         $options = $options ? $options : [];
-		
+
 		$html  = '<input type="radio" id="redirect_enabled" name="wp_pigeon_settings[pigeon_redirect]" value="1"' . checked( 1, $options['pigeon_redirect'], false ) . '/>';
 		$html .= '<label for="redirect_enabled">Enabled</label> ';
-     
+
 		$html .= '<input type="radio" id="redirect_disabled" name="wp_pigeon_settings[pigeon_redirect]" value="2"' . checked( 2, $options['pigeon_redirect'], false ) . '/>';
 		$html .= '<label for="redirect_disabled">Disabled</label>';
-		
+
 		$html .= '<p class="description">Determines whether the plugin does the automatic reroute or stays on the page.</p>';
-     
+
 		echo $html;
 
 	}
@@ -417,8 +417,8 @@ class WP_Pigeon_Admin {
 		echo $html;
 
 	}
-	
-	
+
+
 	/* API user callback
 	 *
 	 * @since    1.1.0
@@ -427,14 +427,14 @@ class WP_Pigeon_Admin {
 		$options = get_option( 'wp_pigeon_settings' );
         $options = $options ? $options : [];
 	?>
-		
+
 		<input type='text' name='wp_pigeon_settings[pigeon_api_user]' value='<?php echo $options['pigeon_api_user']; ?>'>
-	
+
 	<?php
 
 	}
-	
-	
+
+
 	/* API secret key callback
 	 *
 	 * @since    1.1.0
@@ -443,10 +443,26 @@ class WP_Pigeon_Admin {
 		$options = get_option( 'wp_pigeon_settings' );
         $options = $options ? $options : [];
 	?>
-		
+
 		<input type='text' name='wp_pigeon_settings[pigeon_api_secret_key]' value='<?php echo $options['pigeon_api_secret_key']; ?>'>
-	
+
 	<?php
+
+        if( $options['pigeon_api_user'] && $options['pigeon_api_secret_key'] ) {
+			try {
+				require_once(plugin_dir_path(__FILE__) . "../sdk/Pigeon.php");
+				Pigeon_Configuration::clientId($options['pigeon_api_user']);
+				Pigeon_Configuration::apiKey($options['pigeon_api_secret_key']);
+				Pigeon_Configuration::pigeonDomain($options['pigeon_subdomain']);
+
+				// Send the category array
+				$pigeon_sdk = new Pigeon();
+				// Make a call to see if it works.
+				$pigeon_sdk->get("",[]);
+			} catch (Exception $e) {
+				echo "<p style=\"color:#ca4a1f\">There is a connectivity issue. Make sure the Pigeon API credentials are correct. This plugin uses cURL. Please make sure this is enabled in order for the direct API to work.</p>";
+			}
+		}
 
 	}
 
@@ -562,14 +578,20 @@ class WP_Pigeon_Admin {
     {
         $options = get_option( 'wp_pigeon_settings' );
         $options = $options ? $options : [];
+        $required_note = "";
 
         // TODO This may be a bit non-standard, but if the page loads with the plugin enabled, then run an api call to enable the plugin
-        if( isset($_GET["settings-updated"]) && $_GET["settings-updated"] == "true" ) {
-            if (array_key_exists("pigeon_content_pref_category", $options) && $options['pigeon_content_pref_category'] == 1) {
-                pigeon_category_enable();
-            }else{
-                pigeon_category_disable();
-            }
+        // Only run the following if the api keys are set.
+        if( $options['pigeon_api_user'] && $options['pigeon_api_secret_key'] ) {
+			if (isset($_GET["settings-updated"]) && $_GET["settings-updated"] == "true") {
+				if (array_key_exists("pigeon_content_pref_category", $options) && $options['pigeon_content_pref_category'] == 1) {
+					pigeon_category_enable();
+				} else {
+					pigeon_category_disable();
+				}
+			}
+		}else{
+            $required_note = "<strong>Requires API User and Private Key from Settings > API in your Pigeon dashboard.</strong> ";
         }
 
         $options['pigeon_content_pref_category'] = array_key_exists("pigeon_content_pref_category", $options) ? $options['pigeon_content_pref_category'] : 2;
@@ -579,7 +601,7 @@ class WP_Pigeon_Admin {
         $html .= '<input type="radio" id="category_pref_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_pref_category]" value="2"' . checked( 2, $options['pigeon_content_pref_category'], false ) . '/>';
         $html .= '<label for="category_pref_disabled">Disabled</label>';
 
-        $html .= '<p class="description">Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.</p>';
+        $html .= '<p class="description">'.$required_note.'Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.</p>';
 
         echo $html;
 

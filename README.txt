@@ -33,6 +33,9 @@ Follow the instructions below to install the plugin
 
 == Changelog ==
 
+= 1.5.10 =
+* Pigeon API condition checks are made and feedback is given if connectivity fails. Dropped WP SSO in favor of Pigeon being the primary SSO identity provider.
+
 = 1.5.9 =
 * Categories can be sent to Pigeon for registered users to set content preferences by category from the Pigeon user account
 
