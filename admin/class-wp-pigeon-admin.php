@@ -82,7 +82,7 @@ class WP_Pigeon_Admin {
 	 */
 	public function add_meta_box() {
 		$options = get_option( 'wp_pigeon_settings' );
-		$custom_post_types = array_key_exists("pigeon_content_post_types", $options) && $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array();
+		$custom_post_types = (array_key_exists("pigeon_content_post_types", $options) && $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array());
 
 		foreach ( array_merge( array( 'post', 'page' ), $custom_post_types) as $post_type )
 			add_meta_box( 'wp_pigeon', 'Pigeon Settings', array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
@@ -476,7 +476,7 @@ class WP_Pigeon_Admin {
 
 		$options = get_option( 'wp_pigeon_settings' );
         $options = $options ? $options : [];
-		$options['pigeon_content_value_pricing'] = array_key_exists("pigeon_content_value_pricing", $options) ? $options['pigeon_content_value_pricing'] : 2;
+		$options['pigeon_content_value_pricing'] = (array_key_exists("pigeon_content_value_pricing", $options) ? $options['pigeon_content_value_pricing'] : 2);
 		$html  = '<input type="radio" id="value_pricing_enabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="1"' . checked( 1, $options['pigeon_content_value_pricing'], false ) . '/>';
 		$html .= '<label for="value_pricing_enabled">Enabled</label> ';
 
@@ -496,7 +496,7 @@ class WP_Pigeon_Admin {
 		$options = get_option( 'wp_pigeon_settings' );
         $options = $options ? $options : [];
 
-		$options['pigeon_content_value_meter'] = array_key_exists("pigeon_content_value_meter", $options) ? $options['pigeon_content_value_meter'] : 2;
+		$options['pigeon_content_value_meter'] = (array_key_exists("pigeon_content_value_meter", $options) ? $options['pigeon_content_value_meter'] : 2);
 		$html  = '<input type="radio" id="value_meter_enabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="1"' . checked( 1, $options['pigeon_content_value_meter'], false ) . '/>';
 		$html .= '<label for="value_meter_enabled">Enabled</label> ';
 
@@ -550,7 +550,7 @@ class WP_Pigeon_Admin {
 
 		if( $post_types ){
 
-		$post_type_options = $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array();
+		$post_type_options = (array_key_exists("pigeon_content_post_types", $options) && $options['pigeon_content_post_types'] ? $options['pigeon_content_post_types'] : array());
 
 		foreach( $post_types as $option ){
 			$checked = false;
@@ -594,7 +594,7 @@ class WP_Pigeon_Admin {
             $required_note = "<strong>Requires API User and Private Key from Settings > API in your Pigeon dashboard.</strong> ";
         }
 
-        $options['pigeon_content_pref_category'] = array_key_exists("pigeon_content_pref_category", $options) ? $options['pigeon_content_pref_category'] : 2;
+        $options['pigeon_content_pref_category'] = (array_key_exists("pigeon_content_pref_category", $options) ? $options['pigeon_content_pref_category'] : 2);
         $html  = '<input type="radio" id="category_pref_enabled" class="pigeon-content-pref-category" name="wp_pigeon_settings[pigeon_content_pref_category]" value="1"' . checked( 1, $options['pigeon_content_pref_category'], false ) . '/>';
         $html .= '<label for="category_pref_enabled">Enabled</label> ';
 
@@ -616,7 +616,7 @@ class WP_Pigeon_Admin {
 		$options = get_option( 'wp_pigeon_settings' );
 
 
-        $options['pigeon_wp_sso'] = is_array($options) && array_key_exists("pigeon_wp_sso", $options) ? $options['pigeon_wp_sso'] : 2;
+        $options['pigeon_wp_sso'] = (is_array($options) && array_key_exists("pigeon_wp_sso", $options) ? $options['pigeon_wp_sso'] : 2);
 		$html  = '<input type="radio" id="value_sso_enabled" class="pigeon-wp-sso" name="wp_pigeon_settings[pigeon_wp_sso]" value="1"' . checked( 1, $options['pigeon_wp_sso'], false ) . '/>';
 		$html .= '<label for="value_sso_enabled">Enabled</label> ';
 

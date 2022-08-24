@@ -32,6 +32,8 @@ Follow the instructions below to install the plugin
 4. Activate the plugin in the Plugin dashboard
 
 == Changelog ==
+= 1.5.10 =
+* PHP8 Compatibility updates
 
 = 1.5.10 =
 * Pigeon API condition checks are made and feedback is given if connectivity fails. Dropped WP SSO in favor of Pigeon being the primary SSO identity provider.

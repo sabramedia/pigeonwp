@@ -45,9 +45,9 @@ class WP_Pigeon_Api {
 		$this->pigeon_data['user'] = $parameters['user'];
 		$this->pigeon_data['secret'] = $parameters['secret'];
 		$this->pigeon_data['pigeon_version'] = '1.7';
-		$this->pigeon_data['ip'] = array_key_exists('HTTP_CLIENT_IP',$_SERVER) ? $_SERVER['HTTP_CLIENT_IP'] : ( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+		$this->pigeon_data['ip'] = (array_key_exists('HTTP_CLIENT_IP',$_SERVER) ? $_SERVER['HTTP_CLIENT_IP'] : ( array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']));
 		$this->pigeon_data['uri'] = urlencode( 'http://' . $_SERVER["HTTP_HOST"] . $_SERVER['REQUEST_URI'] );
-		$this->pigeon_data['referrer'] = array_key_exists("HTTP_REFERER", $_SERVER ) ? urlencode( $_SERVER["HTTP_REFERER"] ) : "";
+		$this->pigeon_data['referrer'] = (array_key_exists("HTTP_REFERER", $_SERVER ) ? urlencode( $_SERVER["HTTP_REFERER"] ) : "");
 	}
 
 	protected function send( $post_fields ) {
@@ -157,13 +157,13 @@ class WP_Pigeon_Api {
 
 			$pigeon = array(
 				'allowed' => $response['status'] == "redirect" ? 0 : 1,
-				'paywalled' => isset($response['paywalled']) ? $response['paywalled'] : 0,
+				'paywalled' => (isset($response['paywalled']) ? $response['paywalled'] : 0),
 				'user_status' => 0,
 				'meter_limit' => $response['meter_limit'],
-				'meter' => $response['meter'] >= $response['meter_limit'] ? $response['meter_limit'] : $response['meter'], // Accommodate for interval
+				'meter' => ($response['meter'] >= $response['meter_limit'] ? $response['meter_limit'] : $response['meter']), // Accommodate for interval
 				'profile' => $response['profile'], // User profile
 				'ssl' => $response["ssl"], // Need to know if subdomain is secure or not.
-				'force_content_modal' => array_key_exists("force_content_modal",$response) ? $response["force_content_modal"] : 0 // Force content modal even if a content value isn't turned on
+				'force_content_modal' => (array_key_exists("force_content_modal",$response) ? $response["force_content_modal"] : 0) // Force content modal even if a content value isn't turned on
 			);
 
 			if( array_key_exists("credits", $response) )

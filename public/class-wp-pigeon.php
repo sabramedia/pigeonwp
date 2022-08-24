@@ -331,7 +331,7 @@ class WP_Pigeon {
 					contentPrice:".($this->pigeon_content_price ? $this->pigeon_content_price : (empty($this->pigeon_settings['content_price']) ? 0 : preg_replace("/([^0-9\.]+)/","",$this->pigeon_settings['content_price']))).",
 					contentValue:".($this->pigeon_content_value ? $this->pigeon_content_value : (empty($this->pigeon_settings['content_value']) ? 0 : $this->pigeon_settings['content_value'])).",
 					contentPrompt:".($this->pigeon_content_prompt ? $this->pigeon_content_prompt : (empty($this->pigeon_settings['content_prompt']) ? 0 : $this->pigeon_settings['content_prompt'])).",
-					wpPostType: '".($this->pigeon_settings['wp_post_type'] ? $this->pigeon_settings['wp_post_type'] : "")."'
+					wpPostType: '".(isset($this->pigeon_settings['wp_post_type']) && $this->pigeon_settings['wp_post_type'] ? $this->pigeon_settings['wp_post_type'] : "")."'
 				});
 
 				Pigeon.widget.status();";
