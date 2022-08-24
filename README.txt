@@ -32,7 +32,7 @@ Follow the instructions below to install the plugin
 4. Activate the plugin in the Plugin dashboard
 
 == Changelog ==
-= 1.5.10 =
+= 1.5.11 =
 * PHP8 Compatibility updates
 
 = 1.5.10 =
