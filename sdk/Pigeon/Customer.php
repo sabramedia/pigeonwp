@@ -183,7 +183,7 @@ class Pigeon_Customer extends Pigeon
 	public function SSOLogout( $url="" )
 	{
 		$this->sessionLogout();
-		header("Location: " .  ($url ? $url : isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "/" ));
+		header("Location: " .  ($url ? $url : (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "/")));
 	}
 
 	private function _setSSOSession( $session_response )
