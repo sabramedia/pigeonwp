@@ -114,7 +114,7 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 		curl_setopt_array(
 			$ch,
 			array(
-				CURLOPT_URL => $pigeon_subdomain.'/action/public/vo/pigeon-server',
+				CURLOPT_URL => "https://".$pigeon_subdomain.'/action/public/vo/pigeon-server',
 				CURLOPT_TIMEOUT => 15,
 				CURLOPT_VERBOSE => 1,
 				CURLOPT_COOKIE => 1,
