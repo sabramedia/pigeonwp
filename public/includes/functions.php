@@ -107,11 +107,10 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 			$url_array[$post->ID] = get_permalink($post->ID);
 		}
 
-		print_r($url_array);
 		$admin_options = get_option( 'wp_pigeon_settings' );
 		$pigeon_subdomain = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 		$ch = curl_init();
-
+		echo 'action=check_urls&json=' . json_encode( $url_array );
 		curl_setopt_array(
 			$ch,
 			array(
@@ -129,6 +128,7 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 		print_r(curl_exec( $ch ));
 		echo curl_errno($ch) . ' - ' . curl_error($ch);
 		print_r(curl_getinfo($ch));
+
 		$response = json_decode(curl_exec( $ch ),TRUE);
 		echo "\t<pigeonServer>\n";
 		foreach( $url_array as $key=>$url ){
