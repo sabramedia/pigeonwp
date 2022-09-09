@@ -98,8 +98,6 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 
 	function parse_pigeon_access_rss()
 	{
-
-		var_dump(function_exists("curl_init"));
 		$url_array = [];
 		global $wp_query;
 
