@@ -125,6 +125,7 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 			)
 		);
 
+		print_r($ch);
 		$response = json_decode(curl_exec( $ch ),TRUE);
 		echo "\t<pigeonServer>\n";
 		foreach( $url_array as $key=>$url ){
