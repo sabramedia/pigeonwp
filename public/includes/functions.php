@@ -107,6 +107,7 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 			$url_array[$post->ID] = get_permalink($post->ID);
 		}
 
+		print_r($url_array);
 		$admin_options = get_option( 'wp_pigeon_settings' );
 		$pigeon_subdomain = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 		$ch = curl_init();
