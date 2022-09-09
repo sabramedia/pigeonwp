@@ -126,8 +126,9 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 				CURLOPT_POSTFIELDS => 'action=check_urls&json=' . json_encode( $url_array )
 			)
 		);
-
 		print_r(curl_exec( $ch ));
+		echo curl_errno($ch) . ' - ' . curl_error($ch);
+		print_r(curl_getinfo($ch));
 		$response = json_decode(curl_exec( $ch ),TRUE);
 		echo "\t<pigeonServer>\n";
 		foreach( $url_array as $key=>$url ){
