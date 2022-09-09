@@ -121,11 +121,12 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 				CURLOPT_SSL_VERIFYPEER => FALSE,
 				CURLOPT_RETURNTRANSFER => 1,
 				CURLOPT_POST => 1,
+				CURLOPT_HEADER => 1,
 				CURLOPT_USERAGENT => ( array_key_exists( 'HTTP_USER_AGENT', $_SERVER ) ? $_SERVER['HTTP_USER_AGENT'] : '' ),
 				CURLOPT_POSTFIELDS => 'action=check_urls&json=' . json_encode( $url_array )
 			)
 		);
-		print_r(curl_exec( $ch ));
+		var_dump(curl_exec( $ch ));
 		echo curl_errno($ch) . ' - ' . curl_error($ch);
 		print_r(curl_getinfo($ch));
 
