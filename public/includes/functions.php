@@ -110,16 +110,16 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 		$admin_options = get_option( 'wp_pigeon_settings' );
 		$pigeon_subdomain = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 		$ch = curl_init();
-		echo 'action=check_urls&json=' . json_encode( $url_array );
 		curl_setopt_array(
 			$ch,
 			array(
-				CURLOPT_URL => "https://".$pigeon_subdomain.'/action/public/vo/pigeon-server',
+				CURLOPT_URL => $pigeon_subdomain.'/action/public/vo/pigeon-server',
 				CURLOPT_TIMEOUT => 15,
 				CURLOPT_VERBOSE => 1,
 				CURLOPT_COOKIE => 1,
 				CURLOPT_SSL_VERIFYPEER => FALSE,
 				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_FOLLOWLOCATION => 1,
 				CURLOPT_POST => 1,
 				CURLOPT_HEADER => 1,
 				CURLOPT_USERAGENT => ( array_key_exists( 'HTTP_USER_AGENT', $_SERVER ) ? $_SERVER['HTTP_USER_AGENT'] : '' ),
@@ -127,10 +127,11 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 			)
 		);
 		var_dump(curl_exec( $ch ));
-		echo curl_errno($ch) . ' - ' . curl_error($ch);
-		print_r(curl_getinfo($ch));
+//		echo curl_errno($ch) . ' - ' . curl_error($ch);
+//		print_r(curl_getinfo($ch));
 
 		$response = json_decode(curl_exec( $ch ),TRUE);
+		print_r($response)
 		echo "\t<pigeonServer>\n";
 		foreach( $url_array as $key=>$url ){
 			$access = (int)$response[$key];
