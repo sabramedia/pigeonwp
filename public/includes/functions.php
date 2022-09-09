@@ -131,7 +131,7 @@ if ( ! function_exists( 'parse_pigeon_access_rss' ) ) {
 //		print_r(curl_getinfo($ch));
 
 		$response = json_decode(curl_exec( $ch ),TRUE);
-		print_r($response)
+		print_r($response);
 		echo "\t<pigeonServer>\n";
 		foreach( $url_array as $key=>$url ){
 			$access = (int)$response[$key];
