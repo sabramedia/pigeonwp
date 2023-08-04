@@ -24,7 +24,7 @@ class WP_Pigeon {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.5.12';
+	const VERSION = '1.5.13';
 
 	/**
 	 * Unique identifier for the plugin.
