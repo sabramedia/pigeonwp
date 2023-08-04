@@ -231,7 +231,10 @@ class WP_Pigeon {
 	public function load_pigeon_sdk()
 	{
 		$admin_options = get_option( 'wp_pigeon_settings' );
-		if( $admin_options['pigeon_api_secret_key'] && $admin_options['pigeon_api_user'] ){
+		if(
+			isset($admin_options['pigeon_api_secret_key']) && $admin_options['pigeon_api_secret_key'] &&
+			isset($admin_options['pigeon_api_user']) && $admin_options['pigeon_api_user']
+		){
 			require_once( plugin_dir_path( __FILE__ ). "../sdk/Pigeon.php");
 
 			Pigeon_Configuration::clientId($admin_options['pigeon_api_user']);
@@ -560,7 +563,7 @@ class WP_Pigeon {
 			$this->pigeon_settings['wp_post_type'] = $post->post_type;
 
 			// Send zero dollar if the value meter is disabled
-			$this->pigeon_settings['content_price'] = $admin_options["pigeon_content_value_pricing"] == 1 ? get_post_meta( $post->ID, '_wp_pigeon_content_price', true ) : 0;
+			$this->pigeon_settings['content_price'] = isset($admin_options["pigeon_content_value_pricing"]) && $admin_options["pigeon_content_value_pricing"] == 1 ? get_post_meta( $post->ID, '_wp_pigeon_content_price', true ) : 0;
 
 			// Send zero value if the value meter is disabled
 			$this->pigeon_settings['content_value'] = $admin_options["pigeon_content_value_meter"] == 1 ? (int)get_post_meta( $post->ID, '_wp_pigeon_content_value', true ) : 0;
@@ -574,13 +577,13 @@ class WP_Pigeon {
 			$this->pigeon_settings['content_access'] = 0;
 
 		// Redirect setting (this could be already set via our functions)
-		$this->pigeon_settings['redirect'] = $admin_options["pigeon_paywall_interrupt"] ? ( $admin_options["pigeon_paywall_interrupt"] == 1 ? TRUE : FALSE ) : TRUE;
+		$this->pigeon_settings['redirect'] = isset($admin_options["pigeon_paywall_interrupt"]) && $admin_options["pigeon_paywall_interrupt"] ? ( isset($admin_options["pigeon_paywall_interrupt"]) && $admin_options["pigeon_paywall_interrupt"] == 1 ? TRUE : FALSE ) : TRUE;
 
 		// Paywall implementation
-		$this->pigeon_settings['paywall'] = $admin_options["pigeon_paywall"];
+		$this->pigeon_settings['paywall'] = isset($admin_options["pigeon_paywall"]) ? $admin_options["pigeon_paywall"] : 2;
 
 		// Paywall interrupt method
-		$this->pigeon_settings['paywall_interrupt'] = $admin_options["pigeon_paywall_interrupt"];
+		$this->pigeon_settings['paywall_interrupt'] = isset($admin_options["pigeon_paywall_interrupt"]) ? $admin_options["pigeon_paywall_interrupt"] : 3;
 
 		// Subdomain
 
@@ -591,14 +594,14 @@ class WP_Pigeon {
 //			$this->pigeon_settings['subdomain'] = "account.catholicherald.co.uk";
 //		}
 
-		$this->pigeon_settings['subdomain'] = $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]): 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
+		$this->pigeon_settings['subdomain'] = isset($admin_options["pigeon_subdomain"]) && $admin_options["pigeon_subdomain"] ? str_replace(array("https://","http://"),"",$admin_options["pigeon_subdomain"]) : 'my.' . str_replace( 'www.', '', $_SERVER["HTTP_HOST"] );
 
 
 		// User
-		$this->pigeon_settings['user'] = $admin_options["pigeon_api_user"];
+		$this->pigeon_settings['user'] = isset($admin_options["pigeon_api_user"]) ? $admin_options["pigeon_api_user"] : "";
 
 		// Secret key
-		$this->pigeon_settings['secret'] = $admin_options["pigeon_api_secret_key"];
+		$this->pigeon_settings['secret'] = isset($admin_options["pigeon_api_secret_key"]) ? $admin_options["pigeon_api_secret_key"] : "";
 
 		// If the cookie is not set and we are in server mode, let js set the cookie so the fingerprint is checked.
 		$pigeon_session = md5( $this->pigeon_settings['subdomain'] );

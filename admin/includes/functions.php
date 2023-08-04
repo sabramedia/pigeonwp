@@ -34,7 +34,7 @@ function pigeon_category_save()
 
 // Only add the hooks if the category preferences is enabled.
 $options = get_option( "wp_pigeon_settings" );
-if( array_key_exists("pigeon_content_pref_category", $options) && $options["pigeon_content_pref_category"] == 1 ) {
+if( isset($options["pigeon_content_pref_category"]) && $options["pigeon_content_pref_category"] == 1 ) {
 	add_action("created_term", "pigeon_category_save");
 	add_action("edited_term", "pigeon_category_save");
 	add_action("delete_category", "pigeon_category_save");

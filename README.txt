@@ -32,6 +32,9 @@ Follow the instructions below to install the plugin
 4. Activate the plugin in the Plugin dashboard
 
 == Changelog ==
+= 1.5.13 =
+* PHP8 minor version Compatibility updates
+
 = 1.5.12 =
 * Force https for api call that does bulk url paywall checking
 
