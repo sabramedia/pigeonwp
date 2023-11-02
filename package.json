@@ -1,0 +1,14 @@
+{
+	"name": "@pigeon/pigeonwp",
+	"description": "Paywall for WordPress",
+	"author": "Pigeon",
+	"license": "GPL-2.0-or-later",
+	"devDependencies": {
+		"@wordpress/env": "8.9.0"
+	},
+	"scripts": {
+		"start": "wp-env start",
+		"stop": "wp-env stop",
+		"wp": "wp-env run cli"
+	}
+}

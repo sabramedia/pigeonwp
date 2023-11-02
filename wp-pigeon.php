@@ -30,30 +30,20 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/*----------------------------------------------------------------------------*
- * Public-Facing Functionality
- *----------------------------------------------------------------------------*/
-
 /*
  * Load the main WP Pigeon class
  */
-require_once( plugin_dir_path( __FILE__ ) . 'public/class-wp-pigeon.php' );
+require_once plugin_dir_path( __FILE__ ) . 'public/class-wp-pigeon.php';
 
 /*
  * Actually load the plugin by creating an instance
  */
 add_action( 'plugins_loaded', array( 'WP_Pigeon', 'get_instance' ) );
 
-/*----------------------------------------------------------------------------*
- * Dashboard and Administrative Functionality
- *----------------------------------------------------------------------------*/
-
 /*
  * Set up the admin area
  */
 if ( is_admin() ) {
-
-	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-wp-pigeon-admin.php' );
+	require_once plugin_dir_path( __FILE__ ) . 'admin/class-wp-pigeon-admin.php';
 	add_action( 'plugins_loaded', array( 'WP_Pigeon_Admin', 'get_instance' ) );
-
 }
