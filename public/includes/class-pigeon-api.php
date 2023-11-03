@@ -2,18 +2,15 @@
 /**
  * WP Pigeon
  *
- * @package   WP_Pigeon
- * @author    Your Name <email@example.com>
+ * @package   PigeonWP
+ * @author    Pigeon <support@pigeon.io>
  * @license   GPL-2.0+
- * @link      http://pigeonpaywall.com/
+ * @link      http://pigeon.io
  * @copyright 2014 Sabramedia
  */
 
 /**
- * The core class for the plugin
- *
- * @package WP_Pigeon
- * @author  Your Name <email@example.com>
+ * The core class for the plugin.
  */
 class WP_Pigeon_Api {
 

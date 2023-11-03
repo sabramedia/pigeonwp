@@ -2,7 +2,7 @@
 /**
  * WP Pigeon
  *
- * @package   WP_Pigeon
+ * @package   PigeonWP
  * @author    Pigeon <support@pigeon.io>
  * @license   GPL-2.0+
  * @link      https://pigeon.io
@@ -10,10 +10,7 @@
  */
 
 /**
- * The core class for the plugin
- *
- * @package WP_Pigeon
- * @author  Pigeon <support@pigeon.io>
+ * The core class for the plugin.
  */
 class WP_Pigeon {
 	/**
@@ -214,11 +211,7 @@ class WP_Pigeon {
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
-		$domain = $this->plugin_slug;
-		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-
-		load_textdomain( $domain, trailingslashit( WP_LANG_DIR ) . $domain . '/' . $domain . '-' . $locale . '.mo' );
-		load_plugin_textdomain( $domain, false, basename( plugin_dir_path( __DIR__ ) ) . '/languages/' );
+		load_plugin_textdomain( 'pigeonwp', false, PIGEONWP_DIR . 'languages' );
 	}
 
 	/**

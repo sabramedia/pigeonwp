@@ -3,17 +3,14 @@
  * Pigeon for WordPress
  *
  * @package   Pigeon for WordPress
- * @author    Matt Geri / Jonathan Wold
+ * @author    Pigeon <support@pigeon.io>
  * @license   GPL-2.0+
- * @link      http://pigeonpaywall.com/
+ * @link      http://pigeon.io
  * @copyright 2014 Sabramedia
  */
 
 /**
- * The core admin class
- *
- * @package WP_Pigeon
- * @author  Sabramedia
+ * The core admin class.
  */
 class WP_Pigeon_Admin {
 	/**
@@ -148,8 +145,8 @@ class WP_Pigeon_Admin {
 	 */
 	public function add_plugin_admin_menu() {
 		$this->plugin_screen_hook_suffix = add_options_page(
-			__( 'Pigeon', $this->plugin_slug ),
-			__( 'Pigeon', $this->plugin_slug ),
+			__( 'Pigeon', 'pigeonwp' ),
+			__( 'Pigeon', 'pigeonwp' ),
 			'manage_options',
 			$this->plugin_slug,
 			array( $this, 'display_plugin_admin_page' )
@@ -175,33 +172,32 @@ class WP_Pigeon_Admin {
 	public function plugin_settings_init() {
 		register_setting( 'plugin_options', 'wp_pigeon_settings' );
 
-		// Register our sections
+		// Register our sections.
 		$this->plugin_screen_hook_suffix = add_settings_section(
 			'settings_section_basic',
-			__( 'Basic Configuration', $this->plugin_slug ),
+			__( 'Basic Configuration', 'pigeonwp' ),
 			array( $this, 'settings_section_basic_callback' ),
 			'plugin_options'
 		);
 
 		$this->plugin_screen_hook_suffix = add_settings_section(
 			'settings_section_api',
-			__( 'API Connection', $this->plugin_slug ),
+			__( 'API Connection', 'pigeonwp' ),
 			array( $this, 'settings_section_api_callback' ),
 			'plugin_options'
 		);
 
 		$this->plugin_screen_hook_suffix = add_settings_section(
 			'settings_section_content',
-			__( 'Content', $this->plugin_slug ),
+			__( 'Content', 'pigeonwp' ),
 			array( $this, 'settings_section_content_callback' ),
 			'plugin_options'
 		);
 
-		// Register our fields
-
+		// Register our fields.
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_subdomain',
-			__( 'Pigeon Subdomain', $this->plugin_slug ),
+			__( 'Pigeon Subdomain', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_subdomain_render' ),
 			'plugin_options',
 			'settings_section_basic',
@@ -210,7 +206,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_paywall_interrupt',
-			__( 'Paywall Interrupt', $this->plugin_slug ),
+			__( 'Paywall Interrupt', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_paywall_interrupt_render' ),
 			'plugin_options',
 			'settings_section_basic'
@@ -218,7 +214,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_api_user',
-			__( 'User', $this->plugin_slug ),
+			__( 'User', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_api_user_render' ),
 			'plugin_options',
 			'settings_section_api'
@@ -226,7 +222,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_api_secret_key',
-			__( 'Private Key', $this->plugin_slug ),
+			__( 'Private Key', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_api_secret_key_render' ),
 			'plugin_options',
 			'settings_section_api'
@@ -234,7 +230,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_content_value_pricing',
-			__( 'Pricing Value', $this->plugin_slug ),
+			__( 'Pricing Value', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_value_pricing_render' ),
 			'plugin_options',
 			'settings_section_content'
@@ -242,7 +238,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_content_value_meter',
-			__( 'Value Meter', $this->plugin_slug ),
+			__( 'Value Meter', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_value_meter_render' ),
 			'plugin_options',
 			'settings_section_content'
@@ -250,7 +246,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_content_value',
-			__( 'Credit Value', $this->plugin_slug ),
+			__( 'Credit Value', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_value_render' ),
 			'plugin_options',
 			'settings_section_content'
@@ -258,7 +254,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_content_post_types',
-			__( 'Post Types', $this->plugin_slug ),
+			__( 'Post Types', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_post_type_render' ),
 			'plugin_options',
 			'settings_section_content'
@@ -266,7 +262,7 @@ class WP_Pigeon_Admin {
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_content_pref_category',
-			__( 'Category Preferences', $this->plugin_slug ),
+			__( 'Category Preferences', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_category_render' ),
 			'plugin_options',
 			'settings_section_api'
@@ -274,30 +270,30 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * Basic section settings callback
+	 * Basic section settings callback.
 	 *
 	 * @since    1.1.0
 	 */
 	public function settings_section_basic_callback() {}
 
 	/*
-	 * API Section settings callback
+	 * API Section settings callback.
 	 *
 	 * @since    1.1.0
 	 */
 	public function settings_section_api_callback() {}
 	
 	/*
-	 * Content Section settings callback
+	 * Content Section settings callback.
 	 *
 	 * @since    1.4.0
 	 */
 	public function settings_section_content_callback() {
-		esc_html_e( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', $this->plugin_slug );
+		esc_html_e( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeonwp' );
 	}
 
 	/*
-	 * Pigeon subdomain callback
+	 * Pigeon subdomain callback.
 	 *
 	 * @since    1.1.0
 	 */
@@ -311,7 +307,7 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * Pigeon redirect callback
+	 * Pigeon redirect callback.
 	 *
 	 * @since    1.1.0
 	 */
@@ -331,7 +327,7 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * Pigeon Paywall interrupt type
+	 * Pigeon Paywall interrupt type.
 	 *
 	 * @since    1.3.0
 	 */
@@ -354,7 +350,7 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * API user callback
+	 * API user callback.
 	 *
 	 * @since    1.1.0
 	 */
@@ -368,7 +364,7 @@ class WP_Pigeon_Admin {
 
 
 	/*
-	 * API secret key callback
+	 * API secret key callback.
 	 *
 	 * @since    1.1.0
 	 */
@@ -396,7 +392,7 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * Content value pricing on or off
+	 * Content value pricing on or off.
 	 *
 	 * @since    1.4.7
 	 */
@@ -414,7 +410,7 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * Content value meter on or off
+	 * Content value meter on or off.
 	 *
 	 * @since    1.4.0
 	 */
@@ -433,7 +429,7 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * Content value list
+	 * Content value list.
 	 *
 	 * @since    1.4.0
 	 */
@@ -441,7 +437,7 @@ class WP_Pigeon_Admin {
 		$options = get_option( 'wp_pigeon_settings' );
 		$options = $options ? $options : array();
 
-		// preset empty array if not set
+		// Preset empty array if not set.
 		if ( ! isset( $options['pigeon_content_value'] ) ) {
 			$options['pigeon_content_value'] = array( '' );
 		}
@@ -462,7 +458,7 @@ class WP_Pigeon_Admin {
 	}
 
 	/*
-	 * Content value list
+	 * Content value list.
 	 *
 	 * @since    1.4.0
 	 */
@@ -470,7 +466,7 @@ class WP_Pigeon_Admin {
 		$options = get_option( 'wp_pigeon_settings' );
 		$options = $options ? $options : array();
 
-		// preset empty array if not set
+		// Preset empty array if not set.
 		if ( ! isset( $options['pigeon_content_post_types'] ) ) {
 			$options['pigeon_content_value'] = array( '' );
 		}
@@ -508,7 +504,7 @@ class WP_Pigeon_Admin {
 		}}
 
 	/*
-	 * Content category preferences on or off
+	 * Content category preferences on or off.
 	 *
 	 * @since    1.5.9
 	 */
@@ -517,7 +513,7 @@ class WP_Pigeon_Admin {
 		$options       = $options ? $options : array();
 		$required_note = '';
 
-		// TODO This may be a bit non-standard, but if the page loads with the plugin enabled, then run an api call to enable the plugin
+		// TODO This may be a bit non-standard, but if the page loads with the plugin enabled, then run an api call to enable the plugin.
 		// Only run the following if the api keys are set.
 		if ( $options['pigeon_api_user'] && $options['pigeon_api_secret_key'] ) {
 			if ( isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] == 'true' ) {
@@ -560,7 +556,7 @@ class WP_Pigeon_Admin {
 	public function add_action_links( $links ) {
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', $this->plugin_slug ) . '</a>',
+				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_slug ) . '">' . __( 'Settings', 'pigeonwp' ) . '</a>',
 			),
 			$links
 		);
@@ -572,12 +568,12 @@ class WP_Pigeon_Admin {
 	 * @since    1.5.9
 	 */
 	public function load_pigeon_functions() {
-		// Include our custom functions
+		// Include our custom functions.
 		require_once plugin_dir_path( __FILE__ ) . 'includes/functions.php';
 	}
 
 	/**
-	 * Load the Pigeon Direct API SDK
+	 * Load the Pigeon Direct API SDK.
 	 *
 	 * @since    1.5.9
 	 */
@@ -591,7 +587,7 @@ class WP_Pigeon_Admin {
 			Pigeon_Configuration::pigeonDomain( $admin_options['pigeon_subdomain'] );
 			$this->pigeon_sdk = new Pigeon();
 
-			// Load SSO here
+			// Load SSO here.
 			add_action( 'init', array( $this, 'load_sdk' ) );
 		}
 	}
