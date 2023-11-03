@@ -209,14 +209,6 @@ class WP_Pigeon_Admin {
 		);
 
 		$this->plugin_screen_hook_suffix = add_settings_field(
-			'pigeon_paywall',
-			__( 'Paywall', $this->plugin_slug ),
-			array( $this, 'setting_pigeon_paywall_render' ),
-			'plugin_options',
-			'settings_section_basic'
-		);
-
-		$this->plugin_screen_hook_suffix = add_settings_field(
 			'pigeon_paywall_interrupt',
 			__( 'Paywall Interrupt', $this->plugin_slug ),
 			array( $this, 'setting_pigeon_paywall_interrupt_render' ),
@@ -286,18 +278,14 @@ class WP_Pigeon_Admin {
 	 *
 	 * @since    1.1.0
 	 */
-	public function settings_section_basic_callback() {
-		// echo __( 'Basic section description', $this->plugin_slug );
-	}
+	public function settings_section_basic_callback() {}
 
 	/*
 	 * API Section settings callback
 	 *
 	 * @since    1.1.0
 	 */
-	public function settings_section_api_callback() {
-		// echo __( 'API section Description', $this->plugin_slug );
-	}
+	public function settings_section_api_callback() {}
 	
 	/*
 	 * Content Section settings callback
@@ -305,7 +293,7 @@ class WP_Pigeon_Admin {
 	 * @since    1.4.0
 	 */
 	public function settings_section_content_callback() {
-		echo __( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', $this->plugin_slug );
+		esc_html_e( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', $this->plugin_slug );
 	}
 
 	/*
@@ -338,26 +326,6 @@ class WP_Pigeon_Admin {
 		$html .= '<label for="redirect_disabled">Disabled</label>';
 
 		$html .= '<p class="description">Determines whether the plugin does the automatic reroute or stays on the page.</p>';
-
-		echo $html;
-	}
-
-	/*
-	 * Pigeon Paywall plugin technology server | browser
-	 *
-	 * @since    1.3.0
-	 */
-	public function setting_pigeon_paywall_render() {
-		$options = get_option( 'wp_pigeon_settings' );
-		$options = $options ? $options : array();
-
-		$html  = '<input type="radio" id="paywall_server" name="wp_pigeon_settings[pigeon_paywall]" value="1"' . checked( 1, $options['pigeon_paywall'], false ) . '/>';
-		$html .= '<label for="paywall_server">Server</label> ';
-
-		$html .= '<input type="radio" id="paywall_js" name="wp_pigeon_settings[pigeon_paywall]" value="2"' . checked( 2, $options['pigeon_paywall'], false ) . '/>';
-		$html .= '<label for="paywall_js">JavaScript</label>';
-
-		$html .= '<p class="description">Use JavaScript if you have a metered paywall or want to use the modal popup.</p>';
 
 		echo $html;
 	}
@@ -574,27 +542,6 @@ class WP_Pigeon_Admin {
 
 		echo $html;
 	}
-
-	/*
-	 * Content value meter on or off
-	 *
-	 * @since    1.5.0
-	 */
-	public function setting_pigeon_wp_sso() {
-		$options = get_option( 'wp_pigeon_settings' );
-
-		$options['pigeon_wp_sso'] = ( is_array( $options ) && array_key_exists( 'pigeon_wp_sso', $options ) ? $options['pigeon_wp_sso'] : 2 );
-		$html                     = '<input type="radio" id="value_sso_enabled" class="pigeon-wp-sso" name="wp_pigeon_settings[pigeon_wp_sso]" value="1"' . checked( 1, $options['pigeon_wp_sso'], false ) . '/>';
-		$html                    .= '<label for="value_sso_enabled">Enabled</label> ';
-
-		$html .= '<input type="radio" id="value_sso_disabled" class="pigeon-wp-sso" name="wp_pigeon_settings[pigeon_wp_sso]" value="2"' . checked( 2, $options['pigeon_wp_sso'], false ) . '/>';
-		$html .= '<label for="value_sso_disabled">Disabled</label>';
-
-		$html .= '<p class="description">Enable when you want WordPress to manage your user profile data instead of Pigeon.</p>';
-
-		echo $html;
-	}
-
 
 	/**
 	 * Render the settings page for this plugin.
