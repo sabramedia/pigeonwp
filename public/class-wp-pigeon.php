@@ -323,6 +323,13 @@ class WP_Pigeon {
 		// Turns off warnings for loadHTML.
 		libxml_use_internal_errors( true );
 
+		/**
+		 * Protect shortcode.
+		 *
+		 * @param array       $atts Shortcode attributes.
+		 * @param null|string $content The shortcode content.
+		 * @return string
+		 */
 		function pigeon_protect_shortcode( $atts = array(), $content = null ) {
 			// Run shortcode parser recursively.
 			$content = do_shortcode( $content );
@@ -332,7 +339,14 @@ class WP_Pigeon {
 		}
 		add_shortcode( 'pigeon_protect', 'pigeon_protect_shortcode' );
 
-		// Pigeon display block and attribute conditions.
+		/**
+		 * Pigeon display block and attribute conditions.
+		 *
+		 * @param array       $atts Shortcode attributes.
+		 * @param null|string $content The shortcode content.
+		 * @param string      $tag The shortcode tag.
+		 * @return string
+		 */
 		function pigeon_display_shortcode( $atts = array(), $content = null, $tag = '' ) {
 			// Normalize attribute keys, lowercase.
 			$atts = array_change_key_case( (array) $atts, CASE_LOWER );
@@ -372,6 +386,14 @@ class WP_Pigeon {
 		}
 		add_shortcode( 'pigeon_display_when', 'pigeon_display_shortcode' );
 
+		/**
+		 * Content expires shortcode.
+		 *
+		 * @param array       $atts Shortcode attributes.
+		 * @param null|string $content The shortcode content.
+		 * @param string      $tag The shortcode tag.
+		 * @return string
+		 */
 		function pigeon_content_expires_shortcode( $atts = array(), $content = null, $tag = '' ) {
 			// Normalize attribute keys, lowercase.
 			$atts = array_change_key_case( (array) $atts, CASE_LOWER );
@@ -402,16 +424,22 @@ class WP_Pigeon {
 			return;
 		}
 
+		$request_uri = '';
+
+		if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+			$request_uri = sanitize_url( wp_unslash( $_SERVER['REQUEST_URI'] ) );
+		}
+
 		// Avoid asset requests.
 		foreach ( array( '.css', '.js', '.woff', '.eot', '.ttf', '.svg', '.png', '.jpg', '.gif', '.cur', 'css?' ) as $asset ) {
-			if ( strpos( basename( $_SERVER['REQUEST_URI'] ), $asset ) !== false ) {
+			if ( strpos( basename( $request_uri ), $asset ) !== false ) {
 				return;
 			}
 		}
 
 		$admin_options = get_option( 'wp_pigeon_settings' );
 
-		if ( array_key_exists( 'sucuriscan', $_GET ) ) {
+		if ( array_key_exists( 'sucuriscan', $_GET ) ) { // @phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			echo esc_html( '<!--sucuriscan-->' );
 		}
 
@@ -426,35 +454,36 @@ class WP_Pigeon {
 			$this->pigeon_settings['wp_post_type']   = $post->post_type;
 
 			// Send zero dollar if the value meter is disabled.
-			$this->pigeon_settings['content_price'] = isset( $admin_options['pigeon_content_value_pricing'] ) && $admin_options['pigeon_content_value_pricing'] == 1 ? get_post_meta( $post->ID, '_wp_pigeon_content_price', true ) : 0;
+			$this->pigeon_settings['content_price'] = isset( $admin_options['pigeon_content_value_pricing'] ) && '1' === $admin_options['pigeon_content_value_pricing'] ? get_post_meta( $post->ID, '_wp_pigeon_content_price', true ) : 0;
 
 			// Send zero value if the value meter is disabled.
-			$this->pigeon_settings['content_value']  = $admin_options['pigeon_content_value_meter'] == 1 ? (int) get_post_meta( $post->ID, '_wp_pigeon_content_value', true ) : 0;
+			$this->pigeon_settings['content_value']  = isset( $admin_options['pigeon_content_value_meter'] ) && '1' === $admin_options['pigeon_content_value_meter'] ? (int) get_post_meta( $post->ID, '_wp_pigeon_content_value', true ) : 0;
 			$this->pigeon_settings['content_prompt'] = (int) get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
 		}
 
-		if ( ! isset( $this->pigeon_settings['content_access'] ) || $this->pigeon_settings['content_access'] == '' ) {
-			$this->pigeon_settings['content_access'] = 0;
-		}
-
-		if ( ! isset( $this->pigeon_settings['content_value'] ) || $this->pigeon_settings['content_access'] == '' ) {
+		if ( empty( $this->pigeon_settings['content_access'] ) ) {
 			$this->pigeon_settings['content_access'] = 0;
 		}
 
 		// Redirect setting (this could be already set via our functions).
-		$this->pigeon_settings['redirect'] = isset( $admin_options['pigeon_paywall_interrupt'] ) && $admin_options['pigeon_paywall_interrupt'] ? ( isset( $admin_options['pigeon_paywall_interrupt'] ) && $admin_options['pigeon_paywall_interrupt'] == 1 ? true : false ) : true;
+		$this->pigeon_settings['redirect'] = ! empty( $admin_options['pigeon_paywall_interrupt'] ) ? ( '1' === $admin_options['pigeon_paywall_interrupt'] ? true : false ) : true;
 
 		// Paywall interrupt method.
-		$this->pigeon_settings['paywall_interrupt'] = isset( $admin_options['pigeon_paywall_interrupt'] ) ? $admin_options['pigeon_paywall_interrupt'] : 3;
+		$this->pigeon_settings['paywall_interrupt'] = ! empty( $admin_options['pigeon_paywall_interrupt'] ) ? $admin_options['pigeon_paywall_interrupt'] : 3;
 
 		// Subdomain.
-		$this->pigeon_settings['subdomain'] = isset( $admin_options['pigeon_subdomain'] ) && $admin_options['pigeon_subdomain'] ? str_replace( array( 'https://', 'http://' ), '', $admin_options['pigeon_subdomain'] ) : 'my.' . str_replace( 'www.', '', $_SERVER['HTTP_HOST'] );
+		$http_host = '';
+		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
+			$http_host = sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+		}
+
+		$this->pigeon_settings['subdomain'] = ! empty( $admin_options['pigeon_subdomain'] ) ? str_replace( array( 'https://', 'http://' ), '', $admin_options['pigeon_subdomain'] ) : 'my.' . str_replace( 'www.', '', $http_host );
 
 		// User.
-		$this->pigeon_settings['user'] = isset( $admin_options['pigeon_api_user'] ) ? $admin_options['pigeon_api_user'] : '';
+		$this->pigeon_settings['user'] = ! empty( $admin_options['pigeon_api_user'] ) ? $admin_options['pigeon_api_user'] : '';
 
 		// Secret key.
-		$this->pigeon_settings['secret'] = isset( $admin_options['pigeon_api_secret_key'] ) ? $admin_options['pigeon_api_secret_key'] : '';
+		$this->pigeon_settings['secret'] = ! empty( $admin_options['pigeon_api_secret_key'] ) ? $admin_options['pigeon_api_secret_key'] : '';
 
 		$this->pigeon_values = $this->pigeon_settings;
 	}

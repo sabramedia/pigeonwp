@@ -1,9 +1,9 @@
 === WP Pigeon ===
 Contributors: 
 Tags: pigeon, paywall
-Requires at least: 3.5.1
-Tested up to: 5.4.9
-Stable tag: 1.4.0
+Requires at least: 5.9
+Tested up to: 6.3.2
+Stable tag: 1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,11 @@ Follow the instructions below to install the plugin
 4. Activate the plugin in the Plugin dashboard
 
 == Changelog ==
+= 1.6 =
+* Large refactor of codebase to be WordPress Coding Standards compliant
+* Include correct .POT translation file
+* Remove server paywall option
+
 = 1.5.13 =
 * PHP8 minor version Compatibility updates
 

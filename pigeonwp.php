@@ -43,6 +43,6 @@ add_action( 'plugins_loaded', array( 'WP_Pigeon', 'get_instance' ) );
  */
 if ( is_admin() ) {
 	require_once 'admin/class-wp-pigeon-admin.php';
-	
+
 	add_action( 'plugins_loaded', array( 'WP_Pigeon_Admin', 'get_instance' ) );
 }
