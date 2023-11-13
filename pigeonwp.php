@@ -22,27 +22,13 @@
  * Domain Path:       /languages
  */
 
-// If this file is called directly, abort.
-if ( ! defined( 'WPINC' ) ) {
-	die;
-}
+namespace PigeonWP;
 
-/*
- * Load the core plugin files.
- */
+// Config.
 require_once 'config/config.php';
-require_once 'public/class-wp-pigeon.php';
 
-/*
- * Actually load the plugin by creating an instance.
- */
-add_action( 'plugins_loaded', array( 'WP_Pigeon', 'get_instance' ) );
+// Autoload classes.
+require_once 'helpers/autoloader.php';
 
-/*
- * Set up the admin area.
- */
-if ( is_admin() ) {
-	require_once 'admin/class-wp-pigeon-admin.php';
-
-	add_action( 'plugins_loaded', array( 'WP_Pigeon_Admin', 'get_instance' ) );
-}
+$bootstrap = Bootstrap::get_instance();
+$bootstrap->load();
