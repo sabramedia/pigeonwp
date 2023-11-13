@@ -9,12 +9,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-03T07:49:45+00:00\n"
+"POT-Creation-Date: 2023-11-13T12:55:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: pigeonwp\n"
 
 #. Plugin Name of the plugin
+#: templates/admin/admin.php:15
 msgid "Pigeon for WordPress"
 msgstr ""
 
@@ -30,63 +31,193 @@ msgstr ""
 msgid "Sabramedia"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:148
-#: admin/class-wp-pigeon-admin.php:149
+#: classes/class-admin.php:88
+#: classes/class-admin.php:89
 msgid "Pigeon"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:178
+#: classes/class-admin.php:130
+msgid "Settings"
+msgstr ""
+
+#: classes/class-admin.php:148
+msgid "Pigeon Settings"
+msgstr ""
+
+#: classes/class-settings.php:66
 msgid "Basic Configuration"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:185
+#: classes/class-settings.php:73
 msgid "API Connection"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:192
+#: classes/class-settings.php:80
 msgid "Content"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:200
+#: classes/class-settings.php:88
 msgid "Pigeon Subdomain"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:209
+#: classes/class-settings.php:96
 msgid "Paywall Interrupt"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:217
+#: classes/class-settings.php:104
 msgid "User"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:225
+#: classes/class-settings.php:112
 msgid "Private Key"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:233
+#: classes/class-settings.php:120
 msgid "Pricing Value"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:241
+#: classes/class-settings.php:128
 msgid "Value Meter"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:249
+#: classes/class-settings.php:136
 msgid "Credit Value"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:257
+#: classes/class-settings.php:144
 msgid "Post Types"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:265
+#: classes/class-settings.php:152
 msgid "Category Preferences"
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:292
+#: classes/class-settings.php:179
 msgid "Only used when content value needs to be set in WordPress and passed to Pigeon."
 msgstr ""
 
-#: admin/class-wp-pigeon-admin.php:559
-msgid "Settings"
+#: classes/class-settings.php:192
+msgid "Defines the subdomain used for Pigeon."
+msgstr ""
+
+#: classes/class-settings.php:206
+#: classes/class-settings.php:288
+#: classes/class-settings.php:305
+#: classes/class-settings.php:413
+msgid "Enabled"
+msgstr ""
+
+#: classes/class-settings.php:208
+#: classes/class-settings.php:290
+#: classes/class-settings.php:307
+#: classes/class-settings.php:415
+msgid "Disabled"
+msgstr ""
+
+#: classes/class-settings.php:209
+msgid "Determines whether the plugin does the automatic reroute or stays on the page."
+msgstr ""
+
+#: classes/class-settings.php:224
+msgid "Redirect"
+msgstr ""
+
+#: classes/class-settings.php:226
+msgid "Modal Popup"
+msgstr ""
+
+#: classes/class-settings.php:228
+msgid "Custom"
+msgstr ""
+
+#: classes/class-settings.php:229
+msgid "Redirect respects paywall rules. Modal uses the default Pigeon modal. Custom allows you to take your own actions. Refer to documentation on how to do this."
+msgstr ""
+
+#: classes/class-settings.php:273
+msgid "There is a connectivity issue. Make sure the Pigeon API credentials are correct. This plugin uses cURL. Please make sure this is enabled in order for the direct API to work."
+msgstr ""
+
+#: classes/class-settings.php:329
+msgid "Remove"
+msgstr ""
+
+#: classes/class-settings.php:335
+msgid "Add New Value"
+msgstr ""
+
+#: classes/class-settings.php:379
+msgid "There are no custom post types available."
+msgstr ""
+
+#: classes/class-settings.php:407
+msgid "Requires API User and Private Key from Settings > API in your Pigeon dashboard."
+msgstr ""
+
+#: classes/class-settings.php:416
+msgid "Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer."
+msgstr ""
+
+#: classes/class-shortcodes.php:47
+msgid "This page is available to subscribers."
+msgstr ""
+
+#: classes/class-shortcodes.php:47
+msgid "Click here to sign in or get access"
+msgstr ""
+
+#: templates/admin/admin.php:17
+msgid "For questions regarding any of these settings please contact Pigeon support."
+msgstr ""
+
+#: templates/admin/admin.php:19
+msgid "Click here to access the Pigeon control panel"
+msgstr ""
+
+#: templates/admin/admin.php:22
+msgid "Current Installed Version:"
+msgstr ""
+
+#. translators: Link to Github.
+#: templates/admin/admin.php:27
+msgid "Download the latest Pigeon plugin for WordPress from <a href=\"%s\">Github</a>"
+msgstr ""
+
+#: templates/admin/meta-box.php:21
+msgid "Access"
+msgstr ""
+
+#: templates/admin/meta-box.php:25
+msgid "Metered"
+msgstr ""
+
+#: templates/admin/meta-box.php:26
+msgid "Public"
+msgstr ""
+
+#: templates/admin/meta-box.php:27
+msgid "Restricted"
+msgstr ""
+
+#: templates/admin/meta-box.php:35
+msgid "Price"
+msgstr ""
+
+#: templates/admin/meta-box.php:48
+msgid "Value"
+msgstr ""
+
+#: templates/admin/meta-box.php:52
+msgid "Free"
+msgstr ""
+
+#. translators: Credits value.
+#: templates/admin/meta-box.php:55
+msgid "%s credit"
+msgid_plural "%s credits"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/admin/meta-box.php:58
+msgid "Prompt"
 msgstr ""
