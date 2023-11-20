@@ -92,6 +92,22 @@ class Settings {
 		);
 
 		add_settings_field(
+			'pigeon_paywall_sticky',
+			__( 'Sticky Bar', 'pigeonwp' ),
+			array( $this, 'setting_pigeon_paywall_sticky' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
+
+		add_settings_field(
+			'pigeon_paywall_content_display',
+			__( 'Content Display', 'pigeonwp' ),
+			array( $this, 'setting_pigeon_paywall_content_display' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
+
+		add_settings_field(
 			'pigeon_paywall_interrupt',
 			__( 'Paywall Interrupt', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_paywall_interrupt_render' ),
@@ -208,7 +224,43 @@ class Settings {
 		$html .= '<label for="redirect_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 		$html .= '<p class="description">' . esc_html__( 'Determines whether the plugin does the automatic reroute or stays on the page.', 'pigeonwp' ) . '</p>';
 
-		echo wp_kses_post( $html );
+		echo $html; // @phpcs:ignore
+	}
+
+	/**
+	 * Pigeon Paywall interrupt type.
+	 *
+	 * @since 1.6
+	 */
+	public function setting_pigeon_paywall_sticky() {
+		$options = $this->get_settings();
+		$sticky  = ! empty( $options['pigeon_paywall_sticky'] ) ? $options['pigeon_paywall_sticky'] : 0;
+		?>
+		<input type="radio" id="pigeon_paywall_sticky" name="wp_pigeon_settings[pigeon_paywall_sticky]" value="1"<?php checked( 1, $sticky, true ); ?>/>
+		<label for="paywall_server"><?php esc_html_e( 'Show', 'pigeonwp' ); ?></label> 
+		<input type="radio" id="paywall_interrupt_modal" name="wp_pigeon_settings[pigeon_paywall_sticky]" value="0"<?php checked( 0, $sticky, true ); ?>/>
+		<label for="paywall_js"><?php esc_html_e( 'Hide', 'pigeonwp' ); ?></label>
+		<p class="description"><?php esc_html_e( 'Show a sticky bar on each page with paywall information.', 'pigeonwp' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Pigeon content display settings.
+	 *
+	 * @since 1.6
+	 */
+	public function setting_pigeon_paywall_content_display() {
+		$options          = $this->get_settings();
+		$content_display  = ! empty( $options['pigeon_paywall_content_display'] ) ? $options['pigeon_paywall_content_display'] : 0;
+		?>
+		<p class="description"><?php esc_html_e( 'How many paragraphs do you want to show of a protected article?', 'pigeonwp' ); ?></p>
+		<select>
+			<option name="0"<?php selected( 0, $content_display, true ); ?>><?php esc_html_e( 'None', 'pigeonwp' ); ?></option>
+			<?php for ( $i = 1; $i <= 20; $i++ ) : ?>
+				<option name="<?php echo esc_attr( $i ); ?>"<?php selected( $i, $content_display, true ); ?>><?php echo esc_html( $i ); ?></option>
+			<?php endfor; ?>
+		</select>
+		<?php
 	}
 
 	/**
@@ -228,7 +280,7 @@ class Settings {
 		$html .= '<label for="paywall_js">' . esc_html__( 'Custom', 'pigeonwp' ) . '</label>';
 		$html .= '<p class="description">' . esc_html__( 'Redirect respects paywall rules. Modal uses the default Pigeon modal. Custom allows you to take your own actions. Refer to documentation on how to do this.', 'pigeonwp' ) . '</p>';
 
-		echo wp_kses_post( $html );
+		echo $html; // @phpcs:ignore
 	}
 
 	/**
@@ -289,7 +341,7 @@ class Settings {
 		$html .= '<input type="radio" id="value_pricing_disabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="2"' . checked( 2, $pricing, false ) . '/>';
 		$html .= '<label for="value_pricing_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 
-		echo wp_kses_post( $html );
+		echo $html; // @phpcs:ignore
 	}
 
 	/**
@@ -306,7 +358,7 @@ class Settings {
 		$html .= '<input type="radio" id="value_meter_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="2"' . checked( 2, $meter, false ) . '/>';
 		$html .= '<label for="value_meter_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 
-		echo wp_kses_post( $html );
+		echo $html; // @phpcs:ignore
 	}
 
 	/**
@@ -415,6 +467,6 @@ class Settings {
 		$html .= '<label for="category_pref_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 		$html .= '<p class="description">' . $required_note . esc_html__( 'Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.', 'pigeonwp' ) . '</p>';
 
-		echo wp_kses_post( $html );
+		echo $html; // @phpcs:ignore
 	}
 }

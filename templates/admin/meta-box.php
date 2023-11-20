@@ -12,7 +12,7 @@ $content_price  = get_post_meta( $post->ID, '_wp_pigeon_content_price', true );
 $content_value  = get_post_meta( $post->ID, '_wp_pigeon_content_value', true );
 $content_prompt = get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
 
-$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+$settings = get_plugin_settings();
 
 ?>
 <table>

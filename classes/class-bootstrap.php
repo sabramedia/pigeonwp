@@ -48,7 +48,7 @@ class Bootstrap {
 	 *
 	 * @since    1.0.0
 	 */
-	protected function load_plugin_textdomain() {
+	public function load_plugin_textdomain() {
 		load_plugin_textdomain( 'pigeonwp', false, PIGEONWP_DIR . 'languages' );
 	}
 

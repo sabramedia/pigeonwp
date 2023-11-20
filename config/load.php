@@ -13,7 +13,9 @@ $classes = array(
 	'PigeonWP\\Admin',
 	'PigeonWP\\Category_Sync',
 	'PigeonWP\\Pigeon',
+	'PigeonWP\\Protect',
 	'PigeonWP\\RSS',
 	'PigeonWP\\Settings',
 	'PigeonWP\\Shortcodes',
+	'PigeonWP\\Sticky_Bar',
 );

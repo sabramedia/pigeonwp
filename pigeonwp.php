@@ -30,5 +30,8 @@ require_once 'config/config.php';
 // Autoload classes.
 require_once 'helpers/autoloader.php';
 
+// Load helper functions.
+require_once 'helpers/functions.php';
+
 $bootstrap = Bootstrap::get_instance();
 $bootstrap->load();

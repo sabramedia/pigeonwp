@@ -28,27 +28,6 @@ class Category_Sync {
 	public $sdk;
 
 	/**
-	 * Init
-	 *
-	 * @since 1.6
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		// Load the API class.
-		require_once PIGEONWP_DIR . 'sdk/Pigeon.php';
-
-		$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
-
-		\Pigeon_Configuration::clientId( $settings['pigeon_api_user'] );
-		\Pigeon_Configuration::apiKey( $settings['pigeon_api_secret_key'] );
-		\Pigeon_Configuration::pigeonDomain( $settings['pigeon_subdomain'] );
-
-		// Send the category array.
-		$this->sdk = new \Pigeon();
-	}
-
-	/**
 	 * Hooks.
 	 *
 	 * @since 1.6
@@ -56,7 +35,9 @@ class Category_Sync {
 	 * @return void
 	 */
 	public function hooks() {
-		$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+		add_action( 'plugins_loaded', array( $this, 'load_sdk' ) );
+
+		$settings = get_plugin_settings();
 
 		// Only add the hooks if the category preferences is enabled.
 		if ( ! empty( $settings['pigeon_content_pref_category'] ) ) {
@@ -64,6 +45,27 @@ class Category_Sync {
 			add_action( 'edited_term', array( $this, 'category_save' ) );
 			add_action( 'delete_category', array( $this, 'category_save' ) );
 		}
+	}
+
+	/**
+	 * Load the SDK for use in class.
+	 *
+	 * @since 1.6
+	 *
+	 * @return void
+	 */
+	public function load_sdk() {
+		// Load the API class.
+		require_once PIGEONWP_DIR . 'sdk/Pigeon.php';
+
+		$settings = get_plugin_settings();
+
+		\Pigeon_Configuration::clientId( $settings['pigeon_api_user'] );
+		\Pigeon_Configuration::apiKey( $settings['pigeon_api_secret_key'] );
+		\Pigeon_Configuration::pigeonDomain( $settings['pigeon_subdomain'] );
+
+		// Send the category array.
+		$this->sdk = new \Pigeon();
 	}
 
 	/**
@@ -92,7 +94,7 @@ class Category_Sync {
 	 * @return boolean
 	 */
 	public function pigeon_category_enable() {
-		$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+		$settings = get_plugin_settings();
 
 		if ( ! empty( $settings['pigeon_api_user'] ) && ! empty( $settings['pigeon_api_secret_key'] ) ) {
 			try {
@@ -114,7 +116,7 @@ class Category_Sync {
 	 * @return boolean
 	 */
 	public function pigeon_category_disable() {
-		$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+		$settings = get_plugin_settings();
 
 		if ( ! empty( $settings['pigeon_api_user'] ) && ! empty( $settings['pigeon_api_secret_key'] ) ) {
 			try {

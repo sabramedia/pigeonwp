@@ -47,16 +47,17 @@ class Pigeon {
 	 * @return   void
 	 */
 	public function enqueue_scripts() {
-		$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+		$settings = get_plugin_settings();
 
 		if ( ! empty( $settings['pigeon_subdomain'] ) ) {
-			wp_enqueue_script( $this->js_handle, '//' . $settings['pigeon_subdomain'] . '/c/assets/pigeon.js', array( 'jguery' ), PIGEONWP_VERSION, array( 'in_footer' => false ) );
+			wp_enqueue_script( 'jquery' );
+			wp_enqueue_script( $this->js_handle, '//' . $settings['pigeon_subdomain'] . '/c/assets/pigeon.js', array( 'jquery' ), PIGEONWP_VERSION, array( 'in_footer' => false ) );
 		}
 
 		$script  = $this->get_pigeon_class_js( $settings );
 		$script .= $this->get_paywall_js( $settings );
 
-		wp_add_inline_script( $this->js_handle, $script, 'before' );
+		wp_add_inline_script( $this->js_handle, $script, 'after' );
 	}
 
 	/**

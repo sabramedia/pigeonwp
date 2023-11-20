@@ -56,13 +56,12 @@ class Admin {
 	const JS_HANDLE = 'pigeon_admin';
 
 	/**
-	 * Initialize the plugin by loading admin scripts & styles and adding a
-	 * settings page and menu.
+	 * Hooks.
 	 *
-	 * @since 1.0.0
+	 * @since 1.6
 	 * @return void
 	 */
-	private function __construct() {
+	public function hooks() {
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
@@ -140,7 +139,7 @@ class Admin {
 	 * @return void
 	 */
 	public function add_meta_box() {
-		$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+		$settings = get_plugin_settings();
 
 		$custom_post_types = ! empty( $settings['pigeon_content_post_types'] ) ? $settings['pigeon_content_post_types'] : array();
 

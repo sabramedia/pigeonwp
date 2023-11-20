@@ -7,7 +7,7 @@
 
 namespace PigeonWP;
 
-$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+$settings = get_plugin_settings();
 
 $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '', $settings['pigeon_subdomain'] );
 ?>
@@ -22,9 +22,9 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 		<?php esc_html_e( 'Current Installed Version:', 'pigeonwp' ); ?> <?php echo esc_html( PIGEONWP_VERSION ); ?>
 		(
 			<?php
-			sprintf(
+			printf(
 				/* translators: Link to Github. */
-				__( 'Download the latest Pigeon plugin for WordPress from <a href="%s">Github</a>', 'pigeonwp' ),
+				wp_kses_post( 'Download the latest Pigeon plugin for WordPress from <a href="%s">Github</a>', 'pigeonwp' ),
 				esc_url( 'https://github.com/sabramedia/pigeonwp' )
 			);
 			?>

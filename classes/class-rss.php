@@ -46,7 +46,7 @@ class RSS {
 			$url_array[ $post->ID ] = get_permalink( $post->ID );
 		}
 
-		$settings = Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
+		$settings = get_plugin_settings();
 
 		$pigeon_subdomain = '';
 		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
@@ -65,9 +65,9 @@ class RSS {
 			)
 		);
 
-		$response = json_decode( $response, true );
+		$response = json_decode( $response['body'], true );
 
-		if ( $response ) {
+		if ( ! empty( $response ) ) {
 			echo "\t<pigeonServer>\n";
 			foreach ( $url_array as $key => $url ) {
 				$access = (int) $response[ $key ];
@@ -87,7 +87,7 @@ class RSS {
 	public function add_pigeon_field_to_rss() {
 		global $post, $response;
 
-		$pigeon_meta_values = get_pigeon_post_meta( $post->ID );
+		$pigeon_meta_values = $this->get_post_meta( $post->ID );
 		if ( array_key_exists( 'content_access', $pigeon_meta_values ) ) {
 			$pigeon_access = $pigeon_meta_values['content_access'];
 		} else {
@@ -96,5 +96,35 @@ class RSS {
 		}
 
 		echo "\n\t\t<pigeonAccess>" . esc_html( $pigeon_access ) . "</pigeonAccess>\n";
+	}
+
+	/**
+	 * Get Pigeon metadata in a post loop.
+	 *
+	 * @since 1.4.4
+	 * @param int $post_id The ID of the post.
+	 * @return array
+	 */
+	public function get_post_meta( $post_id = null ) {
+		if ( ! $post_id ) {
+			global $post;
+			$post_id = $post->ID;
+		}
+
+		// Set defaults.
+		$pigeon_values = array(
+			'content_price'  => 0,
+			'content_value'  => 0,
+			'content_access' => 1,
+			'content_prompt' => 0,
+		);
+
+		foreach ( get_post_meta( $post_id ) as $key => $pm ) {
+			if ( false !== strpos( $key, '_wp_pigeon_' ) ) {
+				$pigeon_values[ str_replace( '_wp_pigeon_', '', $key ) ] = $pm[0];
+			}
+		}
+
+		return $pigeon_values;
 	}
 }
