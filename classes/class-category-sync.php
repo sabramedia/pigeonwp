@@ -60,6 +60,10 @@ class Category_Sync {
 
 		$settings = get_plugin_settings();
 
+		if ( empty( $settings['pigeon_api_user'] ) || empty( $settings['pigeon_api_secret_key'] ) || empty( $settings['pigeon_subdomain'] ) ) {
+			return;
+		}
+
 		\Pigeon_Configuration::clientId( $settings['pigeon_api_user'] );
 		\Pigeon_Configuration::apiKey( $settings['pigeon_api_secret_key'] );
 		\Pigeon_Configuration::pigeonDomain( $settings['pigeon_subdomain'] );
@@ -83,7 +87,9 @@ class Category_Sync {
 			'hide_empty' => '0',
 		);
 
-		$this->sdk->post( '/plugin/wp_preferences/sync_category', array( 'categories' => get_categories( $args ) ) );
+		if ( ! empty( $this->sdk ) ) {
+			$this->sdk->post( '/plugin/wp_preferences/sync_category', array( 'categories' => get_categories( $args ) ) );
+		}
 	}
 
 	/**
@@ -94,9 +100,7 @@ class Category_Sync {
 	 * @return boolean
 	 */
 	public function pigeon_category_enable() {
-		$settings = get_plugin_settings();
-
-		if ( ! empty( $settings['pigeon_api_user'] ) && ! empty( $settings['pigeon_api_secret_key'] ) ) {
+		if ( ! empty( $this->sdk ) ) {
 			try {
 				$this->sdk->post( '/plugin/wp_preferences/enable_category_plugin', array() );
 				return true;
@@ -116,9 +120,7 @@ class Category_Sync {
 	 * @return boolean
 	 */
 	public function pigeon_category_disable() {
-		$settings = get_plugin_settings();
-
-		if ( ! empty( $settings['pigeon_api_user'] ) && ! empty( $settings['pigeon_api_secret_key'] ) ) {
+		if ( ! empty( $this->sdk ) ) {
 			try {
 				$this->sdk->post( '/plugin/wp_preferences/disable_category_plugin', array() );
 				return true;
