@@ -254,7 +254,7 @@ class Settings {
 		$content_display = ! empty( $options['pigeon_paywall_content_display'] ) ? $options['pigeon_paywall_content_display'] : 0;
 		?>
 		<p class="description"><?php esc_html_e( 'How many paragraphs do you want to show of a protected article?', 'pigeonwp' ); ?></p>
-		<select>
+		<select name="wp_pigeon_settings[pigeon_paywall_content_display]">
 			<option name="0"<?php selected( 0, $content_display, true ); ?>><?php esc_html_e( 'None', 'pigeonwp' ); ?></option>
 			<?php for ( $i = 1; $i <= 20; $i++ ) : ?>
 				<option name="<?php echo esc_attr( $i ); ?>"<?php selected( $i, $content_display, true ); ?>><?php echo esc_html( $i ); ?></option>

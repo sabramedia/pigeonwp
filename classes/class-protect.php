@@ -47,7 +47,7 @@ class Protect {
 			$settings = get_plugin_settings();
 			$p_html   = '';
 
-			if ( $settings['pigeon_paywall_content_display'] > 0 ) {
+			if ( ! empty( $settings['pigeon_paywall_content_display'] ) && $settings['pigeon_paywall_content_display'] > 0 ) {
 				$p_html = ' data-pn="' . (int) $settings['pigeon_paywall_content_display'] . '"';
 			}
 
