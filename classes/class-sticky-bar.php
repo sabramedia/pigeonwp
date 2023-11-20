@@ -21,12 +21,12 @@ class Sticky_Bar {
 	/**
 	 * Handle for the Sticky CSS.
 	 */
-	const CSS_HANDLE = 'pigeon_sticky_css';
+	const CSS_HANDLE = 'pigeon_sticky';
 
 	/**
 	 * Handle for the Sticky JS.
 	 */
-	const JS_HANDLE = 'pigeon_sticky_js';
+	const JS_HANDLE = 'pigeon_sticky';
 
 	/**
 	 * Hooks

@@ -250,8 +250,8 @@ class Settings {
 	 * @since 1.6
 	 */
 	public function setting_pigeon_paywall_content_display() {
-		$options          = $this->get_settings();
-		$content_display  = ! empty( $options['pigeon_paywall_content_display'] ) ? $options['pigeon_paywall_content_display'] : 0;
+		$options         = $this->get_settings();
+		$content_display = ! empty( $options['pigeon_paywall_content_display'] ) ? $options['pigeon_paywall_content_display'] : 0;
 		?>
 		<p class="description"><?php esc_html_e( 'How many paragraphs do you want to show of a protected article?', 'pigeonwp' ); ?></p>
 		<select>
