@@ -103,7 +103,7 @@ class Pigeon {
 				break;
 			case '3':
 			default:
-				$paywall_iterrupt = "'modal'";
+				$paywall_iterrupt = "modal";
 				break;
 		}
 
@@ -119,16 +119,16 @@ class Pigeon {
 			Pigeon.paywall({
 				redirect:' . wp_json_encode( $paywall_iterrupt ) . ',
 				free:' . wp_json_encode( $is_page_free ) . ',
-				contentId:' . wp_json_encode( $page_values['content_id'] ) . ",
-				contentTitle:'" . wp_json_encode( $page_values['content_title'] ) . "',
-				contentDate:'" . wp_json_encode( $page_values['content_date'] ) . "',
-				contentPrice:" . wp_json_encode( $page_values['content_price'] ) . ',
+				contentId:' . wp_json_encode( $page_values['content_id'] ) . ',
+				contentTitle:' . wp_json_encode( $page_values['content_title'] ) . ',
+				contentDate:' . wp_json_encode( $page_values['content_date'] ) . ',
+				contentPrice:' . wp_json_encode( $page_values['content_price'] ) . ',
 				contentValue:' . wp_json_encode( $page_values['content_value'] ) . ',
-				contentPrompt:' . wp_json_encode( $page_values['content_prompt'] ) . ",
-				wpPostType: '" . wp_json_encode( $page_values['wp_post_type'] ) . "'
+				contentPrompt:' . wp_json_encode( $page_values['content_prompt'] ) . ',
+				wpPostType:' . wp_json_encode( $page_values['wp_post_type'] ) . '
 			});
 
-			Pigeon.widget.status();";
+			Pigeon.widget.status();';
 	}
 
 	/**

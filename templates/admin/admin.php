@@ -20,15 +20,6 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 		<?php endif; ?>
 	<p>
 		<?php esc_html_e( 'Current Installed Version:', 'pigeonwp' ); ?> <?php echo esc_html( PIGEONWP_VERSION ); ?>
-		(
-			<?php
-			printf(
-				/* translators: Link to Github. */
-				wp_kses_post( 'Download the latest Pigeon plugin for WordPress from <a href="%s">Github</a>', 'pigeonwp' ),
-				esc_url( 'https://github.com/sabramedia/pigeonwp' )
-			);
-			?>
-		)
 	</p>
 
 	<form action='options.php' method='post'>

@@ -321,7 +321,7 @@ class Settings {
 
 				// Make a call to see if it works.
 				$pigeon_sdk->get( '', array() );
-			} catch ( Exception $e ) {
+			} catch ( \Exception $e ) {
 				echo '<p style="color:#ca4a1f">' . esc_html__( 'There is a connectivity issue. Make sure the Pigeon API credentials are correct. This plugin uses cURL. Please make sure this is enabled in order for the direct API to work.', 'pigeonwp' ) . '</p>';
 			}
 		}

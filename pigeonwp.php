@@ -11,7 +11,7 @@
  * @copyright 2014-2019 Sabramedia
  *
  * @wordpress-plugin
- * Plugin Name:       Pigeon for WordPress
+ * Plugin Name:       Pigeon
  * Plugin URI:        http://pigeon.io
  * Description:       The Pigeon Paywall plugin for WordPress
  * Version:           1.6
