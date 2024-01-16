@@ -6,7 +6,7 @@
 .pigeon-widget-status ul li a:hover { color: #bf2e2b; }
 .pigeon-widget-status ul li:first-child a { border: none; padding: 0; margin: 0; }
 .pigeon-context-promotion .pigeon-cta{ padding: 25px; text-align: center; background: #bf2e2b; color: #ffffff; margin: 25px 0; }
-.pigeon-context-promotion .pigeon-cta a{ color: white; font-weight: bold; }
+.pigeon-context-promotion .pigeon-cta a{ color: white; text-decoration: none; }
 
 @media only screen and (max-width: 600px) {
 	.pigeon-widget-status ul { float: none; }

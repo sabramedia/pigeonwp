@@ -116,6 +116,14 @@ class Settings {
 		);
 
 		add_settings_field(
+			'pigeon_cta_message',
+			__( 'Paywall CTA Message', 'pigeonwp' ),
+			array( $this, 'setting_pigeon_paywall_cta_render' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
+
+		add_settings_field(
 			'pigeon_api_user',
 			__( 'User', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_api_user_render' ),
@@ -284,6 +292,20 @@ class Settings {
 	}
 
 	/**
+	 * Pigeon Paywall cta message.
+	 *
+	 * @since    1.3.0
+	 */
+	public function setting_pigeon_paywall_cta_render() {
+		$options  = $this->get_settings();
+		$cta_message = ! empty( $options['pigeon_cta_message'] ) ? $options['pigeon_cta_message'] : __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeonwp' );
+		?>
+		<textarea name="wp_pigeon_settings[pigeon_cta_message]" class="large-text" rows="3"><?php echo wp_kses_post( $cta_message ); ?></textarea>
+		<p class="description"><?php esc_html_e( 'Message to show when an article is protected behind the paywall.', 'pigeonwp' ); ?></p>
+		<?php
+	}
+
+	/**
 	 * API user callback.
 	 *
 	 * @since    1.1.0
@@ -295,7 +317,6 @@ class Settings {
 		<input type="text" name="wp_pigeon_settings[pigeon_api_user]" value="<?php echo esc_attr( $api_user ); ?>">
 		<?php
 	}
-
 
 	/**
 	 * API secret key callback.
