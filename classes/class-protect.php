@@ -40,8 +40,8 @@ class Protect {
 	public function inject_divs( $content ) {
 		$settings   = get_plugin_settings();
 		$default    = array(
-			'post' => 'Post',
-			'page' => 'Page',
+			'post',
+			'page',
 		);
 		$post_types = ! empty( $settings['pigeon_content_post_types'] ) ? $settings['pigeon_content_post_types'] : $default;
 

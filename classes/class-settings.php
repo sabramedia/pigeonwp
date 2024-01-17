@@ -433,8 +433,8 @@ class Settings {
 		);
 
 		$default = array(
-			'post' => 'Post',
-			'page' => 'Page',
+			'post' => 'post',
+			'page' => 'page',
 		);
 
 		$post_types = array_merge(
@@ -452,7 +452,7 @@ class Settings {
 				}
 				?>
 				<div class="pigeon-content-post-type-option">
-					<input type='checkbox' name='wp_pigeon_settings[pigeon_content_post_types][]' value='<?php echo esc_attr( $option ); ?>'<?php echo esc_attr( $checked ? ' checked' : '' ); ?> /> <?php echo esc_html( $option ); ?>
+					<input type='checkbox' name='wp_pigeon_settings[pigeon_content_post_types][]' value='<?php echo esc_attr( strtolower( $option ) ); ?>'<?php echo esc_attr( $checked ? ' checked' : '' ); ?> /> <?php echo esc_html( $option ); ?>
 				</div>
 				<?php
 			}
