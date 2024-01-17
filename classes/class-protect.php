@@ -66,7 +66,7 @@ class Protect {
 			} else {
 				$cta_message = apply_filters( 'pigeon_cta_message', __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeonwp' ), array() );
 			}
-			
+
 			$pigeon_cta = apply_filters( 'pigeon_cta', '<div class="pigeon-context-promotion" style="display:none;"><p class="pigeon-cta"><a href="#" class="pigeon-open">' . $cta_message . '</a></p></div>', array() );
 
 			$content .= $pigeon_cta;
