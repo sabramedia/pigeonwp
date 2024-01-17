@@ -58,9 +58,16 @@ class Protect {
 				$p_html = ' data-pn="' . (int) $settings['pigeon_paywall_content_display'] . '"';
 			}
 
-			$content     = $before_div . '<div class="pigeon-remove"' . $p_html . '>' . $before_content . $content . $after_content . '</div>' . $after_div;
-			$cta_message = apply_filters( 'pigeon_cta_message', __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeonwp' ), array() );
-			$pigeon_cta  = apply_filters( 'pigeon_cta', '<div class="pigeon-context-promotion" style="display:none;"><p class="pigeon-cta"><a href="#" class="pigeon-open">' . $cta_message . '</a></p></div>', array() );
+			$content = $before_div . '<div class="pigeon-remove"' . $p_html . '>' . $before_content . $content . $after_content . '</div>' . $after_div;
+
+			// Check for custom CTA.
+			if ( ! empty( $settings['pigeon_cta_message'] ) ) {
+				$cta_message = $settings['pigeon_cta_message'];
+			} else {
+				$cta_message = apply_filters( 'pigeon_cta_message', __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeonwp' ), array() );
+			}
+			
+			$pigeon_cta = apply_filters( 'pigeon_cta', '<div class="pigeon-context-promotion" style="display:none;"><p class="pigeon-cta"><a href="#" class="pigeon-open">' . $cta_message . '</a></p></div>', array() );
 
 			$content .= $pigeon_cta;
 		}
