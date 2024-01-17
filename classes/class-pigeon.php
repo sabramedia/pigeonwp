@@ -103,7 +103,7 @@ class Pigeon {
 				break;
 			case '3':
 			default:
-				$paywall_iterrupt = "modal";
+				$paywall_iterrupt = 'modal';
 				break;
 		}
 

@@ -38,7 +38,14 @@ class Protect {
 	 * @return string
 	 */
 	public function inject_divs( $content ) {
-		if ( ! is_front_page() && ( is_singular() || is_page() ) ) {
+		$settings   = get_plugin_settings();
+		$default    = array(
+			'post' => 'Post',
+			'page' => 'Page',
+		);
+		$post_types = ! empty( $settings['pigeon_content_post_types'] ) ? $settings['pigeon_content_post_types'] : $default;
+
+		if ( ! is_front_page() && is_singular( $post_types ) ) {
 			$before_div     = apply_filters( 'pigeon_before_div', '', array() );
 			$before_content = apply_filters( 'pigeon_before_content', '', array() );
 			$after_content  = apply_filters( 'pigeon_after_content', '', array() );
