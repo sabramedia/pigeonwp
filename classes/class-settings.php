@@ -172,6 +172,14 @@ class Settings {
 		);
 
 		add_settings_field(
+			'pigeon_content_pdf_index',
+			__( 'Indexing of PDFs', 'pigeonwp' ),
+			array( $this, 'setting_pigeon_pdf_index' ),
+			'plugin_options',
+			'settings_section_content'
+		);
+
+		add_settings_field(
 			'pigeon_content_pref_category',
 			__( 'Category Preferences', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_category_render' ),
@@ -228,7 +236,7 @@ class Settings {
 
 		$html  = '<input type="radio" id="redirect_enabled" name="wp_pigeon_settings[pigeon_redirect]" value="1"' . checked( 1, $redirect, false ) . '/>';
 		$html .= '<label for="redirect_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
-		$html .= '<input type="radio" id="redirect_disabled" name="wp_pigeon_settings[pigeon_redirect]" value="2"' . checked( 2, $redirect, false ) . '/>';
+		$html .= '<input type="radio" id="redirect_disabled" name="wp_pigeon_settings[pigeon_redirect]" value="0"' . checked( 0, $redirect, false ) . '/>';
 		$html .= '<label for="redirect_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 		$html .= '<p class="description">' . esc_html__( 'Determines whether the plugin does the automatic reroute or stays on the page.', 'pigeonwp' ) . '</p>';
 
@@ -359,7 +367,7 @@ class Settings {
 
 		$html  = '<input type="radio" id="value_pricing_enabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="1"' . checked( 1, $pricing, false ) . '/>';
 		$html .= '<label for="value_pricing_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
-		$html .= '<input type="radio" id="value_pricing_disabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="2"' . checked( 2, $pricing, false ) . '/>';
+		$html .= '<input type="radio" id="value_pricing_disabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="0"' . checked( 0, $pricing, false ) . '/>';
 		$html .= '<label for="value_pricing_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 
 		echo $html; // @phpcs:ignore
@@ -376,7 +384,7 @@ class Settings {
 
 		$html  = '<input type="radio" id="value_meter_enabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="1"' . checked( 1, $meter, false ) . '/>';
 		$html .= '<label for="value_meter_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
-		$html .= '<input type="radio" id="value_meter_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="2"' . checked( 2, $meter, false ) . '/>';
+		$html .= '<input type="radio" id="value_meter_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="0"' . checked( 0, $meter, false ) . '/>';
 		$html .= '<label for="value_meter_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 
 		echo $html; // @phpcs:ignore
@@ -497,9 +505,28 @@ class Settings {
 
 		$html  = '<input type="radio" id="category_pref_enabled" class="pigeon-content-pref-category" name="wp_pigeon_settings[pigeon_content_pref_category]" value="1"' . checked( 1, $options['pigeon_content_pref_category'], false ) . '/>';
 		$html .= '<label for="category_pref_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
-		$html .= '<input type="radio" id="category_pref_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_pref_category]" value="2"' . checked( 2, $options['pigeon_content_pref_category'], false ) . '/>';
+		$html .= '<input type="radio" id="category_pref_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_pref_category]" value="0"' . checked( 0, $options['pigeon_content_pref_category'], false ) . '/>';
 		$html .= '<label for="category_pref_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 		$html .= '<p class="description">' . $required_note . esc_html__( 'Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.', 'pigeonwp' ) . '</p>';
+
+		echo $html; // @phpcs:ignore
+	}
+
+	/**
+	 * Discourage indexing of PDFs.
+	 *
+	 * @since    1.6.0
+	 */
+	public function setting_pigeon_pdf_index() {
+		$options = $this->get_settings();
+
+		$options['pigeon_content_pdf_index'] = ! empty( $options['pigeon_content_pdf_index'] ) ? $options['pigeon_content_pdf_index'] : 2;
+
+		$html  = '<input type="radio" id="pdf_index_enabled" class="pigeon-content-pdf-index" name="wp_pigeon_settings[pigeon_content_pdf_index]" value="1"' . checked( 1, $options['pigeon_content_pdf_index'], false ) . '/>';
+		$html .= '<label for="pdf_index_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<input type="radio" id="pdf_index_disabled" class="pigeon-content-pdf-index" name="wp_pigeon_settings[pigeon_content_pdf_index]" value="0"' . checked( 0, $options['pigeon_content_pdf_index'], false ) . '/>';
+		$html .= '<label for="pdf_index_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Encourage search engines like Google to exclude your uploaded PDF documents from their index.', 'pigeonwp' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}

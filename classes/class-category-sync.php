@@ -40,7 +40,7 @@ class Category_Sync {
 		$settings = get_plugin_settings();
 
 		// Only add the hooks if the category preferences is enabled.
-		if ( ! empty( $settings['pigeon_content_pref_category'] ) ) {
+		if ( ! empty( $settings['pigeon_content_pref_category'] ) && 1 === (int) $settings['pigeon_content_pref_category'] ) {
 			add_action( 'created_term', array( $this, 'category_save' ) );
 			add_action( 'edited_term', array( $this, 'category_save' ) );
 			add_action( 'delete_category', array( $this, 'category_save' ) );

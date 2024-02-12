@@ -38,7 +38,7 @@ class Sticky_Bar {
 	public function hooks() {
 		$settings = get_plugin_settings();
 
-		if ( ! empty( $settings['pigeon_content_pref_category'] ) ) {
+		if ( ! empty( $settings['pigeon_paywall_sticky'] ) && 1 === (int) $settings['pigeon_paywall_sticky'] ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 	}

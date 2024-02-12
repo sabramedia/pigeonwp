@@ -29,7 +29,7 @@ $settings = get_plugin_settings();
 		</td>
 	</tr>
 
-	<?php if ( ! empty( $settings['pigeon_content_value_pricing'] ) ) { ?>
+	<?php if ( ! empty( $settings['pigeon_content_value_pricing'] ) && 1 === (int) $settings['pigeon_content_value_pricing'] ) { ?>
 	<tr>
 		<td>
 			<label for="pigeon-content-price"><?php esc_html_e( 'Price', 'pigeonwp' ); ?>
@@ -42,7 +42,7 @@ $settings = get_plugin_settings();
 	</tr>
 	<?php } ?>
 
-	<?php if ( ! empty( $settings['pigeon_content_value_meter'] ) && isset( $settings['pigeon_content_value'] ) ) : ?>
+	<?php if ( ! empty( $settings['pigeon_content_value_meter'] ) && 1 === (int) $settings['pigeon_content_value_meter'] && isset( $settings['pigeon_content_value'] ) ) : ?>
 	<tr>
 		<td>
 			<label for="pigeon-content-value"><?php esc_html_e( 'Value', 'pigeonwp' ); ?></label>
