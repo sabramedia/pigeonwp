@@ -16,7 +16,7 @@
 		});
 
 		$('input.pigeon-value-meter').change(function(){
-			if($(this).val() == 2 ){ // 2 == disabled
+			if($(this).val() == 0 ) {
 				$(this).closest('tr').next('tr').css({'visibility':'hidden','display':'none'});
 			}else{
 				$(this).closest('tr').next('tr').css({'visibility':'visible','display':''});

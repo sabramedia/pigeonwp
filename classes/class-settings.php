@@ -363,7 +363,7 @@ class Settings {
 	 */
 	public function setting_pigeon_content_value_pricing_render() {
 		$options = $this->get_settings();
-		$pricing = ! empty( $options['pigeon_content_value_pricing'] ) ? $options['pigeon_content_value_pricing'] : 2;
+		$pricing = ! empty( $options['pigeon_content_value_pricing'] ) ? $options['pigeon_content_value_pricing'] : 0;
 
 		$html  = '<input type="radio" id="value_pricing_enabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="1"' . checked( 1, $pricing, false ) . '/>';
 		$html .= '<label for="value_pricing_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
@@ -380,7 +380,7 @@ class Settings {
 	 */
 	public function setting_pigeon_content_value_meter_render() {
 		$options = $this->get_settings();
-		$meter   = ! empty( $options['pigeon_content_value_meter'] ) ? $options['pigeon_content_value_meter'] : 2;
+		$meter   = ! empty( $options['pigeon_content_value_meter'] ) ? $options['pigeon_content_value_meter'] : 0;
 
 		$html  = '<input type="radio" id="value_meter_enabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="1"' . checked( 1, $meter, false ) . '/>';
 		$html .= '<label for="value_meter_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
@@ -501,7 +501,7 @@ class Settings {
 			$required_note = '<strong>' . esc_html__( 'Requires API User and Private Key from Settings > API in your Pigeon dashboard.', 'pigeonwp' ) . '</strong>';
 		}
 
-		$options['pigeon_content_pref_category'] = ! empty( $options['pigeon_content_pref_category'] ) ? $options['pigeon_content_pref_category'] : 2;
+		$options['pigeon_content_pref_category'] = ! empty( $options['pigeon_content_pref_category'] ) ? $options['pigeon_content_pref_category'] : 0;
 
 		$html  = '<input type="radio" id="category_pref_enabled" class="pigeon-content-pref-category" name="wp_pigeon_settings[pigeon_content_pref_category]" value="1"' . checked( 1, $options['pigeon_content_pref_category'], false ) . '/>';
 		$html .= '<label for="category_pref_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
@@ -520,7 +520,7 @@ class Settings {
 	public function setting_pigeon_pdf_index() {
 		$options = $this->get_settings();
 
-		$options['pigeon_content_pdf_index'] = ! empty( $options['pigeon_content_pdf_index'] ) ? $options['pigeon_content_pdf_index'] : 2;
+		$options['pigeon_content_pdf_index'] = ! empty( $options['pigeon_content_pdf_index'] ) ? $options['pigeon_content_pdf_index'] : 0;
 
 		$html  = '<input type="radio" id="pdf_index_enabled" class="pigeon-content-pdf-index" name="wp_pigeon_settings[pigeon_content_pdf_index]" value="1"' . checked( 1, $options['pigeon_content_pdf_index'], false ) . '/>';
 		$html .= '<label for="pdf_index_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
