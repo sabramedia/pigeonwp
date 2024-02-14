@@ -1,0 +1,13 @@
+.pigeon-widget-status { position:fixed; height: 42px; padding: 10px; width: 100%; background: #000; z-index: 999997; font-size: 14px; text-align: center; }
+.pigeon-widget-status ul { display: inline-block; margin: 0 auto; padding: 0; float: right; }
+.pigeon-widget-status ul li { float: left; list-style: none; color: #cdcdcd; }
+.pigeon-widget-status ul li a {color: #cdcdcd; border-left: 1px solid #585858; padding-left: 10px; margin-left: 13px; }
+.pigeon-widget-status ul li.meter a { border: none; }
+.pigeon-widget-status ul li a:hover { color: #bf2e2b; }
+.pigeon-widget-status ul li:first-child a { border: none; padding: 0; margin: 0; }
+.pigeon-context-promotion .pigeon-cta{ padding: 25px; text-align: center; background: #bf2e2b; color: #ffffff; margin: 25px 0; }
+.pigeon-context-promotion .pigeon-cta a{ color: white; text-decoration: none; }
+
+@media only screen and (max-width: 600px) {
+	.pigeon-widget-status ul { float: none; }
+}
