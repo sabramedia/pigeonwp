@@ -26,7 +26,6 @@ class Protect {
 	 */
 	public function hooks() {
 		add_filter( 'the_content', array( $this, 'inject_divs' ) );
-		add_filter( 'robots_txt', array( $this, 'hide_pdfs' ), 0 );
 	}
 
 	/**
@@ -74,24 +73,5 @@ class Protect {
 		}
 
 		return $content;
-	}
-
-	/**
-	 * Protect PDF's from search engine indexes.
-	 *
-	 * @since 1.6
-	 *
-	 * @param string $robots_txt The current robots.txt content.
-	 *
-	 * @return string
-	 */
-	public function hide_pdfs( $robots_txt ) {
-		$settings = get_plugin_settings();
-
-		if ( ! empty( $settings['pigeon_content_pdf_index'] ) && 1 === (int) $settings['pigeon_content_pdf_index'] ) {
-			$robots_txt .= "Disallow: *.pdf\n";
-		}
-
-		return $robots_txt;
 	}
 }

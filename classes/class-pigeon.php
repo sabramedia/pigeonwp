@@ -26,7 +26,7 @@ class Pigeon {
 	 *
 	 * @var     string
 	 */
-	protected $js_handle = 'pigeon-js';
+	protected $js_handle = 'pigeon';
 
 	/**
 	 * Run the plugin hooks.
@@ -90,10 +90,13 @@ class Pigeon {
 	 * Get the paywall JS.
 	 *
 	 * @since 1.6
+	 *
 	 * @param array $settings The plugin settings.
+	 * @param bool  $init_widget Initiate the widget.
+	 *
 	 * @return string
 	 */
-	public function get_paywall_js( $settings ) {
+	public function get_paywall_js( $settings, $init_widget = true ) {
 		switch ( $settings['pigeon_paywall_interrupt'] ) {
 			case '1':
 				$paywall_iterrupt = 1;
@@ -115,7 +118,7 @@ class Pigeon {
 			$is_page_free = 1;
 		}
 
-		return '
+		$js = '
 			Pigeon.paywall({
 				redirect:' . wp_json_encode( $paywall_iterrupt ) . ',
 				free:' . wp_json_encode( $is_page_free ) . ',
@@ -126,9 +129,13 @@ class Pigeon {
 				contentValue:' . wp_json_encode( $page_values['content_value'] ) . ',
 				contentPrompt:' . wp_json_encode( $page_values['content_prompt'] ) . ',
 				wpPostType:' . wp_json_encode( $page_values['wp_post_type'] ) . '
-			});
+			});';
 
-			Pigeon.widget.status();';
+		if ( $init_widget ) {
+			$js .= 'Pigeon.widget.status();';
+		}
+
+		return $js;
 	}
 
 	/**

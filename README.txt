@@ -31,11 +31,26 @@ Follow the instructions below to install the plugin
 3. Upload the `pigeon` directory to the `/wp-content/plugins/` directory
 4. Activate the plugin in the Plugin dashboard
 
+== Frequently Asked Questions ==
+
+= Why are PDFs not being blocked by the paywall? =
+
+If you've enabled the PDF Paywall option in the settings but PDF's are still able to be downloaded when the paywall has run out of credits, then you could have one of the following issues:
+
+1. If you're using Apache, make sure that your `.htaccess` file is writable. Our plugin needs to add a rule to this file. Some large and enterprise hosts don't allow updating of the .htaccess file. Contact your host to check if you're able to write to the `.htaccess` file.
+2. If you're using nginx, then you need to add your own rule to the nginx config. Apply the following rule to hide PDF documents behind the paywall:
+
+```
+rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
+```
+
 == Changelog ==
 = 1.6 =
 * Large refactor of codebase to be WordPress Coding Standards compliant
 * Include correct .POT translation file
 * Remove server paywall option
+* Allow hiding of PDF documents behind the paywall
+* Allow PDF documents to be excluding from search indexes with a robots.txt rule
 
 = 1.5.13 =
 * PHP8 minor version Compatibility updates

@@ -9,9 +9,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-17T14:38:33+00:00\n"
+"POT-Creation-Date: 2024-02-14T16:21:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: pigeonwp\n"
 
 #. Plugin Name of the plugin
@@ -40,8 +40,8 @@ msgstr ""
 msgid "Pigeon Settings"
 msgstr ""
 
-#: classes/class-protect.php:62
-#: classes/class-settings.php:301
+#: classes/class-protect.php:67
+#: classes/class-settings.php:315
 msgid "This page is available to subscribers. Click here to sign in or get access."
 msgstr ""
 
@@ -90,113 +90,138 @@ msgid "Private Key"
 msgstr ""
 
 #: classes/class-settings.php:152
-msgid "Pricing Value"
+msgid "PDF Paywall"
 msgstr ""
 
 #: classes/class-settings.php:160
-msgid "Value Meter"
+msgid "PDF Search Visibility"
 msgstr ""
 
 #: classes/class-settings.php:168
-msgid "Credit Value"
+msgid "Pricing Value"
 msgstr ""
 
 #: classes/class-settings.php:176
+msgid "Value Meter"
+msgstr ""
+
+#: classes/class-settings.php:184
+msgid "Credit Value"
+msgstr ""
+
+#: classes/class-settings.php:192
 msgid "Category Preferences"
 msgstr ""
 
-#: classes/class-settings.php:203
-msgid "Only used when content value needs to be set in WordPress and passed to Pigeon."
-msgstr ""
-
-#: classes/class-settings.php:216
+#: classes/class-settings.php:230
 msgid "Defines the subdomain used for Pigeon."
 msgstr ""
 
-#: classes/class-settings.php:230
-#: classes/class-settings.php:361
-#: classes/class-settings.php:378
-#: classes/class-settings.php:499
+#: classes/class-settings.php:244
+#: classes/class-settings.php:375
+#: classes/class-settings.php:393
+#: classes/class-settings.php:515
+#: classes/class-settings.php:534
+#: classes/class-settings.php:561
 msgid "Enabled"
 msgstr ""
 
-#: classes/class-settings.php:232
-#: classes/class-settings.php:363
-#: classes/class-settings.php:380
-#: classes/class-settings.php:501
+#: classes/class-settings.php:246
+#: classes/class-settings.php:377
+#: classes/class-settings.php:395
+#: classes/class-settings.php:517
+#: classes/class-settings.php:536
+#: classes/class-settings.php:563
 msgid "Disabled"
 msgstr ""
 
-#: classes/class-settings.php:233
+#: classes/class-settings.php:247
 msgid "Determines whether the plugin does the automatic reroute or stays on the page."
 msgstr ""
 
-#: classes/class-settings.php:248
+#: classes/class-settings.php:262
 msgid "Show"
 msgstr ""
 
-#: classes/class-settings.php:250
+#: classes/class-settings.php:264
 msgid "Hide"
 msgstr ""
 
-#: classes/class-settings.php:251
+#: classes/class-settings.php:265
 msgid "Show a sticky bar on each page with paywall information."
 msgstr ""
 
-#: classes/class-settings.php:265
+#: classes/class-settings.php:279
 msgid "None"
 msgstr ""
 
-#: classes/class-settings.php:270
+#: classes/class-settings.php:284
 msgid "How many paragraphs do you want to show of a protected article?"
 msgstr ""
 
-#: classes/class-settings.php:284
+#: classes/class-settings.php:298
 msgid "Redirect"
 msgstr ""
 
-#: classes/class-settings.php:286
+#: classes/class-settings.php:300
 msgid "Modal Popup"
 msgstr ""
 
-#: classes/class-settings.php:288
+#: classes/class-settings.php:302
 msgid "Custom"
 msgstr ""
 
-#: classes/class-settings.php:289
+#: classes/class-settings.php:303
 msgid "Redirect respects paywall rules. Modal uses the default Pigeon modal. Custom allows you to take your own actions. Refer to documentation on how to do this."
 msgstr ""
 
-#: classes/class-settings.php:304
+#: classes/class-settings.php:318
 msgid "Message to show when an article is protected behind the paywall."
 msgstr ""
 
-#: classes/class-settings.php:346
+#: classes/class-settings.php:360
 msgid "There is a connectivity issue. Make sure the Pigeon API credentials are correct. This plugin uses cURL. Please make sure this is enabled in order for the direct API to work."
 msgstr ""
 
-#: classes/class-settings.php:402
+#: classes/class-settings.php:378
+#: classes/class-settings.php:396
+msgid "Only used when content value needs to be set in WordPress and passed to Pigeon."
+msgstr ""
+
+#: classes/class-settings.php:418
 msgid "Remove"
 msgstr ""
 
-#: classes/class-settings.php:408
+#: classes/class-settings.php:424
 msgid "Add New Value"
 msgstr ""
 
-#: classes/class-settings.php:460
+#: classes/class-settings.php:476
 msgid "Enable the paywall on the following posts, pages and post types."
 msgstr ""
 
-#: classes/class-settings.php:465
+#: classes/class-settings.php:481
 msgid "There are no custom post types available."
 msgstr ""
 
-#: classes/class-settings.php:493
+#: classes/class-settings.php:509
 msgid "Requires API User and Private Key from Settings > API in your Pigeon dashboard."
 msgstr ""
 
-#: classes/class-settings.php:502
+#: classes/class-settings.php:518
 msgid "Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer."
+msgstr ""
+
+#: classes/class-settings.php:537
+msgid "Hide PDF documents behind the paywall. All PDF documents uploaded to WordPress will be protected."
+msgstr ""
+
+#: classes/class-settings.php:544
+msgid "Warning! It looks like you may not be running Apache. Nginx and other servers require a custom rewrite rule to be added for this to work. Please see the plugin readme file or contact Pigeon support for assistance."
+msgstr ""
+
+#: classes/class-settings.php:564
+msgid "Encourage search engines like Google to exclude your uploaded PDF documents from their index."
 msgstr ""
 
 #: classes/class-shortcodes.php:47
@@ -260,4 +285,12 @@ msgstr[1] ""
 
 #: templates/admin/meta-box.php:58
 msgid "Prompt"
+msgstr ""
+
+#: templates/public/download-pdf.php:14
+msgid "Downloading PDF..."
+msgstr ""
+
+#: templates/public/download-pdf.php:25
+msgid "Checking PDF download permissions, please wait..."
 msgstr ""

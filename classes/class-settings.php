@@ -148,6 +148,22 @@ class Settings {
 		);
 
 		add_settings_field(
+			'pigeon_content_pdf_paywall',
+			__( 'PDF Paywall', 'pigeonwp' ),
+			array( $this, 'setting_pigeon_pdf_paywall' ),
+			'plugin_options',
+			'settings_section_content'
+		);
+
+		add_settings_field(
+			'pigeon_content_pdf_index',
+			__( 'PDF Search Visibility', 'pigeonwp' ),
+			array( $this, 'setting_pigeon_pdf_index' ),
+			'plugin_options',
+			'settings_section_content'
+		);
+
+		add_settings_field(
 			'pigeon_content_value_pricing',
 			__( 'Pricing Value', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_value_pricing_render' ),
@@ -167,14 +183,6 @@ class Settings {
 			'pigeon_content_value',
 			__( 'Credit Value', 'pigeonwp' ),
 			array( $this, 'setting_pigeon_content_value_render' ),
-			'plugin_options',
-			'settings_section_content'
-		);
-
-		add_settings_field(
-			'pigeon_content_pdf_index',
-			__( 'Indexing of PDFs', 'pigeonwp' ),
-			array( $this, 'setting_pigeon_pdf_index' ),
 			'plugin_options',
 			'settings_section_content'
 		);
@@ -207,9 +215,7 @@ class Settings {
 	 *
 	 * @since    1.4.0
 	 */
-	public function settings_section_content_callback() {
-		esc_html_e( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeonwp' );
-	}
+	public function settings_section_content_callback() {}
 
 	/**
 	 * Pigeon subdomain callback.
@@ -369,6 +375,7 @@ class Settings {
 		$html .= '<label for="value_pricing_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
 		$html .= '<input type="radio" id="value_pricing_disabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="0"' . checked( 0, $pricing, false ) . '/>';
 		$html .= '<label for="value_pricing_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeonwp' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -386,6 +393,7 @@ class Settings {
 		$html .= '<label for="value_meter_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
 		$html .= '<input type="radio" id="value_meter_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="0"' . checked( 0, $meter, false ) . '/>';
 		$html .= '<label for="value_meter_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeonwp' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -508,6 +516,33 @@ class Settings {
 		$html .= '<input type="radio" id="category_pref_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_pref_category]" value="0"' . checked( 0, $options['pigeon_content_pref_category'], false ) . '/>';
 		$html .= '<label for="category_pref_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
 		$html .= '<p class="description">' . $required_note . esc_html__( 'Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.', 'pigeonwp' ) . '</p>';
+
+		echo $html; // @phpcs:ignore
+	}
+
+	/**
+	 * Block PDFs with a paywall.
+	 *
+	 * @since    1.6.0
+	 */
+	public function setting_pigeon_pdf_paywall() {
+		$options = $this->get_settings();
+
+		$options['pigeon_content_pdf_paywall'] = ! empty( $options['pigeon_content_pdf_paywall'] ) ? $options['pigeon_content_pdf_paywall'] : 0;
+
+		$html  = '<input type="radio" id="pdf_paywall_enabled" class="pigeon-content-pdf-paywall" name="wp_pigeon_settings[pigeon_content_pdf_paywall]" value="1"' . checked( 1, $options['pigeon_content_pdf_paywall'], false ) . '/>';
+		$html .= '<label for="pdf_paywall_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<input type="radio" id="pdf_paywall_disabled" class="pigeon-content-pdf-paywall" name="wp_pigeon_settings[pigeon_content_pdf_paywall]" value="0"' . checked( 0, $options['pigeon_content_pdf_paywall'], false ) . '/>';
+		$html .= '<label for="pdf_paywall_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Hide PDF documents behind the paywall. All PDF documents uploaded to WordPress will be protected.', 'pigeonwp' ) . '</p>';
+
+		if ( ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
+			$server = strtolower( sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) );
+		}
+
+		if ( empty( $server ) || false === strpos( $server, 'apache' ) ) {
+			$html .= '<p class="description" style="color:#ca4a1f">' . esc_html__( 'Warning! It looks like you may not be running Apache. Nginx and other servers require a custom rewrite rule to be added for this to work. Please see the plugin readme file or contact Pigeon support for assistance.', 'pigeonwp' ) . '</p>';
+		}
 
 		echo $html; // @phpcs:ignore
 	}
