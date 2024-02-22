@@ -7,13 +7,16 @@
 
 namespace PigeonWP;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 $access_value   = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
 $content_price  = get_post_meta( $post->ID, '_wp_pigeon_content_price', true );
 $content_value  = get_post_meta( $post->ID, '_wp_pigeon_content_value', true );
 $content_prompt = get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
 
 $settings = get_plugin_settings();
-
 ?>
 <table>
 	<tr>

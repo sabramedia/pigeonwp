@@ -7,6 +7,10 @@
 
 namespace PigeonWP;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 /**
  * Get plugin settings.
  *
