@@ -69,13 +69,6 @@ class Settings {
 		);
 
 		add_settings_section(
-			'settings_section_api',
-			__( 'API Connection', 'pigeon' ),
-			array( $this, 'settings_section_api_callback' ),
-			'plugin_options'
-		);
-
-		add_settings_section(
 			'settings_section_content',
 			__( 'Content', 'pigeon' ),
 			array( $this, 'settings_section_content_callback' ),
@@ -132,22 +125,6 @@ class Settings {
 		);
 
 		add_settings_field(
-			'pigeon_api_user',
-			__( 'User', 'pigeon' ),
-			array( $this, 'setting_pigeon_api_user_render' ),
-			'plugin_options',
-			'settings_section_api'
-		);
-
-		add_settings_field(
-			'pigeon_api_secret_key',
-			__( 'Private Key', 'pigeon' ),
-			array( $this, 'setting_pigeon_api_secret_key_render' ),
-			'plugin_options',
-			'settings_section_api'
-		);
-
-		add_settings_field(
 			'pigeon_content_pdf_paywall',
 			__( 'PDF Paywall', 'pigeon' ),
 			array( $this, 'setting_pigeon_pdf_paywall' ),
@@ -186,14 +163,6 @@ class Settings {
 			'plugin_options',
 			'settings_section_content'
 		);
-
-		add_settings_field(
-			'pigeon_content_pref_category',
-			__( 'Category Preferences', 'pigeon' ),
-			array( $this, 'setting_pigeon_content_category_render' ),
-			'plugin_options',
-			'settings_section_api'
-		);
 	}
 
 	/**
@@ -202,13 +171,6 @@ class Settings {
 	 * @since    1.1.0
 	 */
 	public function settings_section_basic_callback() {}
-
-	/**
-	 * API Section settings callback.
-	 *
-	 * @since    1.1.0
-	 */
-	public function settings_section_api_callback() {}
 
 	/**
 	 * Content Section settings callback.
@@ -317,49 +279,6 @@ class Settings {
 		<textarea name="wp_pigeon_settings[pigeon_cta_message]" class="large-text" rows="3"><?php echo wp_kses_post( $cta_message ); ?></textarea>
 		<p class="description"><?php esc_html_e( 'Message to show when an article is protected behind the paywall.', 'pigeon' ); ?></p>
 		<?php
-	}
-
-	/**
-	 * API user callback.
-	 *
-	 * @since    1.1.0
-	 */
-	public function setting_pigeon_api_user_render() {
-		$options  = $this->get_settings();
-		$api_user = ! empty( $options['pigeon_api_user'] ) ? $options['pigeon_api_user'] : '';
-		?>
-		<input type="text" name="wp_pigeon_settings[pigeon_api_user]" value="<?php echo esc_attr( $api_user ); ?>">
-		<?php
-	}
-
-	/**
-	 * API secret key callback.
-	 *
-	 * @since    1.1.0
-	 */
-	public function setting_pigeon_api_secret_key_render() {
-		$options = $this->get_settings();
-		$secret  = ! empty( $options['pigeon_api_secret_key'] ) ? $options['pigeon_api_secret_key'] : '';
-		?>
-		<input type="text" name="wp_pigeon_settings[pigeon_api_secret_key]" value="<?php echo esc_attr( $secret ); ?>">
-		<?php
-		if ( ! empty( $options['pigeon_api_user'] ) && ! empty( $options['pigeon_api_secret_key'] ) ) {
-			try {
-				require_once PIGEONWP_DIR . 'sdk/Pigeon.php';
-
-				\Pigeon_Configuration::clientId( $options['pigeon_api_user'] );
-				\Pigeon_Configuration::apiKey( $options['pigeon_api_secret_key'] );
-				\Pigeon_Configuration::pigeonDomain( $options['pigeon_subdomain'] );
-
-				// Send the category array.
-				$pigeon_sdk = new \Pigeon();
-
-				// Make a call to see if it works.
-				$pigeon_sdk->get( '', array() );
-			} catch ( \Exception $e ) {
-				echo '<p style="color:#ca4a1f">' . esc_html__( 'There is a connectivity issue. Make sure the Pigeon API credentials are correct. This plugin uses cURL. Please make sure this is enabled in order for the direct API to work.', 'pigeon' ) . '</p>';
-			}
-		}
 	}
 
 	/**
@@ -482,42 +401,6 @@ class Settings {
 		</div>
 			<?php
 		}
-	}
-
-	/**
-	 * Content category preferences on or off.
-	 *
-	 * @since    1.5.9
-	 */
-	public function setting_pigeon_content_category_render() {
-		$options       = $this->get_settings();
-		$required_note = '';
-
-		// This may be a bit non-standard, but if the page loads with the plugin enabled, then run an api call to enable the plugin.
-		// Only run the following if the api keys are set.
-		if ( ! empty( $options['pigeon_api_user'] ) && ! empty( $options['pigeon_api_secret_key'] ) ) {
-			if ( ! empty( $_GET['settings-updated'] ) ) { // @phpcs:ignore WordPress.Security.NonceVerification.Recommended
-				$category_sync = Bootstrap::get_instance()->get_container( 'category-sync' );
-
-				if ( array_key_exists( 'pigeon_content_pref_category', $options ) && 1 === (int) $options['pigeon_content_pref_category'] ) {
-					$category_sync->pigeon_category_enable();
-				} else {
-					$category_sync->pigeon_category_disable();
-				}
-			}
-		} else {
-			$required_note = '<strong>' . esc_html__( 'Requires API User and Private Key from Settings > API in your Pigeon dashboard.', 'pigeon' ) . '</strong>';
-		}
-
-		$options['pigeon_content_pref_category'] = ! empty( $options['pigeon_content_pref_category'] ) ? $options['pigeon_content_pref_category'] : 0;
-
-		$html  = '<input type="radio" id="category_pref_enabled" class="pigeon-content-pref-category" name="wp_pigeon_settings[pigeon_content_pref_category]" value="1"' . checked( 1, $options['pigeon_content_pref_category'], false ) . '/>';
-		$html .= '<label for="category_pref_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
-		$html .= '<input type="radio" id="category_pref_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_pref_category]" value="0"' . checked( 0, $options['pigeon_content_pref_category'], false ) . '/>';
-		$html .= '<label for="category_pref_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
-		$html .= '<p class="description">' . $required_note . esc_html__( 'Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.', 'pigeon' ) . '</p>';
-
-		echo $html; // @phpcs:ignore
 	}
 
 	/**

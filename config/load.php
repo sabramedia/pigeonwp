@@ -11,7 +11,6 @@ namespace PigeonWP;
 
 $classes = array(
 	'PigeonWP\\Admin',
-	'PigeonWP\\Category_Sync',
 	'PigeonWP\\PDF',
 	'PigeonWP\\Pigeon',
 	'PigeonWP\\Protect',
