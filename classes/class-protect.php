@@ -64,7 +64,7 @@ class Protect {
 			if ( ! empty( $settings['pigeon_cta_message'] ) ) {
 				$cta_message = $settings['pigeon_cta_message'];
 			} else {
-				$cta_message = apply_filters( 'pigeon_cta_message', __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeonwp' ), array() );
+				$cta_message = apply_filters( 'pigeon_cta_message', __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeon' ), array() );
 			}
 
 			$pigeon_cta = apply_filters( 'pigeon_cta', '<div class="pigeon-context-promotion" style="display:none;"><p class="pigeon-cta"><a href="#" class="pigeon-open">' . $cta_message . '</a></p></div>', array() );

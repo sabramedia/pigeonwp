@@ -18,13 +18,13 @@ $settings = get_plugin_settings();
 <table>
 	<tr>
 		<td>
-			<label for="pigeon-content-access"><?php esc_html_e( 'Access', 'pigeonwp' ); ?></label>
+			<label for="pigeon-content-access"><?php esc_html_e( 'Access', 'pigeon' ); ?></label>
 		</td>
 		<td>
 			<select name="pigeon_content_access" id="pigeon-content-access">
-				<option value="0" <?php selected( (int) $access_value, 0 ); ?>><?php esc_html_e( 'Metered', 'pigeonwp' ); ?></option>
-				<option value="1" <?php selected( (int) $access_value, 1 ); ?>><?php esc_html_e( 'Public', 'pigeonwp' ); ?></option>
-				<option value="2" <?php selected( (int) $access_value, 2 ); ?>><?php esc_html_e( 'Restricted', 'pigeonwp' ); ?></option>
+				<option value="0" <?php selected( (int) $access_value, 0 ); ?>><?php esc_html_e( 'Metered', 'pigeon' ); ?></option>
+				<option value="1" <?php selected( (int) $access_value, 1 ); ?>><?php esc_html_e( 'Public', 'pigeon' ); ?></option>
+				<option value="2" <?php selected( (int) $access_value, 2 ); ?>><?php esc_html_e( 'Restricted', 'pigeon' ); ?></option>
 			</select>
 		</td>
 	</tr>
@@ -32,7 +32,7 @@ $settings = get_plugin_settings();
 	<?php if ( ! empty( $settings['pigeon_content_value_pricing'] ) && 1 === (int) $settings['pigeon_content_value_pricing'] ) { ?>
 	<tr>
 		<td>
-			<label for="pigeon-content-price"><?php esc_html_e( 'Price', 'pigeonwp' ); ?>
+			<label for="pigeon-content-price"><?php esc_html_e( 'Price', 'pigeon' ); ?>
 				<div style="font-size:xx-small; margin-top: -5px;"><em>(e.g., 4.95)</em></div>
 			</label>
 		</td>
@@ -45,17 +45,17 @@ $settings = get_plugin_settings();
 	<?php if ( ! empty( $settings['pigeon_content_value_meter'] ) && 1 === (int) $settings['pigeon_content_value_meter'] && isset( $settings['pigeon_content_value'] ) ) : ?>
 	<tr>
 		<td>
-			<label for="pigeon-content-value"><?php esc_html_e( 'Value', 'pigeonwp' ); ?></label>
+			<label for="pigeon-content-value"><?php esc_html_e( 'Value', 'pigeon' ); ?></label>
 		</td>
 		<td>
 			<select name="pigeon_content_value" id="pigeon-content-value">
-				<option value="0">-- <?php esc_html_e( 'Free', 'pigeonwp' ); ?> --</option>
+				<option value="0">-- <?php esc_html_e( 'Free', 'pigeon' ); ?> --</option>
 				<?php foreach ( $settings['pigeon_content_value'] as $value ) : ?>
 					<?php // translators: Credits value. ?>
-					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( (int) $content_value, (int) $value ); ?>><?php echo esc_html( _n( '%s credit', '%s credits', $value, 'pigeonwp' ) ); ?></option>
+					<option value="<?php echo esc_attr( $value ); ?>" <?php selected( (int) $content_value, (int) $value ); ?>><?php echo esc_html( _n( '%s credit', '%s credits', $value, 'pigeon' ) ); ?></option>
 				<?php endforeach; ?>
 			</select>
-			<span style="padding-left:5px;"><?php esc_html_e( 'Prompt', 'pigeonwp' ); ?> <input type="checkbox" name="pigeon_content_prompt" value="1" <?php checked( (int) $content_prompt, 1 ); ?>></span>
+			<span style="padding-left:5px;"><?php esc_html_e( 'Prompt', 'pigeon' ); ?> <input type="checkbox" name="pigeon_content_prompt" value="1" <?php checked( (int) $content_prompt, 1 ); ?>></span>
 		</td>
 	</tr>
 	<?php endif; ?>

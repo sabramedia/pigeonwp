@@ -16,7 +16,7 @@
  * Description:       The Pigeon Paywall plugin for WordPress
  * Version:           1.6
  * Author:            Sabramedia
- * Text Domain:       pigeonwp
+ * Text Domain:       pigeon
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Domain Path:       /languages

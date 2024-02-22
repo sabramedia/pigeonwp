@@ -63,21 +63,21 @@ class Settings {
 		// Register our sections.
 		add_settings_section(
 			'settings_section_basic',
-			__( 'Basic Configuration', 'pigeonwp' ),
+			__( 'Basic Configuration', 'pigeon' ),
 			array( $this, 'settings_section_basic_callback' ),
 			'plugin_options'
 		);
 
 		add_settings_section(
 			'settings_section_api',
-			__( 'API Connection', 'pigeonwp' ),
+			__( 'API Connection', 'pigeon' ),
 			array( $this, 'settings_section_api_callback' ),
 			'plugin_options'
 		);
 
 		add_settings_section(
 			'settings_section_content',
-			__( 'Content', 'pigeonwp' ),
+			__( 'Content', 'pigeon' ),
 			array( $this, 'settings_section_content_callback' ),
 			'plugin_options'
 		);
@@ -85,7 +85,7 @@ class Settings {
 		// Register our fields.
 		add_settings_field(
 			'pigeon_subdomain',
-			__( 'Pigeon Subdomain', 'pigeonwp' ),
+			__( 'Pigeon Subdomain', 'pigeon' ),
 			array( $this, 'setting_pigeon_subdomain_render' ),
 			'plugin_options',
 			'settings_section_basic'
@@ -93,7 +93,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_paywall_sticky',
-			__( 'Sticky Bar', 'pigeonwp' ),
+			__( 'Sticky Bar', 'pigeon' ),
 			array( $this, 'setting_pigeon_paywall_sticky' ),
 			'plugin_options',
 			'settings_section_basic'
@@ -101,7 +101,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_paywall_content_display',
-			__( 'Content Display', 'pigeonwp' ),
+			__( 'Content Display', 'pigeon' ),
 			array( $this, 'setting_pigeon_paywall_content_display' ),
 			'plugin_options',
 			'settings_section_basic'
@@ -109,7 +109,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_paywall_interrupt',
-			__( 'Paywall Interrupt', 'pigeonwp' ),
+			__( 'Paywall Interrupt', 'pigeon' ),
 			array( $this, 'setting_pigeon_paywall_interrupt_render' ),
 			'plugin_options',
 			'settings_section_basic'
@@ -117,7 +117,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_cta_message',
-			__( 'Paywall CTA Message', 'pigeonwp' ),
+			__( 'Paywall CTA Message', 'pigeon' ),
 			array( $this, 'setting_pigeon_paywall_cta_render' ),
 			'plugin_options',
 			'settings_section_basic'
@@ -125,7 +125,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_content_post_types',
-			__( 'Post Types', 'pigeonwp' ),
+			__( 'Post Types', 'pigeon' ),
 			array( $this, 'setting_pigeon_content_post_type_render' ),
 			'plugin_options',
 			'settings_section_basic'
@@ -133,7 +133,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_api_user',
-			__( 'User', 'pigeonwp' ),
+			__( 'User', 'pigeon' ),
 			array( $this, 'setting_pigeon_api_user_render' ),
 			'plugin_options',
 			'settings_section_api'
@@ -141,7 +141,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_api_secret_key',
-			__( 'Private Key', 'pigeonwp' ),
+			__( 'Private Key', 'pigeon' ),
 			array( $this, 'setting_pigeon_api_secret_key_render' ),
 			'plugin_options',
 			'settings_section_api'
@@ -149,7 +149,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_content_pdf_paywall',
-			__( 'PDF Paywall', 'pigeonwp' ),
+			__( 'PDF Paywall', 'pigeon' ),
 			array( $this, 'setting_pigeon_pdf_paywall' ),
 			'plugin_options',
 			'settings_section_content'
@@ -157,7 +157,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_content_pdf_index',
-			__( 'PDF Search Visibility', 'pigeonwp' ),
+			__( 'PDF Search Visibility', 'pigeon' ),
 			array( $this, 'setting_pigeon_pdf_index' ),
 			'plugin_options',
 			'settings_section_content'
@@ -165,7 +165,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_content_value_pricing',
-			__( 'Pricing Value', 'pigeonwp' ),
+			__( 'Pricing Value', 'pigeon' ),
 			array( $this, 'setting_pigeon_content_value_pricing_render' ),
 			'plugin_options',
 			'settings_section_content'
@@ -173,7 +173,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_content_value_meter',
-			__( 'Value Meter', 'pigeonwp' ),
+			__( 'Value Meter', 'pigeon' ),
 			array( $this, 'setting_pigeon_content_value_meter_render' ),
 			'plugin_options',
 			'settings_section_content'
@@ -181,7 +181,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_content_value',
-			__( 'Credit Value', 'pigeonwp' ),
+			__( 'Credit Value', 'pigeon' ),
 			array( $this, 'setting_pigeon_content_value_render' ),
 			'plugin_options',
 			'settings_section_content'
@@ -189,7 +189,7 @@ class Settings {
 
 		add_settings_field(
 			'pigeon_content_pref_category',
-			__( 'Category Preferences', 'pigeonwp' ),
+			__( 'Category Preferences', 'pigeon' ),
 			array( $this, 'setting_pigeon_content_category_render' ),
 			'plugin_options',
 			'settings_section_api'
@@ -227,7 +227,7 @@ class Settings {
 		$subdomain = ! empty( $options['pigeon_subdomain'] ) ? $options['pigeon_subdomain'] : '';
 		?>
 		<input type="text" name="wp_pigeon_settings[pigeon_subdomain]" value="<?php echo esc_attr( $subdomain ); ?>">
-		<p class="description"><?php esc_html_e( 'Defines the subdomain used for Pigeon.', 'pigeonwp' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Defines the subdomain used for Pigeon.', 'pigeon' ); ?></p>
 		<?php
 	}
 
@@ -241,10 +241,10 @@ class Settings {
 		$redirect = ! empty( $options['pigeon_redirect'] ) ? $options['pigeon_redirect'] : '';
 
 		$html  = '<input type="radio" id="redirect_enabled" name="wp_pigeon_settings[pigeon_redirect]" value="1"' . checked( 1, $redirect, false ) . '/>';
-		$html .= '<label for="redirect_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="redirect_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="redirect_disabled" name="wp_pigeon_settings[pigeon_redirect]" value="0"' . checked( 0, $redirect, false ) . '/>';
-		$html .= '<label for="redirect_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
-		$html .= '<p class="description">' . esc_html__( 'Determines whether the plugin does the automatic reroute or stays on the page.', 'pigeonwp' ) . '</p>';
+		$html .= '<label for="redirect_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Determines whether the plugin does the automatic reroute or stays on the page.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -259,10 +259,10 @@ class Settings {
 		$sticky  = ! empty( $options['pigeon_paywall_sticky'] ) ? $options['pigeon_paywall_sticky'] : 0;
 		?>
 		<input type="radio" id="pigeon_paywall_sticky" name="wp_pigeon_settings[pigeon_paywall_sticky]" value="1"<?php checked( 1, $sticky, true ); ?>/>
-		<label for="paywall_server"><?php esc_html_e( 'Show', 'pigeonwp' ); ?></label><br />
+		<label for="paywall_server"><?php esc_html_e( 'Show', 'pigeon' ); ?></label><br />
 		<input type="radio" id="paywall_interrupt_modal" name="wp_pigeon_settings[pigeon_paywall_sticky]" value="0"<?php checked( 0, $sticky, true ); ?>/>
-		<label for="paywall_js"><?php esc_html_e( 'Hide', 'pigeonwp' ); ?></label>
-		<p class="description"><?php esc_html_e( 'Show a sticky bar on each page with paywall information.', 'pigeonwp' ); ?></p>
+		<label for="paywall_js"><?php esc_html_e( 'Hide', 'pigeon' ); ?></label>
+		<p class="description"><?php esc_html_e( 'Show a sticky bar on each page with paywall information.', 'pigeon' ); ?></p>
 		<?php
 	}
 
@@ -276,12 +276,12 @@ class Settings {
 		$content_display = ! empty( $options['pigeon_paywall_content_display'] ) ? $options['pigeon_paywall_content_display'] : 0;
 		?>
 		<select name="wp_pigeon_settings[pigeon_paywall_content_display]">
-			<option name="0"<?php selected( 0, $content_display, true ); ?>><?php esc_html_e( 'None', 'pigeonwp' ); ?></option>
+			<option name="0"<?php selected( 0, $content_display, true ); ?>><?php esc_html_e( 'None', 'pigeon' ); ?></option>
 			<?php for ( $i = 1; $i <= 20; $i++ ) : ?>
 				<option name="<?php echo esc_attr( $i ); ?>"<?php selected( $i, $content_display, true ); ?>><?php echo esc_html( $i ); ?></option>
 			<?php endfor; ?>
 		</select>
-		<p class="description"><?php esc_html_e( 'How many paragraphs do you want to show of a protected article?', 'pigeonwp' ); ?></p>
+		<p class="description"><?php esc_html_e( 'How many paragraphs do you want to show of a protected article?', 'pigeon' ); ?></p>
 		<?php
 	}
 
@@ -295,12 +295,12 @@ class Settings {
 		$interrupt = ! empty( $options['pigeon_paywall_interrupt'] ) ? $options['pigeon_paywall_interrupt'] : '';
 
 		$html  = '<input type="radio" id="paywall_interrupt_redirect" name="wp_pigeon_settings[pigeon_paywall_interrupt]" value="1"' . checked( 1, $interrupt, false ) . '/>';
-		$html .= '<label for="paywall_server">' . esc_html__( 'Redirect', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="paywall_server">' . esc_html__( 'Redirect', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="paywall_interrupt_modal" name="wp_pigeon_settings[pigeon_paywall_interrupt]" value="3"' . checked( 3, $interrupt, false ) . '/>';
-		$html .= '<label for="paywall_js">' . esc_html__( 'Modal Popup', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="paywall_js">' . esc_html__( 'Modal Popup', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="paywall_interrupt_custom" name="wp_pigeon_settings[pigeon_paywall_interrupt]" value="2"' . checked( 2, $interrupt, false ) . '/>';
-		$html .= '<label for="paywall_js">' . esc_html__( 'Custom', 'pigeonwp' ) . '</label>';
-		$html .= '<p class="description">' . esc_html__( 'Redirect respects paywall rules. Modal uses the default Pigeon modal. Custom allows you to take your own actions. Refer to documentation on how to do this.', 'pigeonwp' ) . '</p>';
+		$html .= '<label for="paywall_js">' . esc_html__( 'Custom', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Redirect respects paywall rules. Modal uses the default Pigeon modal. Custom allows you to take your own actions. Refer to documentation on how to do this.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -312,10 +312,10 @@ class Settings {
 	 */
 	public function setting_pigeon_paywall_cta_render() {
 		$options     = $this->get_settings();
-		$cta_message = ! empty( $options['pigeon_cta_message'] ) ? $options['pigeon_cta_message'] : __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeonwp' );
+		$cta_message = ! empty( $options['pigeon_cta_message'] ) ? $options['pigeon_cta_message'] : __( 'This page is available to subscribers. Click here to sign in or get access.', 'pigeon' );
 		?>
 		<textarea name="wp_pigeon_settings[pigeon_cta_message]" class="large-text" rows="3"><?php echo wp_kses_post( $cta_message ); ?></textarea>
-		<p class="description"><?php esc_html_e( 'Message to show when an article is protected behind the paywall.', 'pigeonwp' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Message to show when an article is protected behind the paywall.', 'pigeon' ); ?></p>
 		<?php
 	}
 
@@ -357,7 +357,7 @@ class Settings {
 				// Make a call to see if it works.
 				$pigeon_sdk->get( '', array() );
 			} catch ( \Exception $e ) {
-				echo '<p style="color:#ca4a1f">' . esc_html__( 'There is a connectivity issue. Make sure the Pigeon API credentials are correct. This plugin uses cURL. Please make sure this is enabled in order for the direct API to work.', 'pigeonwp' ) . '</p>';
+				echo '<p style="color:#ca4a1f">' . esc_html__( 'There is a connectivity issue. Make sure the Pigeon API credentials are correct. This plugin uses cURL. Please make sure this is enabled in order for the direct API to work.', 'pigeon' ) . '</p>';
 			}
 		}
 	}
@@ -372,10 +372,10 @@ class Settings {
 		$pricing = ! empty( $options['pigeon_content_value_pricing'] ) ? $options['pigeon_content_value_pricing'] : 0;
 
 		$html  = '<input type="radio" id="value_pricing_enabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="1"' . checked( 1, $pricing, false ) . '/>';
-		$html .= '<label for="value_pricing_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="value_pricing_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="value_pricing_disabled" class="pigeon-value-pricing" name="wp_pigeon_settings[pigeon_content_value_pricing]" value="0"' . checked( 0, $pricing, false ) . '/>';
-		$html .= '<label for="value_pricing_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
-		$html .= '<p class="description">' . esc_html__( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeonwp' ) . '</p>';
+		$html .= '<label for="value_pricing_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -390,10 +390,10 @@ class Settings {
 		$meter   = ! empty( $options['pigeon_content_value_meter'] ) ? $options['pigeon_content_value_meter'] : 0;
 
 		$html  = '<input type="radio" id="value_meter_enabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="1"' . checked( 1, $meter, false ) . '/>';
-		$html .= '<label for="value_meter_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="value_meter_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="value_meter_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_value_meter]" value="0"' . checked( 0, $meter, false ) . '/>';
-		$html .= '<label for="value_meter_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
-		$html .= '<p class="description">' . esc_html__( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeonwp' ) . '</p>';
+		$html .= '<label for="value_meter_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Only used when content value needs to be set in WordPress and passed to Pigeon.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -415,13 +415,13 @@ class Settings {
 			?>
 		<div class="pigeon-content-value-option">
 			<input type='text' name='wp_pigeon_settings[pigeon_content_value][]' value='<?php echo esc_attr( $option ); ?>'>
-			<button class="remove"><?php echo esc_html__( 'Remove', 'pigeonwp' ); ?></button>
+			<button class="remove"><?php echo esc_html__( 'Remove', 'pigeon' ); ?></button>
 		</div>
 			<?php
 		}
 		?>
 		<div class="pigeon-add-content-value">
-			<button><?php echo esc_html__( 'Add New Value', 'pigeonwp' ); ?></button>
+			<button><?php echo esc_html__( 'Add New Value', 'pigeon' ); ?></button>
 		</div>
 		<?php
 	}
@@ -473,12 +473,12 @@ class Settings {
 				<?php
 			}
 			?>
-			<p class="description"><?php esc_html_e( 'Enable the paywall on the following posts, pages and post types.', 'pigeonwp' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Enable the paywall on the following posts, pages and post types.', 'pigeon' ); ?></p>
 			<?php
 		} else {
 			?>
 			<div class="pigeon-add-post-type">
-			<?php echo esc_html__( 'There are no custom post types available.', 'pigeonwp' ); ?>
+			<?php echo esc_html__( 'There are no custom post types available.', 'pigeon' ); ?>
 		</div>
 			<?php
 		}
@@ -506,16 +506,16 @@ class Settings {
 				}
 			}
 		} else {
-			$required_note = '<strong>' . esc_html__( 'Requires API User and Private Key from Settings > API in your Pigeon dashboard.', 'pigeonwp' ) . '</strong>';
+			$required_note = '<strong>' . esc_html__( 'Requires API User and Private Key from Settings > API in your Pigeon dashboard.', 'pigeon' ) . '</strong>';
 		}
 
 		$options['pigeon_content_pref_category'] = ! empty( $options['pigeon_content_pref_category'] ) ? $options['pigeon_content_pref_category'] : 0;
 
 		$html  = '<input type="radio" id="category_pref_enabled" class="pigeon-content-pref-category" name="wp_pigeon_settings[pigeon_content_pref_category]" value="1"' . checked( 1, $options['pigeon_content_pref_category'], false ) . '/>';
-		$html .= '<label for="category_pref_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="category_pref_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="category_pref_disabled" class="pigeon-value-meter" name="wp_pigeon_settings[pigeon_content_pref_category]" value="0"' . checked( 0, $options['pigeon_content_pref_category'], false ) . '/>';
-		$html .= '<label for="category_pref_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
-		$html .= '<p class="description">' . $required_note . esc_html__( 'Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.', 'pigeonwp' ) . '</p>';
+		$html .= '<label for="category_pref_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . $required_note . esc_html__( 'Enable to send Post Categories to Pigeon. Registered users can choose which content categories they prefer.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -531,17 +531,17 @@ class Settings {
 		$options['pigeon_content_pdf_paywall'] = ! empty( $options['pigeon_content_pdf_paywall'] ) ? $options['pigeon_content_pdf_paywall'] : 0;
 
 		$html  = '<input type="radio" id="pdf_paywall_enabled" class="pigeon-content-pdf-paywall" name="wp_pigeon_settings[pigeon_content_pdf_paywall]" value="1"' . checked( 1, $options['pigeon_content_pdf_paywall'], false ) . '/>';
-		$html .= '<label for="pdf_paywall_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="pdf_paywall_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="pdf_paywall_disabled" class="pigeon-content-pdf-paywall" name="wp_pigeon_settings[pigeon_content_pdf_paywall]" value="0"' . checked( 0, $options['pigeon_content_pdf_paywall'], false ) . '/>';
-		$html .= '<label for="pdf_paywall_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
-		$html .= '<p class="description">' . esc_html__( 'Hide PDF documents behind the paywall. All PDF documents uploaded to WordPress will be protected.', 'pigeonwp' ) . '</p>';
+		$html .= '<label for="pdf_paywall_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Hide PDF documents behind the paywall. All PDF documents uploaded to WordPress will be protected.', 'pigeon' ) . '</p>';
 
 		if ( ! empty( $_SERVER['SERVER_SOFTWARE'] ) ) {
 			$server = strtolower( sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) );
 		}
 
 		if ( empty( $server ) || false === strpos( $server, 'apache' ) ) {
-			$html .= '<p class="description" style="color:#ca4a1f">' . esc_html__( 'Warning! It looks like you may not be running Apache. Nginx and other servers require a custom rewrite rule to be added for this to work. Please see the plugin readme file or contact Pigeon support for assistance.', 'pigeonwp' ) . '</p>';
+			$html .= '<p class="description" style="color:#ca4a1f">' . esc_html__( 'Warning! It looks like you may not be running Apache. Nginx and other servers require a custom rewrite rule to be added for this to work. Please see the plugin readme file or contact Pigeon support for assistance.', 'pigeon' ) . '</p>';
 		}
 
 		echo $html; // @phpcs:ignore
@@ -558,10 +558,10 @@ class Settings {
 		$options['pigeon_content_pdf_index'] = ! empty( $options['pigeon_content_pdf_index'] ) ? $options['pigeon_content_pdf_index'] : 0;
 
 		$html  = '<input type="radio" id="pdf_index_enabled" class="pigeon-content-pdf-index" name="wp_pigeon_settings[pigeon_content_pdf_index]" value="1"' . checked( 1, $options['pigeon_content_pdf_index'], false ) . '/>';
-		$html .= '<label for="pdf_index_enabled">' . esc_html__( 'Enabled', 'pigeonwp' ) . '</label><br />';
+		$html .= '<label for="pdf_index_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
 		$html .= '<input type="radio" id="pdf_index_disabled" class="pigeon-content-pdf-index" name="wp_pigeon_settings[pigeon_content_pdf_index]" value="0"' . checked( 0, $options['pigeon_content_pdf_index'], false ) . '/>';
-		$html .= '<label for="pdf_index_disabled">' . esc_html__( 'Disabled', 'pigeonwp' ) . '</label>';
-		$html .= '<p class="description">' . esc_html__( 'Encourage search engines like Google to exclude your uploaded PDF documents from their index.', 'pigeonwp' ) . '</p>';
+		$html .= '<label for="pdf_index_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'Encourage search engines like Google to exclude your uploaded PDF documents from their index.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
