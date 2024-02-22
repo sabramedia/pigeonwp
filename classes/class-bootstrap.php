@@ -49,7 +49,7 @@ class Bootstrap {
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
-		load_plugin_textdomain( 'pigeonwp', false, PIGEONWP_DIR . 'languages' );
+		load_plugin_textdomain( 'pigeon', false, PIGEONWP_DIR . 'languages' );
 	}
 
 	/**

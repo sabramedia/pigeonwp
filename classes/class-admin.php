@@ -84,8 +84,8 @@ class Admin {
 	 */
 	public function add_plugin_admin_menu() {
 		add_options_page(
-			__( 'Pigeon', 'pigeonwp' ),
-			__( 'Pigeon', 'pigeonwp' ),
+			__( 'Pigeon', 'pigeon' ),
+			__( 'Pigeon', 'pigeon' ),
 			'manage_options',
 			self::MENU_SLUG,
 			array( $this, 'display_plugin_admin_page' )
@@ -126,7 +126,7 @@ class Admin {
 	public function add_action_links( $links ) {
 		return array_merge(
 			array(
-				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . self::MENU_SLUG ) . '">' . __( 'Settings', 'pigeonwp' ) . '</a>',
+				'settings' => '<a href="' . admin_url( 'options-general.php?page=' . self::MENU_SLUG ) . '">' . __( 'Settings', 'pigeon' ) . '</a>',
 			),
 			$links
 		);
@@ -144,7 +144,7 @@ class Admin {
 		$custom_post_types = ! empty( $settings['pigeon_content_post_types'] ) ? $settings['pigeon_content_post_types'] : array();
 
 		foreach ( array_merge( array( 'post', 'page' ), $custom_post_types ) as $post_type ) {
-			add_meta_box( self::META_BOX_ID, __( 'Pigeon Settings', 'pigeonwp' ), array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
+			add_meta_box( self::META_BOX_ID, __( 'Pigeon Settings', 'pigeon' ), array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
 		}
 	}
 

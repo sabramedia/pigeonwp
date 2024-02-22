@@ -11,7 +11,7 @@ namespace PigeonWP;
 <html lang="en-US">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title><?php esc_html_e( 'Downloading PDF...', 'pigeonwp' ); ?></title>
+		<title><?php esc_html_e( 'Downloading PDF...', 'pigeon' ); ?></title>
 		<?php wp_head(); ?>
 		<script>
 			Pigeon.paywallPromise.done(function(response){
@@ -22,7 +22,7 @@ namespace PigeonWP;
 		</script>
 	</head>
 	<body>
-		<?php esc_html_e( 'Checking PDF download permissions, please wait...', 'pigeonwp' ); ?>
+		<?php esc_html_e( 'Checking PDF download permissions, please wait...', 'pigeon' ); ?>
 		<?php wp_footer(); ?>
 	</body>
 </html>

@@ -4,7 +4,7 @@
  *
  * @since 1.6
  *
- * @package Pigeon\Plugin\PigeonWP
+ * @package PigeonWP
  */
 
 namespace PigeonWP;

@@ -32,7 +32,7 @@
 	"scripts": {
 		"clean": ["vendor/bin/phpcbf . --standard=phpcs.xml"],
 		"lint": ["vendor/bin/phpcs . --standard=phpcs.xml"],
-		"make-pot": "wp i18n make-pot . ./languages/pigeonwp.pot --exclude=admin/js,assets,sdk"
+		"make-pot": "wp i18n make-pot . ./languages/pigeon.pot --exclude=admin/js,assets,sdk"
 	}
   }
   
