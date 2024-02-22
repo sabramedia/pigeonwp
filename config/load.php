@@ -9,6 +9,10 @@
 
 namespace PigeonWP;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 $classes = array(
 	'PigeonWP\\Admin',
 	'PigeonWP\\Category_Sync',

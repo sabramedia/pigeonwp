@@ -7,6 +7,10 @@
 
 namespace PigeonWP;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 $settings = get_plugin_settings();
 
 $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '', $settings['pigeon_subdomain'] );

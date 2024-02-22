@@ -9,6 +9,10 @@
 
 namespace PigeonWP;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 spl_autoload_register(
 	function ( $class_name ) {
 		$path = dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'classes';
