@@ -11,7 +11,9 @@ The official Pigeon Paywall plugin for WordPress
 
 == Description ==
 
-Enable this plugin to start using the Pigeon Paywall on your WordPress website. An account on [Pigeon.io](https://pigeon.io) is required for this plugin to work.
+Pigeon is paywall software that allows you to hide your content from users by specifying paywall rules. It offers account management and subscription based billing for your readers and subscribers. Enable this plugin to start using the Pigeon Paywall on your WordPress website.
+
+An account on [Pigeon.io](https://pigeon.io) is required for this plugin to function. Your paywall rules and account management are setup and managed inside your Pigeon.io account. This plugin enables the JavaScript scripts and widgets required to block your content from non-subscribers based on the rules you've setup in your Pigeon.io account. Please read the [terms of service](https://pigeon.io/terms-of-service) and [privacy policy](https://pigeon.io/privacy-policy) for Pigeon.io.
 
 == Installation ==
 
