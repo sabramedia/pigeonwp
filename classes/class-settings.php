@@ -68,13 +68,6 @@ class Settings {
 			'plugin_options'
 		);
 
-		add_settings_section(
-			'settings_section_content',
-			__( 'Content', 'pigeon' ),
-			array( $this, 'settings_section_content_callback' ),
-			'plugin_options'
-		);
-
 		// Register our fields.
 		add_settings_field(
 			'pigeon_subdomain',
@@ -82,6 +75,27 @@ class Settings {
 			array( $this, 'setting_pigeon_subdomain_render' ),
 			'plugin_options',
 			'settings_section_basic'
+		);
+
+		// If the user has not entered a subdomain, give instructions for setting up an account.
+		$settings = get_plugin_settings();
+
+		if ( empty( $settings['pigeon_subdomain'] ) ) {
+			add_settings_section(
+				'settings_section_installation',
+				__( 'Get Started', 'pigeon' ),
+				array( $this, 'settings_section_installation_callback' ),
+				'plugin_options'
+			);
+
+			return;
+		}
+
+		add_settings_section(
+			'settings_section_content',
+			__( 'Content', 'pigeon' ),
+			array( $this, 'settings_section_content_callback' ),
+			'plugin_options'
 		);
 
 		add_settings_field(
@@ -163,6 +177,17 @@ class Settings {
 			'plugin_options',
 			'settings_section_content'
 		);
+	}
+
+	/**
+	 * Installation section callback.
+	 *
+	 * @since    1.6.1
+	 */
+	public function settings_section_installation_callback() {
+		?>
+		<p>Don't have an account yet with <a href="#">Pigeon</a>? No problem. Getting started is easy. Visit <a href="#">Pigeon.io</a> to sign up for an account.</p>
+		<?php
 	}
 
 	/**

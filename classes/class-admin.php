@@ -74,6 +74,9 @@ class Admin {
 		// Add our meta box for posts, pages and custom post types.
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_box' ) );
 		add_action( 'save_post', array( $this, 'save_meta_box' ) );
+
+		// Redirect to settings page on plugin activation.
+		add_action( 'activated_plugin', array( $this, 'redirect_on_activation' ) );
 	}
 
 	/**
@@ -201,5 +204,42 @@ class Admin {
 				update_post_meta( $post_id, '_wp_pigeon_content_prompt', 0 );
 			}
 		}
+	}
+
+	/**
+	 * Redirect on activation.
+	 *
+	 * @since 1.6.1
+	 * @param string $plugin The plugin being activated.
+	 * @return void
+	 */
+	public function redirect_on_activation( $plugin ) {
+		if ( PIGEONWP_BASENAME !== $plugin ) {
+			return;
+		}
+
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		if ( is_network_admin() ) {
+			return;
+		}
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			return;
+		}
+
+		$action = '';
+		if ( ! empty( $_REQUEST['action'] ) ) { // @phpcs:ignore
+			$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ); // @phpcs:ignore
+		}
+
+		if ( ! empty( $_REQUEST['activate-multi'] ) || 'activate-selected' === $action ) { // @phpcs:ignore
+			return;
+		}
+
+		wp_safe_redirect( admin_url( 'options-general.php?page=' . self::MENU_SLUG ) );
+		exit;
 	}
 }

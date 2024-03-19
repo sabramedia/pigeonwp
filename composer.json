@@ -20,6 +20,9 @@
 		"process-timeout": 3000,
 		"platform": {
 			"php": "7.1"
+		},
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
 	},
 	"extra": {
@@ -35,4 +38,3 @@
 		"make-pot": "wp i18n make-pot . ./languages/pigeon.pot --exclude=admin/js,assets,sdk"
 	}
   }
-  

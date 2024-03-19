@@ -48,6 +48,10 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 
 == Changelog ==
 = 1.6 =
+* Fix plugin settings link on the plugin listings page
+* Show steps to get setup with Pigeon if a domain has not been added yet
+
+= 1.6 =
 * Large refactor of codebase to be WordPress Coding Standards compliant
 * Include correct .POT translation file
 * Remove server paywall option
