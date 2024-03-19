@@ -1,5 +1,5 @@
-=== Pigeon ===
-Contributors: 
+=== Pigeon Paywall ===
+Contributors: pigeonplatform, sabramedia, mattgeri
 Tags: pigeon, paywall, restrict content, protect posts
 Requires at least: 5.9
 Tested up to: 6.3.2
