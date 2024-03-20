@@ -97,6 +97,10 @@ class Pigeon {
 	 * @return string
 	 */
 	public function get_paywall_js( $settings, $init_widget = true ) {
+		if ( empty( $settings['pigeon_paywall_interrupt'] ) ) {
+			$settings['pigeon_paywall_interrupt'] = 3;
+		}
+
 		switch ( $settings['pigeon_paywall_interrupt'] ) {
 			case '1':
 				$paywall_iterrupt = 1;
