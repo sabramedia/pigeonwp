@@ -47,9 +47,10 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 ```
 
 == Changelog ==
-= 1.6 =
+= 1.6.1 =
 * Fix plugin settings link on the plugin listings page
 * Show steps to get setup with Pigeon if a domain has not been added yet
+* Fixed a bug where the metered access metabox was not saving the first value
 
 = 1.6 =
 * Large refactor of codebase to be WordPress Coding Standards compliant
