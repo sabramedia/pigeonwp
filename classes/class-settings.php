@@ -186,7 +186,16 @@ class Settings {
 	 */
 	public function settings_section_installation_callback() {
 		?>
-		<p>Don't have an account yet with <a href="#">Pigeon</a>? No problem. Getting started is easy. Visit <a href="#">Pigeon.io</a> to sign up for an account.</p>
+		<p>
+			<?php
+			printf(
+				// translators: Link to the pigeon website.
+				esc_html__( 'Don\'t have an account yet with %1$s? Visit %2$s to request a demo account.', 'pigeon' ),
+				'<a target="_blank" href="https://pigeon.io/">Pigeon</a>',
+				'<a target="_blank" href="https://pigeon.io/#contact">Pigeon.io</a>'
+			);
+			?>
+		</p>
 		<?php
 	}
 
