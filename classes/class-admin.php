@@ -170,7 +170,7 @@ class Admin {
 	 * @return void|int
 	 */
 	public function save_meta_box( $post_id ) {
-		if ( ! isset( $_POST[ self::NONCE_NAME ] ) ) {
+		if ( empty( $_POST[ self::NONCE_NAME ] ) ) {
 			return $post_id;
 		}
 
@@ -184,17 +184,17 @@ class Admin {
 			return $post_id;
 		}
 
-		if ( ! empty( $_POST['pigeon_content_access'] ) ) {
+		if ( isset( $_POST['pigeon_content_access'] ) ) {
 			$pigeon_content_access = intval( wp_unslash( $_POST['pigeon_content_access'] ) );
 			update_post_meta( $post_id, '_wp_pigeon_content_access', $pigeon_content_access );
 		}
 
-		if ( ! empty( $_POST['pigeon_content_price'] ) ) {
+		if ( isset( $_POST['pigeon_content_price'] ) ) {
 			$pigeon_content_price = sanitize_text_field( wp_unslash( $_POST['pigeon_content_price'] ) );
 			update_post_meta( $post_id, '_wp_pigeon_content_price', $pigeon_content_price );
 		}
 
-		if ( ! empty( $_POST['pigeon_content_value'] ) ) {
+		if ( isset( $_POST['pigeon_content_value'] ) ) {
 			$pigeon_content_value = intval( wp_unslash( $_POST['pigeon_content_value'] ) );
 			update_post_meta( $post_id, '_wp_pigeon_content_value', $pigeon_content_value );
 
