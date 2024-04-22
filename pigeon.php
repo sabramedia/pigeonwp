@@ -14,7 +14,7 @@
  * Plugin Name:       Pigeon Paywall
  * Plugin URI:        http://pigeon.io
  * Description:       The Pigeon Paywall plugin for WordPress
- * Version:           1.6.1
+ * Version:           1.6.2
  * Author:            Pigeon
  * Text Domain:       pigeon
  * License:           GPL-2.0+

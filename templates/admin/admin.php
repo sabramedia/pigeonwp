@@ -28,7 +28,11 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 		<?php
 		settings_fields( 'plugin_options' );
 		do_settings_sections( 'plugin_options' );
-		submit_button();
+
+		$settings = get_plugin_settings();
+		if ( ! empty( $settings['pigeon_subdomain'] ) ) {
+			submit_button();
+		}
 		?>
 	</form>
 </div>

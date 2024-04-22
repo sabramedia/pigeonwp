@@ -35,6 +35,9 @@ class Settings {
 	public function hooks() {
 		// Register the settings.
 		add_action( 'admin_menu', array( $this, 'plugin_settings_init' ) );
+
+		// Ajax hander for saving subdomain.
+		add_action( 'wp_ajax_pigeon_connect', array( $this, 'connect_pigeon' ) );
 	}
 
 	/**
@@ -60,6 +63,20 @@ class Settings {
 	public function plugin_settings_init() {
 		register_setting( 'plugin_options', self::SETTINGS_KEY );
 
+		// If the user has not entered a subdomain, give instructions for setting up an account.
+		$settings = get_plugin_settings();
+
+		if ( empty( $settings['pigeon_subdomain'] ) ) {
+			add_settings_section(
+				'settings_section_installation',
+				__( 'Get Started', 'pigeon' ),
+				array( $this, 'settings_section_installation_callback' ),
+				'plugin_options'
+			);
+
+			return;
+		}
+
 		// Register our sections.
 		add_settings_section(
 			'settings_section_basic',
@@ -76,20 +93,6 @@ class Settings {
 			'plugin_options',
 			'settings_section_basic'
 		);
-
-		// If the user has not entered a subdomain, give instructions for setting up an account.
-		$settings = get_plugin_settings();
-
-		if ( empty( $settings['pigeon_subdomain'] ) ) {
-			add_settings_section(
-				'settings_section_installation',
-				__( 'Get Started', 'pigeon' ),
-				array( $this, 'settings_section_installation_callback' ),
-				'plugin_options'
-			);
-
-			return;
-		}
 
 		add_settings_section(
 			'settings_section_content',
@@ -188,14 +191,28 @@ class Settings {
 		?>
 		<p>
 			<?php
-			printf(
-				// translators: Link to the pigeon website.
-				esc_html__( 'Don\'t have an account yet with %1$s? Visit %2$s to request a demo account.', 'pigeon' ),
-				'<a target="_blank" href="https://pigeon.io/">Pigeon</a>',
-				'<a target="_blank" href="https://pigeon.io/#contact">Pigeon.io</a>'
-			);
+				esc_html_e( 'Connect your site to Pigeon to get started.', 'pigeon' );
 			?>
 		</p>
+		<input type="button" class="button button-primary" value="<?php esc_attr_e( 'Connect to Pigeon', 'pigeon' ); ?>" onclick="window.open( 'https://pigeon.io/cmc/register?origin=<?php echo esc_url_raw( get_site_url() ); ?>', '_blank', 'location=yes,height=720,width=720' );">
+		<script>
+			const connect = ( data ) => {
+				if ( data.subdomain != undefined ) {
+					$.ajax({
+						type: 'post',
+						url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
+						data: {
+							nonce: <?php echo esc_attr( wp_create_nonce( 'pigeon-connect-nonce' ) ); ?>,
+							action: 'pigeon_connect',
+							subdomain: data.subdomain
+						},
+						success: function() {
+							window.location = '<?php echo esc_url( admin_url( 'options-general.php?page=pigeon' ) ); ?>';
+						}
+					});
+				}
+			};
+		</script>
 		<?php
 	}
 
@@ -481,5 +498,25 @@ class Settings {
 		$html .= '<p class="description">' . esc_html__( 'Encourage search engines like Google to exclude your uploaded PDF documents from their index.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
+	}
+
+	/**
+	 * Save the sub domain to the database.
+	 *
+	 * @since 1.6.2
+	 *
+	 * @return void
+	 */
+	public function connect_pigeon() {
+		if ( ! empty( $_POST['subdomain'] ) && ! empty( $_POST['nonce'] ) ) {
+			$subdomain = sanitize_text_field( wp_unslash( $_POST['subdomain'] ) );
+
+			if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'pigeon-connect-nonce' ) ) {
+				update_option( 'pigeon_subdomain', $subdomain );
+				wp_send_json_success( 'Connected.' );
+			}
+		}
+
+		wp_die();
 	}
 }
