@@ -47,6 +47,10 @@ class Pigeon {
 	 * @return   void
 	 */
 	public function enqueue_scripts() {
+		if ( ! is_paywall_enabled() ) {
+			return;
+		}
+
 		$settings = get_plugin_settings();
 
 		if ( ! empty( $settings['pigeon_subdomain'] ) ) {

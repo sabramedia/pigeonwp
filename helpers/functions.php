@@ -19,3 +19,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 function get_plugin_settings() {
 	return Bootstrap::get_instance()->get_container( 'settings' )->get_settings();
 }
+
+/**
+ * Check if the paywall is enabled.
+ *
+ * @return boolean
+ */
+function is_paywall_enabled() {
+	$settings = get_plugin_settings();
+
+	$demo = ! empty( $settings['pigeon_demo'] ) ? $settings['pigeon_demo'] : 0;
+
+	if ( $demo && ! current_user_can( 'activate_plugins' ) ) {
+		return false;
+	}
+
+	return true;
+}

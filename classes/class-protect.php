@@ -38,7 +38,12 @@ class Protect {
 	 * @return string
 	 */
 	public function inject_divs( $content ) {
-		$settings   = get_plugin_settings();
+		$settings = get_plugin_settings();
+
+		if ( ! is_paywall_enabled() ) {
+			return;
+		}
+
 		$default    = array(
 			'post',
 			'page',

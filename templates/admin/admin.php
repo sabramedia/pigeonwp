@@ -30,7 +30,7 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 		do_settings_sections( 'plugin_options' );
 
 		$settings = get_plugin_settings();
-		if ( ! empty( $settings['pigeon_subdomain'] ) ) {
+		if ( ! empty( $settings['pigeon_subdomain'] ) || ! empty( $_GET['configure'] ) ) { // @phpcs:ignore
 			submit_button();
 		}
 		?>

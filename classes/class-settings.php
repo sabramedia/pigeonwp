@@ -36,12 +36,17 @@ class Settings {
 		// Register the settings.
 		add_action( 'admin_menu', array( $this, 'plugin_settings_init' ) );
 
+		// Default settings on activation.
+		add_action( 'activated_plugin', array( $this, 'set_defaults' ), 0 );
+
 		// Ajax hander for saving subdomain.
 		add_action( 'wp_ajax_pigeon_connect', array( $this, 'connect_pigeon' ) );
 	}
 
 	/**
 	 * Return settings
+	 *
+	 * @since 1.6
 	 *
 	 * @return array
 	 */
@@ -53,6 +58,31 @@ class Settings {
 		}
 
 		return array();
+	}
+
+	/**
+	 * Add settings on activation.
+	 *
+	 * @since 1.6.2
+	 * @param string $plugin The plugin being activated.
+	 * @return void
+	 */
+	public function set_defaults( $plugin ) {
+		if ( PIGEONWP_BASENAME !== $plugin ) {
+			return;
+		}
+
+		$settings = get_plugin_settings();
+
+		if ( ! empty( $settings ) ) {
+			return;
+		}
+
+		$settings = array(
+			'pigeon_demo' => 1,
+		);
+
+		update_option( self::SETTINGS_KEY, $settings );
 	}
 
 	/**
@@ -74,7 +104,9 @@ class Settings {
 				'plugin_options'
 			);
 
-			return;
+			if ( empty( $_GET['configure'] ) ) { // @phpcs:ignore
+				return;
+			}
 		}
 
 		// Register our sections.
@@ -90,6 +122,14 @@ class Settings {
 			'pigeon_subdomain',
 			__( 'Pigeon Subdomain', 'pigeon' ),
 			array( $this, 'setting_pigeon_subdomain_render' ),
+			'plugin_options',
+			'settings_section_basic'
+		);
+
+		add_settings_field(
+			'pigeon_demo',
+			__( 'Demo Mode', 'pigeon' ),
+			array( $this, 'setting_pigeon_demo_render' ),
 			'plugin_options',
 			'settings_section_basic'
 		);
@@ -190,11 +230,10 @@ class Settings {
 	public function settings_section_installation_callback() {
 		?>
 		<p>
-			<?php
-				esc_html_e( 'Connect your site to Pigeon to get started.', 'pigeon' );
-			?>
+			<?php esc_html_e( 'To get started, connect your site to a Pigeon account or register a new Pigeon account.', 'pigeon' ); ?>
+			<a href="<?php echo esc_url( admin_url( 'options-general.php?page=pigeon&configure=1' ) ); ?>"><?php esc_html_e( 'Configure manually instead?', 'pigeon' ); ?></a>
 		</p>
-		<input type="button" class="button button-primary" value="<?php esc_attr_e( 'Connect to Pigeon', 'pigeon' ); ?>" onclick="window.open( 'https://pigeon.io/cmc/register?origin=<?php echo esc_url_raw( get_site_url() ); ?>', '_blank', 'location=yes,height=720,width=720' );">
+		<input type="button" class="button button-primary" value="<?php esc_attr_e( 'Connect to Pigeon', 'pigeon' ); ?>" onclick="window.open( 'https://pigeon.io/cmc/register?src=wp&origin=<?php echo esc_url_raw( get_site_url() ); ?>', '_blank', 'location=yes,height=720,width=720' );">
 		<script>
 			const connect = ( data ) => {
 				if ( data.subdomain != undefined ) {
@@ -202,7 +241,7 @@ class Settings {
 						type: 'post',
 						url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
 						data: {
-							nonce: <?php echo esc_attr( wp_create_nonce( 'pigeon-connect-nonce' ) ); ?>,
+							nonce: '<?php echo esc_attr( wp_create_nonce( 'pigeon-connect-nonce' ) ); ?>',
 							action: 'pigeon_connect',
 							subdomain: data.subdomain
 						},
@@ -245,19 +284,19 @@ class Settings {
 	}
 
 	/**
-	 * Pigeon redirect callback.
+	 * Pigeon demo callback.
 	 *
-	 * @since    1.1.0
+	 * @since    1.6.2
 	 */
-	public function setting_pigeon_redirect_render() {
-		$options  = $this->get_settings();
-		$redirect = ! empty( $options['pigeon_redirect'] ) ? $options['pigeon_redirect'] : '';
+	public function setting_pigeon_demo_render() {
+		$options = $this->get_settings();
+		$demo    = ! empty( $options['pigeon_demo'] ) ? $options['pigeon_demo'] : 0;
 
-		$html  = '<input type="radio" id="redirect_enabled" name="wp_pigeon_settings[pigeon_redirect]" value="1"' . checked( 1, $redirect, false ) . '/>';
-		$html .= '<label for="redirect_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
-		$html .= '<input type="radio" id="redirect_disabled" name="wp_pigeon_settings[pigeon_redirect]" value="0"' . checked( 0, $redirect, false ) . '/>';
-		$html .= '<label for="redirect_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
-		$html .= '<p class="description">' . esc_html__( 'Determines whether the plugin does the automatic reroute or stays on the page.', 'pigeon' ) . '</p>';
+		$html  = '<input type="radio" id="demo_enabled" name="wp_pigeon_settings[pigeon_demo]" value="1"' . checked( 1, $demo, false ) . '/>';
+		$html .= '<label for="demo_enabled">' . esc_html__( 'Enabled', 'pigeon' ) . '</label><br />';
+		$html .= '<input type="radio" id="demo_disabled" name="wp_pigeon_settings[pigeon_demo]" value="0"' . checked( 0, $demo, false ) . '/>';
+		$html .= '<label for="demo_disabled">' . esc_html__( 'Disabled', 'pigeon' ) . '</label>';
+		$html .= '<p class="description">' . esc_html__( 'For testing purposes - only administrators will see the paywall.', 'pigeon' ) . '</p>';
 
 		echo $html; // @phpcs:ignore
 	}
@@ -509,10 +548,12 @@ class Settings {
 	 */
 	public function connect_pigeon() {
 		if ( ! empty( $_POST['subdomain'] ) && ! empty( $_POST['nonce'] ) ) {
-			$subdomain = sanitize_text_field( wp_unslash( $_POST['subdomain'] ) );
-
 			if ( wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'pigeon-connect-nonce' ) ) {
-				update_option( 'pigeon_subdomain', $subdomain );
+				$subdomain = sanitize_text_field( wp_unslash( $_POST['subdomain'] ) );
+
+				$settings                     = $this->get_settings();
+				$settings['pigeon_subdomain'] = $subdomain;
+				update_option( self::SETTINGS_KEY, $settings );
 				wp_send_json_success( 'Connected.' );
 			}
 		}
