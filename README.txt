@@ -49,6 +49,7 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 == Changelog ==
 = 1.6.2 =
 * Added a connection user interface for connecting a site to Pigeon
+* Introduces a demo mode for testing
 
 = 1.6.1 =
 * Fix plugin settings link on the plugin listings page
