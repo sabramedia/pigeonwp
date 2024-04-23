@@ -235,7 +235,7 @@ class Settings {
 		</p>
 		<input type="button" class="button button-primary" value="<?php esc_attr_e( 'Connect to Pigeon', 'pigeon' ); ?>" onclick="window.open( 'https://pigeon.io/cmc/register?src=wp&origin=<?php echo esc_url_raw( get_site_url() ); ?>', '_blank', 'location=yes,height=720,width=720' );">
 		<script>
-			const connect = ( data ) => {
+			const pigeonconnect = ( data ) => {
 				if ( data.subdomain != undefined ) {
 					$.ajax({
 						type: 'post',
