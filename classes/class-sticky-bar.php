@@ -51,6 +51,10 @@ class Sticky_Bar {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
+		if ( ! is_paywall_enabled() ) {
+			return;
+		}
+
 		wp_enqueue_style( self::CSS_HANDLE, PIGEONWP_URL . 'src/sticky.css', array(), PIGEONWP_VERSION );
 		wp_enqueue_script( self::JS_HANDLE, PIGEONWP_URL . 'src/sticky.js', array( 'jquery' ), PIGEONWP_VERSION, false );
 	}
