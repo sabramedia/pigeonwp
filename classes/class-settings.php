@@ -251,6 +251,18 @@ class Settings {
 					});
 				}
 			};
+
+            window.addEventListener("message", function(e) {
+				if (e.origin !== 'https://pigeon.io') {
+					return false;
+				}
+				var input = JSON.parse(e.data);
+				switch (input.action) {
+					case 'pigeonconnect':
+						pigeonconnect(input);
+						break;
+				}
+			});
 		</script>
 		<?php
 	}

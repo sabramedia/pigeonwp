@@ -20,7 +20,7 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 	<p>
 		<?php esc_html_e( 'For questions regarding any of these settings please contact Pigeon support.', 'pigeon' ); ?>
 		<?php if ( ! empty( $settings['pigeon_subdomain'] ) ) : ?>
-			<a href="<?php echo esc_url( 'https://' . $settings['pigeon_subdomain'] ); ?>/admin" target="_blank"><?php esc_html_e( 'Click here to access the Pigeon control panel', 'pigeon' ); ?></a>.
+            <a href="<?php echo esc_url( 'https://pigeon.io/api/sso?format=admin&return_to=https://'. $settings['pigeon_subdomain'] ); ?>/admin" target="_blank"><?php esc_html_e( 'Click here to access the Pigeon control panel', 'pigeon' ); ?></a>.
 		<?php endif; ?>
 	</p>
 
