@@ -230,6 +230,10 @@ class Admin {
 			return;
 		}
 
+		if ( wp_doing_ajax() ) {
+			return;
+		}
+
 		$action = '';
 		if ( ! empty( $_REQUEST['action'] ) ) { // @phpcs:ignore
 			$action = sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ); // @phpcs:ignore
