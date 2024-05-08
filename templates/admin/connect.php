@@ -57,10 +57,7 @@ use function PigeonWP\get_plugin_url;
 		border-radius: 6px;
 		box-shadow: rgba(50, 50, 93, 0.2) 0px 5px 10px -2px, rgba(0, 0, 0, 0.25) 0px 3px 7px -3px, inset rgba(53, 188, 254, 0.8) 0px 1px 1px, inset rgba(37, 55, 121, 0.5) 0px -1px 1px;
 	}
-
-	.pigeon-manual-setup { margin-top: 5px; }
-	.pigeon-manual-setup a { color: #999; font-size: 12px; }
-
+	.pigeon-manual-setup { display: block; margin: 8px 0 -18px 0; color: #949ba3 !important; font-size: 13px; font-weight: 300; }
 	.pigeon-box-contact { text-align: center; font-size: 13px; font-style: italic; margin-top: 15px; opacity: 0.85; }
 </style>
 
@@ -106,9 +103,7 @@ use function PigeonWP\get_plugin_url;
 			<div class="pigeon-box-body">
 				<p><?php esc_html_e( 'Adding Pigeon to your site is free and enables you to use Pigeon in Demo Mode. While in Demo Mode, you will be able to see how Pigeon works for yourself without affecting your visitors.', 'pigeon' ); ?></p>
 				<a class="pigeon-button" href="#" onclick="window.open( 'https://pigeon.io/cmc/register?src=wp&origin=<?php echo esc_url_raw( get_site_url() ); ?>', '_blank', 'location=yes,height=720,width=720' );"><?php esc_html_e( 'Connect to Pigeon', 'pigeon' ); ?></a>
-				<p class="pigeon-manual-setup">
-					<a href="<?php echo esc_url( admin_url( 'options-general.php?page=pigeon&configure=1' ) ); ?>"><?php esc_html_e( 'Configure manually instead?', 'pigeon' ); ?></a>
-				</p>
+				<a class="pigeon-manual-setup" href="<?php echo esc_url( admin_url( 'options-general.php?page=pigeon&configure=1' ) ); ?>"><?php esc_html_e( 'Configure manually instead?', 'pigeon' ); ?></a>
 			</div>
 		</div>
 		<div class="pigeon-box-contact">
