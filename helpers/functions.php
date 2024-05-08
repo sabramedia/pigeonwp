@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get plugin settings.
  *
+ * @since 1.6
+ *
  * @return array
  */
 function get_plugin_settings() {
@@ -22,6 +24,8 @@ function get_plugin_settings() {
 
 /**
  * Check if the paywall is enabled.
+ *
+ * @since 1.6
  *
  * @return boolean
  */
@@ -35,4 +39,17 @@ function is_paywall_enabled() {
 	}
 
 	return true;
+}
+
+/**
+ * Get plugin URL with path.
+ *
+ * @since 1.6.3
+ *
+ * @param string $path The path to add.
+ *
+ * @return string
+ */
+function get_plugin_url( $path = '' ) {
+	return ! empty( $path ) ? PIGEONWP_URL . ltrim( $path, '/' ) : PIGEONWP_URL;
 }

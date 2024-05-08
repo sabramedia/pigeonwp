@@ -96,10 +96,10 @@ class Settings {
 		// If the user has not entered a subdomain, give instructions for setting up an account.
 		$settings = get_plugin_settings();
 
-		if ( empty( $settings['pigeon_subdomain'] ) ) {
+		if ( empty( $settings['pigeon_subdomain'] ) && empty( $_GET['configure'] ) ) { // @phpcs:ignore
 			add_settings_section(
 				'settings_section_installation',
-				__( 'Get Started', 'pigeon' ),
+				'',
 				array( $this, 'settings_section_installation_callback' ),
 				'plugin_options'
 			);
@@ -228,43 +228,7 @@ class Settings {
 	 * @since    1.6.1
 	 */
 	public function settings_section_installation_callback() {
-		?>
-		<p>
-			<?php esc_html_e( 'To get started, connect your site to a Pigeon account or register a new Pigeon account.', 'pigeon' ); ?>
-			<a href="<?php echo esc_url( admin_url( 'options-general.php?page=pigeon&configure=1' ) ); ?>"><?php esc_html_e( 'Configure manually instead?', 'pigeon' ); ?></a>
-		</p>
-		<input type="button" class="button button-primary" value="<?php esc_attr_e( 'Connect to Pigeon', 'pigeon' ); ?>" onclick="window.open( 'https://pigeon.io/cmc/register?src=wp&origin=<?php echo esc_url_raw( get_site_url() ); ?>', '_blank', 'location=yes,height=720,width=720' );">
-		<script>
-			function pigeonconnect( data ) {
-				if ( data.subdomain != undefined ) {
-					jQuery.ajax({
-						type: 'post',
-						url: '<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>',
-						data: {
-							nonce: '<?php echo esc_attr( wp_create_nonce( 'pigeon-connect-nonce' ) ); ?>',
-							action: 'pigeon_connect',
-							subdomain: data.subdomain
-						},
-						success: function() {
-							window.location = '<?php echo esc_url( admin_url( 'options-general.php?page=pigeon' ) ); ?>';
-						}
-					});
-				}
-			};
-
-			window.addEventListener( 'message', function( e ) {
-				if ( e.origin !== 'https://pigeon.io' ) {
-					return false;
-				}
-				var input = JSON.parse( e.data );
-				switch ( input.action ) {
-					case 'pigeonconnect':
-						pigeonconnect( input );
-						break;
-				}
-			} );
-		</script>
-		<?php
+		include_once PIGEONWP_DIR . 'templates/admin/connect.php';
 	}
 
 	/**

@@ -2,8 +2,8 @@
 Contributors: pigeonplatform, sabramedia, mattgeri
 Tags: pigeon, paywall, restrict content, protect posts
 Requires at least: 5.9
-Tested up to: 6.5.2
-Stable tag: 1.6.2
+Tested up to: 6.5.3
+Stable tag: 1.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 ```
 
 == Changelog ==
+= 1.6.3 =
+* Improve the connection UI for connection with Pigeon
+
 = 1.6.2 =
 * Added a connection user interface for connecting a site to Pigeon
 * Introduces a demo mode for testing
