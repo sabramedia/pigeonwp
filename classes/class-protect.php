@@ -41,7 +41,7 @@ class Protect {
 		$settings = get_plugin_settings();
 
 		if ( ! is_paywall_enabled() ) {
-			return;
+			return $content;
 		}
 
 		$default    = array(
