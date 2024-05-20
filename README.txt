@@ -49,6 +49,7 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 == Changelog ==
 = 1.6.3 =
 * Improve the connection UI for connection with Pigeon
+* Fix bug when paywall was not active in demo mode, content would not render
 
 = 1.6.2 =
 * Added a connection user interface for connecting a site to Pigeon
