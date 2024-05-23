@@ -65,8 +65,15 @@ class Admin {
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
+		// Add admin bar item.
+		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_item' ), 100 );
+
 		// Load JS.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+
+		// Admin CSS.
+		add_action( 'admin_enqueue_scripts', array( $this, 'add_styles' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'add_styles' ) );
 
 		// Add an action link pointing to the options page.
 		add_filter( 'plugin_action_links_' . PIGEONWP_BASENAME, array( $this, 'add_action_links' ) );
@@ -96,6 +103,42 @@ class Admin {
 	}
 
 	/**
+	 * Add menu item to the admin bar for Pigeon/
+	 *
+	 * @since 1.6.4
+	 *
+	 * @param object $wp_admin_bar The admin bar object.
+	 *
+	 * @return void
+	 */
+	public function add_admin_bar_item( $wp_admin_bar ) {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+
+		$title    = __( 'Pigeon', 'pigeon' );
+		$meta     = array();
+		$settings = get_plugin_settings();
+		$demo     = ! empty( $settings['pigeon_demo'] ) ? $settings['pigeon_demo'] : 0;
+
+		if ( $demo ) {
+			$title .= ': ' . __( 'Demo Mode', 'pigeon' );
+
+			$meta['class'] = 'pigeon_demo_mode';
+		}
+
+		$wp_admin_bar->add_menu(
+			array(
+				'id'     => 'pigeon',
+				'parent' => null,
+				'href'   => admin_url( 'options-general.php?page=pigeon' ),
+				'title'  => $title,
+				'meta'   => $meta,
+			)
+		);
+	}
+
+	/**
 	 * Render the settings page for this plugin.
 	 *
 	 * @since 1.0.0
@@ -116,6 +159,26 @@ class Admin {
 	public function enqueue_scripts( $hook ) {
 		if ( 'settings_page_' . self::MENU_SLUG === $hook ) {
 			wp_enqueue_script( self::JS_HANDLE, PIGEONWP_URL . 'src/admin/settings.js', array(), PIGEONWP_VERSION, array( 'in_footer' => false ) );
+		}
+	}
+
+	/**
+	 * Add admin styles.
+	 *
+	 * @since 1.6.4
+	 *
+	 * @return void
+	 */
+	public function add_styles() {
+		if ( current_user_can( 'activate_plugins' ) ) {
+			$css = '
+				#wp-admin-bar-pigeon.pigeon_demo_mode a, 
+				#wp-admin-bar-pigeon.pigeon_demo_mode a:hover {
+					background-color: #FDCF1A;
+					color: #1d2327;
+				}
+			';
+			wp_add_inline_style( 'admin-bar', $css );
 		}
 	}
 

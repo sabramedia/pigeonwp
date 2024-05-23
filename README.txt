@@ -3,7 +3,7 @@ Contributors: pigeonplatform, sabramedia, mattgeri
 Tags: pigeon, paywall, restrict content, protect posts
 Requires at least: 5.9
 Tested up to: 6.5.3
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 ```
 
 == Changelog ==
+= 1.6.4 =
+* Add an item to the admin bar to show when the plugin is in demo mode
+
 = 1.6.3 =
 * Improve the connection UI for connection with Pigeon
 * Fix bug when paywall was not active in demo mode, content would not render
