@@ -49,6 +49,7 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 == Changelog ==
 = 1.6.4 =
 * Add an item to the admin bar to show when the plugin is in demo mode
+* Implement new buttons for the Pigeon Admin links on the settings page
 
 = 1.6.3 =
 * Improve the connection UI for connection with Pigeon
