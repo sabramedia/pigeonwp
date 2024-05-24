@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Pigeon Paywall 1.6.2\n"
+"Project-Id-Version: Pigeon Paywall 1.6.4\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pigeonwp\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-04-24T20:17:49+00:00\n"
+"POT-Creation-Date: 2024-05-24T10:23:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.10.0\n"
 "X-Domain: pigeon\n"
@@ -27,26 +27,28 @@ msgid "The Pigeon Paywall plugin for WordPress"
 msgstr ""
 
 #. Author of the plugin
-#: classes/class-admin.php:90
-#: classes/class-admin.php:91
+#: classes/class-admin.php:97
+#: classes/class-admin.php:98
+#: classes/class-admin.php:119
 msgid "Pigeon"
 msgstr ""
 
-#: classes/class-admin.php:132
+#: classes/class-admin.php:125
+#: classes/class-settings.php:131
+msgid "Demo Mode"
+msgstr ""
+
+#: classes/class-admin.php:195
 msgid "Settings"
 msgstr ""
 
-#: classes/class-admin.php:150
+#: classes/class-admin.php:213
 msgid "Pigeon Settings"
 msgstr ""
 
 #: classes/class-protect.php:72
-#: classes/class-settings.php:367
+#: classes/class-settings.php:343
 msgid "This page is available to subscribers. Click here to sign in or get access."
-msgstr ""
-
-#: classes/class-settings.php:102
-msgid "Get Started"
 msgstr ""
 
 #: classes/class-settings.php:115
@@ -55,10 +57,6 @@ msgstr ""
 
 #: classes/class-settings.php:123
 msgid "Pigeon Subdomain"
-msgstr ""
-
-#: classes/class-settings.php:131
-msgid "Demo Mode"
 msgstr ""
 
 #: classes/class-settings.php:139
@@ -105,112 +103,100 @@ msgstr ""
 msgid "Credit Value"
 msgstr ""
 
-#: classes/class-settings.php:233
-msgid "To get started, connect your site to a Pigeon account or register a new Pigeon account."
-msgstr ""
-
-#: classes/class-settings.php:234
-msgid "Configure manually instead?"
-msgstr ""
-
-#: classes/class-settings.php:236
-msgid "Connect to Pigeon"
-msgstr ""
-
-#: classes/class-settings.php:282
+#: classes/class-settings.php:258
 msgid "Defines the subdomain used for Pigeon."
 msgstr ""
 
-#: classes/class-settings.php:296
-#: classes/class-settings.php:384
-#: classes/class-settings.php:402
-#: classes/class-settings.php:507
-#: classes/class-settings.php:534
+#: classes/class-settings.php:272
+#: classes/class-settings.php:360
+#: classes/class-settings.php:378
+#: classes/class-settings.php:483
+#: classes/class-settings.php:510
 msgid "Enabled"
 msgstr ""
 
-#: classes/class-settings.php:298
-#: classes/class-settings.php:386
-#: classes/class-settings.php:404
-#: classes/class-settings.php:509
-#: classes/class-settings.php:536
+#: classes/class-settings.php:274
+#: classes/class-settings.php:362
+#: classes/class-settings.php:380
+#: classes/class-settings.php:485
+#: classes/class-settings.php:512
 msgid "Disabled"
 msgstr ""
 
-#: classes/class-settings.php:299
+#: classes/class-settings.php:275
 msgid "For testing purposes - only administrators will see the paywall."
 msgstr ""
 
-#: classes/class-settings.php:314
+#: classes/class-settings.php:290
 msgid "Show"
 msgstr ""
 
-#: classes/class-settings.php:316
+#: classes/class-settings.php:292
 msgid "Hide"
 msgstr ""
 
-#: classes/class-settings.php:317
+#: classes/class-settings.php:293
 msgid "Show a sticky bar on each page with paywall information."
 msgstr ""
 
-#: classes/class-settings.php:331
+#: classes/class-settings.php:307
 msgid "None"
 msgstr ""
 
-#: classes/class-settings.php:336
+#: classes/class-settings.php:312
 msgid "How many paragraphs do you want to show of a protected article?"
 msgstr ""
 
-#: classes/class-settings.php:350
+#: classes/class-settings.php:326
 msgid "Redirect"
 msgstr ""
 
-#: classes/class-settings.php:352
+#: classes/class-settings.php:328
 msgid "Modal Popup"
 msgstr ""
 
-#: classes/class-settings.php:354
+#: classes/class-settings.php:330
 msgid "Custom"
 msgstr ""
 
-#: classes/class-settings.php:355
+#: classes/class-settings.php:331
 msgid "Redirect respects paywall rules. Modal uses the default Pigeon modal. Custom allows you to take your own actions. Refer to documentation on how to do this."
 msgstr ""
 
-#: classes/class-settings.php:370
+#: classes/class-settings.php:346
 msgid "Message to show when an article is protected behind the paywall."
 msgstr ""
 
-#: classes/class-settings.php:387
-#: classes/class-settings.php:405
+#: classes/class-settings.php:363
+#: classes/class-settings.php:381
 msgid "Only used when content value needs to be set in WordPress and passed to Pigeon."
 msgstr ""
 
-#: classes/class-settings.php:427
+#: classes/class-settings.php:403
 msgid "Remove"
 msgstr ""
 
-#: classes/class-settings.php:433
+#: classes/class-settings.php:409
 msgid "Add New Value"
 msgstr ""
 
-#: classes/class-settings.php:485
+#: classes/class-settings.php:461
 msgid "Enable the paywall on the following posts, pages and post types."
 msgstr ""
 
-#: classes/class-settings.php:490
+#: classes/class-settings.php:466
 msgid "There are no custom post types available."
 msgstr ""
 
-#: classes/class-settings.php:510
+#: classes/class-settings.php:486
 msgid "Hide PDF documents behind the paywall. All PDF documents uploaded to WordPress will be protected."
 msgstr ""
 
-#: classes/class-settings.php:517
+#: classes/class-settings.php:493
 msgid "Warning! It looks like you may not be running Apache. Nginx and other servers require a custom rewrite rule to be added for this to work. Please see the plugin readme file or contact Pigeon support for assistance."
 msgstr ""
 
-#: classes/class-settings.php:537
+#: classes/class-settings.php:513
 msgid "Encourage search engines like Google to exclude your uploaded PDF documents from their index."
 msgstr ""
 
@@ -222,16 +208,45 @@ msgstr ""
 msgid "Click here to sign in or get access"
 msgstr ""
 
-#: templates/admin/admin.php:19
+#: templates/admin/admin.php:36
 msgid "Pigeon for WordPress"
 msgstr ""
 
-#: templates/admin/admin.php:21
-msgid "For questions regarding any of these settings please contact Pigeon support."
+#: templates/admin/admin.php:40
+msgid "To access the full selection of settings and features, visit your Pigeon admin."
 msgstr ""
 
-#: templates/admin/admin.php:23
-msgid "Click here to access the Pigeon control panel"
+#: templates/admin/admin.php:41
+#: templates/admin/admin.php:47
+msgid "Visit Pigeon Admin"
+msgstr ""
+
+#: templates/admin/admin.php:45
+msgid "Pigeon is in Demo Mode"
+msgstr ""
+
+#: templates/admin/admin.php:46
+msgid "While in demo mode, the paywall is only visible to WordPress admins. Complete setup by visiting your Pigeon admin."
+msgstr ""
+
+#: templates/admin/connect.php:100
+msgid "Connect with Pigeon"
+msgstr ""
+
+#: templates/admin/connect.php:101
+msgid "To continue setup, connect your site to Pigeon."
+msgstr ""
+
+#: templates/admin/connect.php:104
+msgid "Adding Pigeon to your site is free and enables you to use Pigeon in Demo Mode. While in Demo Mode, you will be able to see how Pigeon works for yourself without affecting your visitors."
+msgstr ""
+
+#: templates/admin/connect.php:105
+msgid "Connect to Pigeon"
+msgstr ""
+
+#: templates/admin/connect.php:106
+msgid "Configure manually instead?"
 msgstr ""
 
 #: templates/admin/meta-box.php:24
