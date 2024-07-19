@@ -1,7 +1,7 @@
 .pigeon-widget-status * { box-sizing: border-box; }
 .pigeon-widget-status { position: fixed; height: 42px; padding: 10px; width: 100%; background: #000; z-index: 999997; font-size: 14px; text-align: center; box-sizing: border-box; }
 .pigeon-widget-status ul { display: inline-block; margin: 0 auto; padding: 2px 0 0 0; float: right; position: relative; line-height: 17px; }
-.pigeon-widget-status ul:before { content: ""; width: 3px; height: 100%; position: absolute; left: 12px; background: #000; }
+.pigeon-widget-status ul:before { content: ""; width: 3px; height: 24px; position: absolute; left: 12px; top: 0; background: #000; }
 .pigeon-widget-status ul li { float: left; list-style: none; color: #cdcdcd; border-left: 1px solid #585858; padding-left: 10px; margin-left: 13px; }
 .pigeon-widget-status ul li a { color: #cdcdcd; text-decoration: none; }
 .pigeon-widget-status ul li a:hover { color: #bf2e2b; }
