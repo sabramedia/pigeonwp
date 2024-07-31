@@ -136,6 +136,7 @@ class Pigeon {
 				contentPrice:' . wp_json_encode( $page_values['content_price'] ) . ',
 				contentValue:' . wp_json_encode( $page_values['content_value'] ) . ',
 				contentPrompt:' . wp_json_encode( $page_values['content_prompt'] ) . ',
+				contentCategories:' . wp_json_encode( $page_values['content_categories'] ) . ',
 				wpPostType:' . wp_json_encode( $page_values['wp_post_type'] ) . '
 			});';
 
@@ -155,14 +156,15 @@ class Pigeon {
 	 */
 	protected function get_single_page_values( $settings ) {
 		$values = array(
-			'content_id'     => 0,
-			'content_title'  => '',
-			'content_date'   => '',
-			'content_access' => 0,
-			'content_price'  => 0,
-			'content_value'  => 0,
-			'content_prompt' => 0,
-			'wp_post_type'   => '',
+			'content_id'         => 0,
+			'content_title'      => '',
+			'content_date'       => '',
+			'content_access'     => 0,
+			'content_price'      => 0,
+			'content_value'      => 0,
+			'content_prompt'     => 0,
+			'content_categories' => array(),
+			'wp_post_type'       => '',
 		);
 
 		if ( is_admin() ) {
@@ -198,6 +200,12 @@ class Pigeon {
 			// Send zero value if the value meter is disabled.
 			$values['content_value']  = ! empty( $settings['pigeon_content_value_meter'] ) ? (int) get_post_meta( $post->ID, '_wp_pigeon_content_value', true ) : 0;
 			$values['content_prompt'] = (int) get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
+
+			// Categories.
+			$categories = wp_get_post_categories( $post->ID );
+			if ( ! empty( $categories ) ) {
+				$values['content_categories'] = $categories;
+			}
 		}
 
 		return $values;

@@ -2,8 +2,8 @@
 Contributors: pigeonplatform, sabramedia, mattgeri
 Tags: pigeon, paywall, restrict content, protect posts
 Requires at least: 5.9
-Tested up to: 6.5.3
-Stable tag: 1.6.4
+Tested up to: 6.6.1
+Stable tag: 1.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 ```
 
 == Changelog ==
+= 1.6.5 =
+* Added a categories array to the JavaScript to send post categories to Pigeon
+
 = 1.6.4 =
 * Add an item to the admin bar to show when the plugin is in demo mode
 * Implement new buttons for the Pigeon Admin links on the settings page
