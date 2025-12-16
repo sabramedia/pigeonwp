@@ -137,6 +137,7 @@ class Pigeon {
 				contentValue:' . wp_json_encode( $page_values['content_value'] ) . ',
 				contentPrompt:' . wp_json_encode( $page_values['content_prompt'] ) . ',
 				contentCategories:' . wp_json_encode( $page_values['content_categories'] ) . ',
+				contentTags:' . wp_json_encode( $page_values['content_tags'] ) . ',
 				wpPostType:' . wp_json_encode( $page_values['wp_post_type'] ) . '
 			});';
 
@@ -164,6 +165,7 @@ class Pigeon {
 			'content_value'      => 0,
 			'content_prompt'     => 0,
 			'content_categories' => array(),
+			'content_tags' 		 => array(),
 			'wp_post_type'       => '',
 		);
 
@@ -205,6 +207,12 @@ class Pigeon {
 			$categories = wp_get_post_categories( $post->ID );
 			if ( ! empty( $categories ) ) {
 				$values['content_categories'] = $categories;
+			}
+
+			// Tags.
+			$tags = wp_get_post_tags( $post->ID, array( 'fields' => 'ids' ) );
+			if ( ! empty( $tags ) ) {
+				$values['content_tags'] = $tags;
 			}
 		}
 
