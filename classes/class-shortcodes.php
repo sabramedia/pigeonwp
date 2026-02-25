@@ -44,7 +44,7 @@ class Shortcodes {
 		// Run shortcode parser recursively.
 		$content  = do_shortcode( $content );
 		$content  = '<div class="pigeon-remove">' . $content . '</div>';
-		$content .= '<div class="pigeon-context-promotion" style="display:none;"><p>' . esc_html__( 'This page is available to subscribers.', 'pigeon' ) . ' <a href="#" class="pigeon-open">' . esc_html__( 'Click here to sign in or get access', 'pigeon' ) . '</a>.</p></div>';
+		$content .= '<div class="pigeon-context-promotion" style="display:none;"><p class="pigeon-cta">' . esc_html__( 'This page is available to subscribers.', 'pigeon' ) . ' <a href="#" class="pigeon-open">' . esc_html__( 'Click here to sign in or get access', 'pigeon' ) . '</a>.</p></div>';
 
 		return apply_filters( 'the_content', $content );
 	}
