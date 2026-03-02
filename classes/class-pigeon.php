@@ -80,14 +80,11 @@ class Pigeon {
 		return "
 		var Pigeon = new PigeonClass({
 			subdomain:'" . $settings['pigeon_subdomain'] . "',
-			fingerprint:true," . (
-				// If primary domain is not found in the subdomain, then use iFrame for SSO IDP.
-				strstr( $settings['pigeon_subdomain'], str_replace( 'www.', '', $http_host ) ) === false ? "idp:true,\n\t\t\t" : ''
-			) . '
+			fingerprint:true,
 			cid: null,
 			cha: null
 		});
-		';
+		";
 	}
 
 	/**
