@@ -49,6 +49,23 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 		<?php endif; ?>
 	<?php endif; ?>
 
+	<?php $legacy_access_count = Access_Controls::count_legacy(); ?>
+	<?php if ( $legacy_access_count ) : ?>
+	<div class="notice notice-info inline">
+		<p>
+			<?php
+			// translators: Number of posts.
+			echo esc_html( sprintf( _n( '%d item still stores its Pigeon access setting the old way. Move it to the pigeon-free / pigeon-restricted tags so it can be bulk edited.', '%d items still store their Pigeon access setting the old way. Move them to the pigeon-free / pigeon-restricted tags so they can be bulk edited.', $legacy_access_count, 'pigeon' ), $legacy_access_count ) );
+			?>
+		</p>
+		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+			<input type="hidden" name="action" value="<?php echo esc_attr( Access_Controls::MIGRATE_ACTION ); ?>" />
+			<?php wp_nonce_field( Access_Controls::MIGRATE_ACTION ); ?>
+			<p><?php submit_button( __( 'Move to tags', 'pigeon' ), 'secondary', 'submit', false ); ?></p>
+		</form>
+	</div>
+	<?php endif; ?>
+
 	<form action='options.php' method='post'>
 		<?php
 		settings_fields( 'plugin_options' );

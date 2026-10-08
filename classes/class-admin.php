@@ -247,10 +247,11 @@ class Admin {
 			return $post_id;
 		}
 
-		if ( isset( $_POST['pigeon_content_access'] ) ) {
-			$pigeon_content_access = intval( wp_unslash( $_POST['pigeon_content_access'] ) );
-			update_post_meta( $post_id, '_wp_pigeon_content_access', $pigeon_content_access );
+		if ( wp_is_post_revision( $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
+			return $post_id;
 		}
+
+		$this->save_access( $post_id );
 
 		if ( isset( $_POST['pigeon_content_price'] ) ) {
 			$pigeon_content_price = sanitize_text_field( wp_unslash( $_POST['pigeon_content_price'] ) );
@@ -266,6 +267,31 @@ class Admin {
 			} else {
 				update_post_meta( $post_id, '_wp_pigeon_content_prompt', 0 );
 			}
+		}
+	}
+
+	/**
+	 * Saves the access dropdown to the reserved tags.
+	 *
+	 * Only writes when the dropdown changed, so a reserved tag added in the Tags box
+	 * survives the save. The nonce is checked by save_meta_box().
+	 *
+	 * @since 1.7.0
+	 * @param int $post_id The ID of the post.
+	 * @return void
+	 */
+	protected function save_access( $post_id ) {
+		// @phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['pigeon_content_access'] ) ) {
+			return;
+		}
+
+		$access   = intval( wp_unslash( $_POST['pigeon_content_access'] ) );
+		$original = isset( $_POST['pigeon_content_access_original'] ) ? intval( wp_unslash( $_POST['pigeon_content_access_original'] ) ) : null;
+		// @phpcs:enable
+
+		if ( $access !== $original ) {
+			Access_Tags::set_access( $post_id, $access );
 		}
 	}
 
