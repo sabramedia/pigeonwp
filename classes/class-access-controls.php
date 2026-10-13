@@ -361,7 +361,9 @@ class Access_Controls {
 			return;
 		}
 
+		// Above the Pigeon paywall modal (99999999), so a locked page can still be switched.
 		$css = '
+			#wpadminbar { z-index: 100000000; }
 			#wpadminbar .pigeon-access-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #a7aaad; margin-right: 6px; vertical-align: middle; }
 			#wpadminbar .pigeon-access-source { opacity: 0.7; }
 			#wpadminbar .pigeon-access--free .pigeon-access-dot { background: #00a32a; }
