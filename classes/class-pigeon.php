@@ -75,6 +75,9 @@ class Pigeon {
 		$http_host = '';
 		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
 			$http_host = sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+
+			// A port (e.g. a dev site on :8898) would never match the subdomain and force IDP on.
+			$http_host = preg_replace( '/:\d+$/', '', $http_host );
 		}
 
 		return "
