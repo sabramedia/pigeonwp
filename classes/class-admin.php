@@ -65,15 +65,10 @@ class Admin {
 		// Add the options page and menu item.
 		add_action( 'admin_menu', array( $this, 'add_plugin_admin_menu' ) );
 
-		// Add admin bar item.
-		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_item' ), 100 );
+		// The admin bar item lives in Access_Controls, which adds the page's paywall status to it.
 
 		// Load JS.
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
-		// Admin CSS.
-		add_action( 'admin_enqueue_scripts', array( $this, 'add_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'add_styles' ) );
 
 		// Add an action link pointing to the options page.
 		add_filter( 'plugin_action_links_' . PIGEONWP_BASENAME, array( $this, 'add_action_links' ) );
@@ -103,42 +98,6 @@ class Admin {
 	}
 
 	/**
-	 * Add menu item to the admin bar for Pigeon/
-	 *
-	 * @since 1.6.4
-	 *
-	 * @param object $wp_admin_bar The admin bar object.
-	 *
-	 * @return void
-	 */
-	public function add_admin_bar_item( $wp_admin_bar ) {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
-			return;
-		}
-
-		$title    = __( 'Pigeon', 'pigeon' );
-		$meta     = array();
-		$settings = get_plugin_settings();
-		$demo     = ! empty( $settings['pigeon_demo'] ) ? $settings['pigeon_demo'] : 0;
-
-		if ( $demo ) {
-			$title .= ': ' . __( 'Demo Mode', 'pigeon' );
-
-			$meta['class'] = 'pigeon_demo_mode';
-		}
-
-		$wp_admin_bar->add_menu(
-			array(
-				'id'     => 'pigeon',
-				'parent' => null,
-				'href'   => admin_url( 'options-general.php?page=pigeon' ),
-				'title'  => $title,
-				'meta'   => $meta,
-			)
-		);
-	}
-
-	/**
 	 * Render the settings page for this plugin.
 	 *
 	 * @since 1.0.0
@@ -159,26 +118,6 @@ class Admin {
 	public function enqueue_scripts( $hook ) {
 		if ( 'settings_page_' . self::MENU_SLUG === $hook ) {
 			wp_enqueue_script( self::JS_HANDLE, PIGEONWP_URL . 'src/admin/settings.js', array(), PIGEONWP_VERSION, array( 'in_footer' => false ) );
-		}
-	}
-
-	/**
-	 * Add admin styles.
-	 *
-	 * @since 1.6.4
-	 *
-	 * @return void
-	 */
-	public function add_styles() {
-		if ( current_user_can( 'activate_plugins' ) ) {
-			$css = '
-				#wp-admin-bar-pigeon.pigeon_demo_mode a, 
-				#wp-admin-bar-pigeon.pigeon_demo_mode a:hover {
-					background-color: #FDCF1A;
-					color: #1d2327;
-				}
-			';
-			wp_add_inline_style( 'admin-bar', $css );
 		}
 	}
 
@@ -210,7 +149,8 @@ class Admin {
 		$custom_post_types = ! empty( $settings['pigeon_content_post_types'] ) ? $settings['pigeon_content_post_types'] : array();
 
 		foreach ( array_merge( array( 'post', 'page' ), $custom_post_types ) as $post_type ) {
-			add_meta_box( self::META_BOX_ID, __( 'Pigeon Settings', 'pigeon' ), array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
+			// Classic editor only; the block editor uses the native panel from Editor_Panel.
+			add_meta_box( self::META_BOX_ID, __( 'Pigeon Settings', 'pigeon' ), array( $this, 'display_meta_box' ), $post_type, 'side', 'high', array( '__back_compat_meta_box' => true ) );
 		}
 	}
 
@@ -247,10 +187,11 @@ class Admin {
 			return $post_id;
 		}
 
-		if ( isset( $_POST['pigeon_content_access'] ) ) {
-			$pigeon_content_access = intval( wp_unslash( $_POST['pigeon_content_access'] ) );
-			update_post_meta( $post_id, '_wp_pigeon_content_access', $pigeon_content_access );
+		if ( wp_is_post_revision( $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
+			return $post_id;
 		}
+
+		$this->save_access( $post_id );
 
 		if ( isset( $_POST['pigeon_content_price'] ) ) {
 			$pigeon_content_price = sanitize_text_field( wp_unslash( $_POST['pigeon_content_price'] ) );
@@ -266,6 +207,31 @@ class Admin {
 			} else {
 				update_post_meta( $post_id, '_wp_pigeon_content_prompt', 0 );
 			}
+		}
+	}
+
+	/**
+	 * Saves the access dropdown to the reserved tags.
+	 *
+	 * Only writes when the dropdown changed, so a reserved tag added in the Tags box
+	 * survives the save. The nonce is checked by save_meta_box().
+	 *
+	 * @since 1.7.0
+	 * @param int $post_id The ID of the post.
+	 * @return void
+	 */
+	protected function save_access( $post_id ) {
+		// @phpcs:disable WordPress.Security.NonceVerification.Missing
+		if ( ! isset( $_POST['pigeon_content_access'] ) ) {
+			return;
+		}
+
+		$access   = intval( wp_unslash( $_POST['pigeon_content_access'] ) );
+		$original = isset( $_POST['pigeon_content_access_original'] ) ? intval( wp_unslash( $_POST['pigeon_content_access_original'] ) ) : null;
+		// @phpcs:enable
+
+		if ( $access !== $original ) {
+			Access_Tags::set_access( $post_id, $access );
 		}
 	}
 

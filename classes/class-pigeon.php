@@ -72,11 +72,6 @@ class Pigeon {
 	 * @return string
 	 */
 	public function get_pigeon_class_js( $settings ) {
-		$http_host = '';
-		if ( ! empty( $_SERVER['HTTP_HOST'] ) ) {
-			$http_host = sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
-		}
-
 		return "
 		var Pigeon = new PigeonClass({
 			subdomain:'" . $settings['pigeon_subdomain'] . "',
@@ -162,7 +157,7 @@ class Pigeon {
 			'content_value'      => 0,
 			'content_prompt'     => 0,
 			'content_categories' => array(),
-			'content_tags' 		 => array(),
+			'content_tags'       => array(),
 			'wp_post_type'       => '',
 		);
 
@@ -190,7 +185,7 @@ class Pigeon {
 			$values['content_id']     = $post->ID;
 			$values['content_title']  = $post->post_title;
 			$values['content_date']   = $post->post_date_gmt;
-			$values['content_access'] = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+			$values['content_access'] = Access_Tags::get_access( $post->ID );
 			$values['wp_post_type']   = $post->post_type;
 
 			// Send zero dollar if the value meter is disabled.

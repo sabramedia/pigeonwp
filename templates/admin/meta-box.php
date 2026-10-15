@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-$access_value   = get_post_meta( $post->ID, '_wp_pigeon_content_access', true );
+$access_value   = Access_Tags::get_access( $post->ID );
 $content_price  = get_post_meta( $post->ID, '_wp_pigeon_content_price', true );
 $content_value  = get_post_meta( $post->ID, '_wp_pigeon_content_value', true );
 $content_prompt = get_post_meta( $post->ID, '_wp_pigeon_content_prompt', true );
@@ -25,10 +25,11 @@ $settings = get_plugin_settings();
 		</td>
 		<td>
 			<select name="pigeon_content_access" id="pigeon-content-access">
-				<option value="0" <?php selected( (int) $access_value, 0 ); ?>><?php esc_html_e( 'Metered', 'pigeon' ); ?></option>
-				<option value="1" <?php selected( (int) $access_value, 1 ); ?>><?php esc_html_e( 'Public', 'pigeon' ); ?></option>
-				<option value="2" <?php selected( (int) $access_value, 2 ); ?>><?php esc_html_e( 'Restricted', 'pigeon' ); ?></option>
+				<option value="0" <?php selected( $access_value, Access_Tags::ACCESS_RULES ); ?>><?php esc_html_e( 'Pigeon rules (default)', 'pigeon' ); ?></option>
+				<option value="1" <?php selected( $access_value, Access_Tags::ACCESS_FREE ); ?>><?php esc_html_e( 'Always free', 'pigeon' ); ?></option>
+				<option value="2" <?php selected( $access_value, Access_Tags::ACCESS_RESTRICTED ); ?>><?php esc_html_e( 'Always restricted', 'pigeon' ); ?></option>
 			</select>
+			<input type="hidden" name="pigeon_content_access_original" value="<?php echo esc_attr( $access_value ); ?>" />
 		</td>
 	</tr>
 

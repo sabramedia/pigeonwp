@@ -32,8 +32,10 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 				border-image: repeating-linear-gradient( -60deg, #FDCF1A, #FDD948 25px, #1e2227 25px, #353A40 48px) 60;
 				background: linear-gradient(75deg, #254a7a 0%, #275b8d 50%, rgba(0,173,223,1) 100%);
 			}
+			.pigeon-logo-heading { margin: 20px 0 0; line-height: 0; }
+			.pigeon-logo-heading img { display: block; width: auto; height: 48px; }
 		</style>
-		<h2><?php esc_html_e( 'Pigeon for WordPress', 'pigeon' ); ?></h2>
+		<h2 class="pigeon-logo-heading"><img src="<?php echo esc_url( get_plugin_url( 'images/pigeon-logo.png' ) ); ?>" alt="<?php esc_attr_e( 'Pigeon for WordPress', 'pigeon' ); ?>" width="142" height="48" /></h2>
 
 		<?php if ( empty( $settings['pigeon_demo'] ) ) : ?>
 		<div class="pigeon-banner pigeon-visit-admin">
@@ -47,6 +49,23 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 			<a class="pigeon-button" href="<?php echo esc_url( 'https://pigeon.io/api/sso?format=admin&return_to=https://' . $settings['pigeon_subdomain'] ); ?>/admin"><?php esc_html_e( 'Visit Pigeon Admin', 'pigeon' ); ?></a>
 		</div>
 		<?php endif; ?>
+	<?php endif; ?>
+
+	<?php $legacy_access_count = Access_Controls::count_legacy(); ?>
+	<?php if ( $legacy_access_count ) : ?>
+	<div class="notice notice-info inline">
+		<p>
+			<?php
+			// translators: Number of posts.
+			echo esc_html( sprintf( _n( '%d item still stores its Pigeon access setting the old way. Move it to the pigeon-free / pigeon-restricted tags so it can be bulk edited.', '%d items still store their Pigeon access setting the old way. Move them to the pigeon-free / pigeon-restricted tags so they can be bulk edited.', $legacy_access_count, 'pigeon' ), $legacy_access_count ) );
+			?>
+		</p>
+		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
+			<input type="hidden" name="action" value="<?php echo esc_attr( Access_Controls::MIGRATE_ACTION ); ?>" />
+			<?php wp_nonce_field( Access_Controls::MIGRATE_ACTION ); ?>
+			<p><?php submit_button( __( 'Move to tags', 'pigeon' ), 'secondary', 'pigeon-migrate', false ); // Not "submit": that id belongs to the settings form's Save Changes. ?></p>
+		</form>
+	</div>
 	<?php endif; ?>
 
 	<form action='options.php' method='post'>

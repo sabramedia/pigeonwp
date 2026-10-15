@@ -26,6 +26,13 @@ class Settings {
 	const SETTINGS_KEY = 'wp_pigeon_settings';
 
 	/**
+	 * Settings kept but not shown on the settings page (pricing value, value meter, credit values).
+	 *
+	 * @since 1.7.0
+	 */
+	const HIDDEN_KEYS = array( 'pigeon_content_value_pricing', 'pigeon_content_value_meter', 'pigeon_content_value' );
+
+	/**
 	 * Hooks.
 	 *
 	 * @since 1.6
@@ -91,7 +98,7 @@ class Settings {
 	 * @since    1.1.0
 	 */
 	public function plugin_settings_init() {
-		register_setting( 'plugin_options', self::SETTINGS_KEY );
+		register_setting( 'plugin_options', self::SETTINGS_KEY, array( 'sanitize_callback' => array( $this, 'preserve_hidden_settings' ) ) );
 
 		// If the user has not entered a subdomain, give instructions for setting up an account.
 		$settings = get_plugin_settings();
@@ -197,29 +204,37 @@ class Settings {
 			'settings_section_content'
 		);
 
-		add_settings_field(
-			'pigeon_content_value_pricing',
-			__( 'Pricing Value', 'pigeon' ),
-			array( $this, 'setting_pigeon_content_value_pricing_render' ),
-			'plugin_options',
-			'settings_section_content'
-		);
+		// Pricing Value, Value Meter and Credit Value are hidden until they're standardized
+		// (see HIDDEN_KEYS). Their render methods stay below for when they come back.
+	}
 
-		add_settings_field(
-			'pigeon_content_value_meter',
-			__( 'Value Meter', 'pigeon' ),
-			array( $this, 'setting_pigeon_content_value_meter_render' ),
-			'plugin_options',
-			'settings_section_content'
-		);
+	/**
+	 * Keep the stored values of settings the page no longer shows.
+	 *
+	 * The whole settings array is saved from the form, so a field that isn't on the page would
+	 * otherwise be wiped on the next save, switching pricing or the value meter off on sites that
+	 * use them.
+	 *
+	 * @since 1.7.0
+	 *
+	 * @param mixed $value The settings being saved.
+	 *
+	 * @return mixed
+	 */
+	public function preserve_hidden_settings( $value ) {
+		if ( ! is_array( $value ) ) {
+			return $value;
+		}
 
-		add_settings_field(
-			'pigeon_content_value',
-			__( 'Credit Value', 'pigeon' ),
-			array( $this, 'setting_pigeon_content_value_render' ),
-			'plugin_options',
-			'settings_section_content'
-		);
+		$current = $this->get_settings();
+
+		foreach ( self::HIDDEN_KEYS as $key ) {
+			if ( ! array_key_exists( $key, $value ) && array_key_exists( $key, $current ) ) {
+				$value[ $key ] = $current[ $key ];
+			}
+		}
+
+		return $value;
 	}
 
 	/**

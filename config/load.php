@@ -14,7 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $classes = array(
+	'PigeonWP\\Access_Controls',
+	'PigeonWP\\Access_Tags',
 	'PigeonWP\\Admin',
+	'PigeonWP\\Editor_Panel',
 	'PigeonWP\\PDF',
 	'PigeonWP\\Pigeon',
 	'PigeonWP\\Protect',

@@ -125,6 +125,12 @@ class RSS {
 			}
 		}
 
+		// A reserved access tag overrides the meta.
+		$tag_access = Access_Tags::get_tag_access( $post_id );
+		if ( null !== $tag_access ) {
+			$pigeon_values['content_access'] = $tag_access;
+		}
+
 		return $pigeon_values;
 	}
 }
