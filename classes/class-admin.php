@@ -119,18 +119,6 @@ class Admin {
 		if ( 'settings_page_' . self::MENU_SLUG === $hook ) {
 			wp_enqueue_script( self::JS_HANDLE, PIGEONWP_URL . 'src/admin/settings.js', array(), PIGEONWP_VERSION, array( 'in_footer' => false ) );
 		}
-
-		// Block editor only: keep the Pigeon Settings box and the Tags panel in step across saves.
-		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-
-		if ( in_array( $hook, array( 'post.php', 'post-new.php' ), true ) && $screen && $screen->is_block_editor() ) {
-			wp_enqueue_script( 'pigeon-editor-sync', PIGEONWP_URL . 'src/admin/editor-sync.js', array( 'wp-data', 'wp-api-fetch', 'wp-edit-post' ), PIGEONWP_VERSION, true );
-			wp_add_inline_script(
-				'pigeon-editor-sync',
-				'window.pigeonEditorSync = ' . wp_json_encode( array( 'reserved' => Access_Tags::get_term_ids() ) ) . ';',
-				'before'
-			);
-		}
 	}
 
 	/**
@@ -161,7 +149,8 @@ class Admin {
 		$custom_post_types = ! empty( $settings['pigeon_content_post_types'] ) ? $settings['pigeon_content_post_types'] : array();
 
 		foreach ( array_merge( array( 'post', 'page' ), $custom_post_types ) as $post_type ) {
-			add_meta_box( self::META_BOX_ID, __( 'Pigeon Settings', 'pigeon' ), array( $this, 'display_meta_box' ), $post_type, 'side', 'high' );
+			// Classic editor only; the block editor uses the native panel from Editor_Panel.
+			add_meta_box( self::META_BOX_ID, __( 'Pigeon Settings', 'pigeon' ), array( $this, 'display_meta_box' ), $post_type, 'side', 'high', array( '__back_compat_meta_box' => true ) );
 		}
 	}
 
