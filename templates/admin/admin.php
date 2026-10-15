@@ -32,8 +32,10 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 				border-image: repeating-linear-gradient( -60deg, #FDCF1A, #FDD948 25px, #1e2227 25px, #353A40 48px) 60;
 				background: linear-gradient(75deg, #254a7a 0%, #275b8d 50%, rgba(0,173,223,1) 100%);
 			}
+			.pigeon-logo-heading { margin: 20px 0 0; line-height: 0; }
+			.pigeon-logo-heading img { display: block; width: auto; height: 48px; }
 		</style>
-		<h2><?php esc_html_e( 'Pigeon for WordPress', 'pigeon' ); ?></h2>
+		<h2 class="pigeon-logo-heading"><img src="<?php echo esc_url( get_plugin_url( 'images/pigeon-logo.png' ) ); ?>" alt="<?php esc_attr_e( 'Pigeon for WordPress', 'pigeon' ); ?>" width="142" height="48" /></h2>
 
 		<?php if ( empty( $settings['pigeon_demo'] ) ) : ?>
 		<div class="pigeon-banner pigeon-visit-admin">
