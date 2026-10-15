@@ -340,8 +340,8 @@ class Access_Tags {
 	public static function get_labels() {
 		return array(
 			self::ACCESS_RULES      => __( 'Pigeon rules', 'pigeon' ),
-			self::ACCESS_FREE       => __( 'Free', 'pigeon' ),
-			self::ACCESS_RESTRICTED => __( 'Restricted', 'pigeon' ),
+			self::ACCESS_FREE       => __( 'Always free', 'pigeon' ),
+			self::ACCESS_RESTRICTED => __( 'Always restricted', 'pigeon' ),
 		);
 	}
 

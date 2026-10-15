@@ -26,8 +26,8 @@ $settings = get_plugin_settings();
 		<td>
 			<select name="pigeon_content_access" id="pigeon-content-access">
 				<option value="0" <?php selected( $access_value, Access_Tags::ACCESS_RULES ); ?>><?php esc_html_e( 'Pigeon rules (default)', 'pigeon' ); ?></option>
-				<option value="1" <?php selected( $access_value, Access_Tags::ACCESS_FREE ); ?>><?php esc_html_e( 'Free', 'pigeon' ); ?></option>
-				<option value="2" <?php selected( $access_value, Access_Tags::ACCESS_RESTRICTED ); ?>><?php esc_html_e( 'Restricted', 'pigeon' ); ?></option>
+				<option value="1" <?php selected( $access_value, Access_Tags::ACCESS_FREE ); ?>><?php esc_html_e( 'Always free', 'pigeon' ); ?></option>
+				<option value="2" <?php selected( $access_value, Access_Tags::ACCESS_RESTRICTED ); ?>><?php esc_html_e( 'Always restricted', 'pigeon' ); ?></option>
 			</select>
 			<input type="hidden" name="pigeon_content_access_original" value="<?php echo esc_attr( $access_value ); ?>" />
 		</td>

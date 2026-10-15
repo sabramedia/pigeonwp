@@ -98,7 +98,11 @@ class Access_Controls {
 	 */
 	public function add_bulk_actions( $actions ) {
 		foreach ( Access_Tags::get_labels() as $access => $label ) {
-			// translators: An access setting, e.g. Free.
+			if ( Access_Tags::ACCESS_RULES === $access ) {
+				$label = __( 'Follow Pigeon rules', 'pigeon' );
+			}
+
+			// translators: An access setting, e.g. Always free.
 			$actions[ self::BULK_PREFIX . $access ] = sprintf( __( 'Pigeon: %s', 'pigeon' ), $label );
 		}
 
@@ -328,7 +332,7 @@ class Access_Controls {
 	}
 
 	/**
-	 * The "Use Pigeon rules / Force free / Force restricted" items, current one checked.
+	 * The "Follow Pigeon rules / Always free / Always restricted" items, current one checked.
 	 *
 	 * @since 1.7.0
 	 *
@@ -340,11 +344,7 @@ class Access_Controls {
 	 */
 	protected function add_admin_bar_overrides( $wp_admin_bar, $post_id, $access ) {
 		foreach ( Access_Tags::get_labels() as $value => $label ) {
-			$item = Access_Tags::ACCESS_RULES === $value ? __( 'Use Pigeon rules', 'pigeon' ) : sprintf(
-				// translators: An access setting, e.g. Free.
-				__( 'Force %s', 'pigeon' ),
-				strtolower( $label )
-			);
+			$item = Access_Tags::ACCESS_RULES === $value ? __( 'Follow Pigeon rules', 'pigeon' ) : $label;
 
 			$wp_admin_bar->add_node(
 				array(
