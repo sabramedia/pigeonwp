@@ -67,13 +67,13 @@ class Access_Tags {
 	const LEGACY_META_KEY = '_wp_pigeon_content_access';
 
 	/**
-	 * Reserved term IDs keyed by access value, cached for the request.
+	 * Reserved term IDs keyed by access value, cached for the request per blog (multisite).
 	 *
 	 * @since 1.7.0
 	 *
-	 * @var array|null
+	 * @var array
 	 */
-	protected static $term_ids = null;
+	protected static $term_ids = array();
 
 	/**
 	 * Set while the plugin reads terms itself, so the front-end hiding filters let them through.
@@ -92,6 +92,9 @@ class Access_Tags {
 	 * @return void
 	 */
 	public function hooks() {
+		// Pages and custom post types carry the override as a tag too.
+		add_action( 'init', array( $this, 'register_tag_taxonomy' ), 20 );
+
 		// Only the plugin may rename or delete the reserved tags.
 		add_filter( 'map_meta_cap', array( $this, 'protect_terms' ), 10, 4 );
 
@@ -106,42 +109,61 @@ class Access_Tags {
 	}
 
 	/**
-	 * Get the reserved term IDs, creating the terms if they are missing.
+	 * Give every Pigeon post type the post_tag taxonomy, so a page's override tag is a real,
+	 * counted and cleaned-up relationship.
 	 *
 	 * @since 1.7.0
 	 *
+	 * @return void
+	 */
+	public function register_tag_taxonomy() {
+		foreach ( self::get_post_types() as $post_type ) {
+			if ( post_type_exists( $post_type ) && ! is_object_in_taxonomy( $post_type, 'post_tag' ) ) {
+				register_taxonomy_for_object_type( 'post_tag', $post_type );
+			}
+		}
+	}
+
+	/**
+	 * Get the reserved term IDs.
+	 *
+	 * Reads trust the stored IDs. Writes pass $verify, which checks them and creates any
+	 * missing term, so a front-end page view never inserts terms once they exist.
+	 *
+	 * @since 1.7.0
+	 *
+	 * @param bool $verify Check the stored IDs against the terms and repair them.
+	 *
 	 * @return array Term IDs keyed by access value.
 	 */
-	public static function get_term_ids() {
-		if ( null !== self::$term_ids ) {
-			return self::$term_ids;
+	public static function get_term_ids( $verify = false ) {
+		$blog_id = get_current_blog_id();
+
+		if ( ! $verify && isset( self::$term_ids[ $blog_id ] ) ) {
+			return self::$term_ids[ $blog_id ];
+		}
+
+		// Too early: nothing can be looked up or created yet, and nothing is cached.
+		if ( ! taxonomy_exists( 'post_tag' ) ) {
+			return array();
 		}
 
 		$stored = get_option( self::TERMS_OPTION );
-		$stored = is_array( $stored ) ? $stored : array();
-		$ids    = array();
+		$stored = is_array( $stored ) ? array_map( 'intval', $stored ) : array();
 
+		if ( ! $verify && count( $stored ) === count( self::TAG_SLUGS ) ) {
+			self::$term_ids[ $blog_id ] = $stored;
+			return $stored;
+		}
+
+		$ids            = array();
 		self::$internal = true;
 
 		foreach ( self::TAG_SLUGS as $access => $slug ) {
-			if ( ! empty( $stored[ $access ] ) ) {
-				$term = get_term( (int) $stored[ $access ], 'post_tag' );
+			$term_id = self::find_or_create_term( $slug, isset( $stored[ $access ] ) ? $stored[ $access ] : 0 );
 
-				if ( $term instanceof \WP_Term && $term->slug === $slug ) {
-					$ids[ $access ] = (int) $term->term_id;
-					continue;
-				}
-			}
-
-			$term = get_term_by( 'slug', $slug, 'post_tag' );
-
-			if ( ! $term ) {
-				$created = wp_insert_term( $slug, 'post_tag', array( 'slug' => $slug ) );
-				$term    = is_wp_error( $created ) ? false : get_term( $created['term_id'], 'post_tag' );
-			}
-
-			if ( $term instanceof \WP_Term ) {
-				$ids[ $access ] = (int) $term->term_id;
+			if ( $term_id ) {
+				$ids[ $access ] = $term_id;
 			}
 		}
 
@@ -151,9 +173,37 @@ class Access_Tags {
 			update_option( self::TERMS_OPTION, $ids );
 		}
 
-		self::$term_ids = $ids;
+		self::$term_ids[ $blog_id ] = $ids;
 
 		return $ids;
+	}
+
+	/**
+	 * The ID of a reserved tag: the stored one if it still matches, else found by slug, else created.
+	 *
+	 * @since 1.7.0
+	 *
+	 * @param string $slug      The reserved slug.
+	 * @param int    $stored_id The ID stored for it, or 0.
+	 *
+	 * @return int The term ID, or 0.
+	 */
+	protected static function find_or_create_term( $slug, $stored_id ) {
+		$term = $stored_id ? get_term( $stored_id, 'post_tag' ) : null;
+
+		if ( ! $term instanceof \WP_Term || $term->slug !== $slug ) {
+			$term = get_term_by( 'slug', $slug, 'post_tag' );
+		}
+
+		if ( ! $term ) {
+			$created = wp_insert_term( $slug, 'post_tag', array( 'slug' => $slug ) );
+
+			// A concurrent request may have just created it; the error carries its ID.
+			$term_id = is_wp_error( $created ) ? $created->get_error_data( 'term_exists' ) : $created['term_id'];
+			$term    = $term_id ? get_term( (int) $term_id, 'post_tag' ) : null;
+		}
+
+		return $term instanceof \WP_Term ? (int) $term->term_id : 0;
 	}
 
 	/**
@@ -205,15 +255,25 @@ class Access_Tags {
 	public static function get_tag_access( $post_id ) {
 		$term_ids = self::get_term_ids();
 
-		self::$internal = true;
-		$post_terms     = wp_get_object_terms( $post_id, 'post_tag', array( 'fields' => 'ids' ) );
-		self::$internal = false;
+		// The term cache is already primed for the main query and list tables.
+		$post_terms = get_object_term_cache( $post_id, 'post_tag' );
+
+		if ( false === $post_terms ) {
+			self::$internal = true;
+			$post_terms     = wp_get_object_terms( $post_id, 'post_tag', array( 'fields' => 'ids' ) );
+			self::$internal = false;
+		}
 
 		if ( is_wp_error( $post_terms ) ) {
 			return null;
 		}
 
-		$post_terms = array_map( 'intval', $post_terms );
+		$post_terms = array_map(
+			function ( $term ) {
+				return (int) ( $term instanceof \WP_Term ? $term->term_id : $term );
+			},
+			(array) $post_terms
+		);
 
 		// Restricted wins if both are somehow present.
 		foreach ( array( self::ACCESS_RESTRICTED, self::ACCESS_FREE ) as $access ) {
@@ -228,7 +288,9 @@ class Access_Tags {
 	/**
 	 * Set the access override for a post.
 	 *
-	 * Replaces any reserved tag with the one for the new value and removes the legacy meta.
+	 * Replaces any reserved tag with the one for the new value. The legacy meta is removed
+	 * for free/restricted (the tag is the truth) and left as 0 for rules, which is what the
+	 * old "Metered" choice stored and what the RSS feed has always reported for it.
 	 *
 	 * @since 1.7.0
 	 *
@@ -239,7 +301,7 @@ class Access_Tags {
 	 */
 	public static function set_access( $post_id, $access ) {
 		$access   = (int) $access;
-		$term_ids = self::get_term_ids();
+		$term_ids = self::get_term_ids( true );
 
 		if ( count( $term_ids ) !== count( self::TAG_SLUGS ) ) {
 			return false;
@@ -256,7 +318,14 @@ class Access_Tags {
 			}
 		}
 
-		delete_post_meta( $post_id, self::LEGACY_META_KEY );
+		if ( self::ACCESS_RULES === $access ) {
+			update_post_meta( $post_id, self::LEGACY_META_KEY, self::ACCESS_RULES );
+		} else {
+			delete_post_meta( $post_id, self::LEGACY_META_KEY );
+		}
+
+		// The inline Pigeon.paywall({free:…}) is baked into the cached page.
+		clean_post_cache( $post_id );
 
 		return true;
 	}
@@ -342,10 +411,26 @@ class Access_Tags {
 			return;
 		}
 
-		$tt_ids = array_map( 'intval', (array) $tt_ids );
+		// On an append $tt_ids holds only the added terms and core leaves $old_tt_ids empty, so read
+		// what the post now has.
+		if ( $append ) {
+			self::$internal = true;
+			$tt_ids         = wp_get_object_terms( $object_id, 'post_tag', array( 'fields' => 'tt_ids' ) );
+			self::$internal = false;
+		}
 
-		if ( in_array( (int) $restricted->term_taxonomy_id, $tt_ids, true ) && in_array( (int) $free->term_taxonomy_id, $tt_ids, true ) ) {
+		$tt_ids = is_wp_error( $tt_ids ) ? array() : array_map( 'intval', (array) $tt_ids );
+
+		$has_restricted = in_array( (int) $restricted->term_taxonomy_id, $tt_ids, true );
+		$has_free       = in_array( (int) $free->term_taxonomy_id, $tt_ids, true );
+
+		if ( $has_restricted && $has_free ) {
 			wp_remove_object_terms( $object_id, array( (int) $free->term_id ), 'post_tag' );
+		}
+
+		// Once a reserved tag is set, an old free/restricted meta must not come back if the tag is removed.
+		if ( ( $has_restricted || $has_free ) && in_array( (int) get_post_meta( $object_id, self::LEGACY_META_KEY, true ), array( self::ACCESS_FREE, self::ACCESS_RESTRICTED ), true ) ) {
+			delete_metadata( 'post', $object_id, self::LEGACY_META_KEY );
 		}
 	}
 
@@ -357,11 +442,22 @@ class Access_Tags {
 	 * @return bool
 	 */
 	protected function should_hide() {
-		if ( self::$internal || is_admin() ) {
+		if ( self::$internal ) {
 			return false;
 		}
 
-		// The block editor reads tags over REST.
+		// Front-end AJAX (infinite scroll, "load more") runs through admin-ajax.php, where is_admin()
+		// is true; only editors see the tags there.
+		if ( wp_doing_ajax() ) {
+			return ! current_user_can( 'edit_posts' );
+		}
+
+		if ( is_admin() ) {
+			return false;
+		}
+
+		// REST stays unfiltered: the block editor reads tags there, and so does Pigeon's paywall
+		// editor (tag search, reserved-tag checks).
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return false;
 		}
@@ -502,9 +598,16 @@ class Access_Tags {
 			return;
 		}
 
+		$is_feed = is_feed();
+
 		global $wp_query;
 		$wp_query->set_404();
 		status_header( 404 );
 		nocache_headers();
+
+		// set_404() keeps is_feed, and the template loader would still render the tag's feed.
+		if ( $is_feed ) {
+			exit;
+		}
 	}
 }

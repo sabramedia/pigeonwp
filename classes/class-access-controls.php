@@ -58,8 +58,10 @@ class Access_Controls {
 		add_action( 'admin_init', array( $this, 'register_list_hooks' ) );
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
-		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_status' ), 101 );
+		// The one Pigeon toolbar item: icon, the page's paywall status, overrides and settings.
+		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_menu' ), 100 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_admin_bar_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_bar_assets' ) );
 
 		add_action( 'admin_post_' . self::SET_ACTION, array( $this, 'handle_set_access' ) );
 		add_action( 'admin_post_' . self::MIGRATE_ACTION, array( $this, 'handle_migrate' ) );
@@ -235,7 +237,11 @@ class Access_Controls {
 	}
 
 	/**
-	 * Add the paywall status and the access switcher to the front-end admin bar.
+	 * The Pigeon toolbar item.
+	 *
+	 * Everywhere: the Pigeon icon, opening a menu with Settings (for users who can manage
+	 * options). On a post the user can edit: the icon is followed by the page's live paywall
+	 * status, and the menu lists the access overrides above Settings.
 	 *
 	 * @since 1.7.0
 	 *
@@ -243,35 +249,97 @@ class Access_Controls {
 	 *
 	 * @return void
 	 */
-	public function add_admin_bar_status( $wp_admin_bar ) {
-		$post = $this->get_admin_bar_post();
+	public function add_admin_bar_menu( $wp_admin_bar ) {
+		$can_settings = current_user_can( 'manage_options' );
+		$post         = $this->get_admin_bar_post();
 
-		if ( ! $post ) {
+		if ( ! $can_settings && ! $post ) {
 			return;
 		}
 
-		$labels = Access_Tags::get_labels();
-		$access = Access_Tags::get_access( $post->ID );
-		$source = Access_Tags::ACCESS_RULES === $access ? __( 'rules', 'pigeon' ) : __( 'override', 'pigeon' );
+		$settings     = get_plugin_settings();
+		$demo         = ! empty( $settings['pigeon_demo'] );
+		$settings_url = admin_url( 'options-general.php?page=' . Admin::MENU_SLUG );
+
+		$title   = sprintf(
+			'<img class="pigeon-ab-icon" src="%s" width="20" height="20" alt="" /><span class="screen-reader-text">%s</span>',
+			esc_url( get_plugin_url( 'images/pigeon-icon.png' ) ),
+			esc_html__( 'Pigeon', 'pigeon' )
+		);
+		$classes = array( 'pigeon-ab' );
+		$tooltip = '';
+
+		if ( $demo ) {
+			$title    .= '<span class="pigeon-ab-label">' . esc_html__( 'Demo Mode', 'pigeon' ) . '</span>';
+			$classes[] = 'pigeon_demo_mode';
+		}
+
+		if ( $post ) {
+			$access    = Access_Tags::get_access( $post->ID );
+			$source    = Access_Tags::ACCESS_RULES === $access ? __( 'rules', 'pigeon' ) : __( 'override', 'pigeon' );
+			$title    .= sprintf(
+				'<span class="pigeon-ab-label"><span class="pigeon-access-dot"></span><span class="pigeon-access-status">%s</span> <span class="pigeon-access-source">&middot; %s</span></span>',
+				esc_html__( 'Paywall: checking…', 'pigeon' ),
+				esc_html( $source )
+			);
+			$classes[] = 'pigeon-access pigeon-access--pending';
+			$tooltip   = __( 'What a signed-out reader gets on this page, from Pigeon. Your own subscription is ignored, but a page you bought with credits shows as free.', 'pigeon' );
+		}
 
 		$wp_admin_bar->add_node(
 			array(
-				'id'    => 'pigeon-access',
-				'title' => sprintf(
-					'<span class="pigeon-access-dot"></span><span class="pigeon-access-status">%s</span> <span class="pigeon-access-source">&middot; %s</span>',
-					esc_html__( 'Paywall: checking…', 'pigeon' ),
-					esc_html( $source )
-				),
-				'href'  => false,
+				'id'    => 'pigeon',
+				'title' => $title,
+				'href'  => $can_settings ? $settings_url : false,
 				'meta'  => array(
-					'class' => 'pigeon-access pigeon-access--pending',
-					'title' => __( 'What a signed-out reader gets on this page, from Pigeon. Your own subscription is ignored, but a page you bought with credits shows as free.', 'pigeon' ),
+					'class' => implode( ' ', $classes ),
+					'title' => $tooltip,
 				),
 			)
 		);
 
-		foreach ( $labels as $value => $label ) {
-			$title = Access_Tags::ACCESS_RULES === $value ? __( 'Use Pigeon rules', 'pigeon' ) : sprintf(
+		$settings_parent = 'pigeon';
+
+		if ( $post ) {
+			$this->add_admin_bar_overrides( $wp_admin_bar, $post->ID, $access );
+
+			// Settings sits in the toolbar's secondary group: the darker band at the bottom.
+			$wp_admin_bar->add_group(
+				array(
+					'parent' => 'pigeon',
+					'id'     => 'pigeon-secondary',
+					'meta'   => array( 'class' => 'ab-sub-secondary' ),
+				)
+			);
+			$settings_parent = 'pigeon-secondary';
+		}
+
+		if ( $can_settings ) {
+			$wp_admin_bar->add_node(
+				array(
+					'parent' => $settings_parent,
+					'id'     => 'pigeon-settings',
+					'title'  => esc_html__( 'Pigeon settings', 'pigeon' ),
+					'href'   => $settings_url,
+				)
+			);
+		}
+	}
+
+	/**
+	 * The "Use Pigeon rules / Force free / Force restricted" items, current one checked.
+	 *
+	 * @since 1.7.0
+	 *
+	 * @param \WP_Admin_Bar $wp_admin_bar The admin bar object.
+	 * @param int           $post_id      The post ID.
+	 * @param int           $access       The post's current access.
+	 *
+	 * @return void
+	 */
+	protected function add_admin_bar_overrides( $wp_admin_bar, $post_id, $access ) {
+		foreach ( Access_Tags::get_labels() as $value => $label ) {
+			$item = Access_Tags::ACCESS_RULES === $value ? __( 'Use Pigeon rules', 'pigeon' ) : sprintf(
 				// translators: An access setting, e.g. Free.
 				__( 'Force %s', 'pigeon' ),
 				strtolower( $label )
@@ -279,23 +347,14 @@ class Access_Controls {
 
 			$wp_admin_bar->add_node(
 				array(
-					'parent' => 'pigeon-access',
+					'parent' => 'pigeon',
 					'id'     => 'pigeon-access-' . $value,
-					'title'  => ( $value === $access ? '&#10003; ' : '' ) . esc_html( $title ),
-					'href'   => $this->get_set_access_url( $post->ID, $value ),
+					'title'  => ( $value === $access ? '&#10003; ' : '' ) . esc_html( $item ),
+					'href'   => $this->get_set_access_url( $post_id, $value ),
 					'meta'   => array( 'class' => $value === $access ? 'pigeon-access-current' : '' ),
 				)
 			);
 		}
-
-		$wp_admin_bar->add_node(
-			array(
-				'parent' => 'pigeon-access',
-				'id'     => 'pigeon-access-edit',
-				'title'  => esc_html__( 'Edit post settings', 'pigeon' ),
-				'href'   => get_edit_post_link( $post->ID ),
-			)
-		);
 	}
 
 	/**
@@ -357,7 +416,23 @@ class Access_Controls {
 	 * @return void
 	 */
 	public function enqueue_admin_bar_assets() {
-		if ( ! is_admin_bar_showing() || ! $this->get_admin_bar_post() ) {
+		if ( ! is_admin_bar_showing() ) {
+			return;
+		}
+
+		// The icon and demo badge, wherever the Pigeon item shows.
+		wp_add_inline_style(
+			'admin-bar',
+			'
+			#wpadminbar #wp-admin-bar-pigeon > .ab-item { display: flex; align-items: center; }
+			#wpadminbar #wp-admin-bar-pigeon .pigeon-ab-icon { display: block; width: 20px; height: 20px; }
+			#wpadminbar #wp-admin-bar-pigeon .pigeon-ab-label { margin-left: 6px; }
+			#wpadminbar #wp-admin-bar-pigeon.pigeon_demo_mode > .ab-item,
+			#wpadminbar #wp-admin-bar-pigeon.pigeon_demo_mode:hover > .ab-item { background-color: #fdcf1a; color: #1d2327; }
+			'
+		);
+
+		if ( ! $this->get_admin_bar_post() ) {
 			return;
 		}
 
@@ -402,7 +477,7 @@ class Access_Controls {
 
 		return '(function () {
 			var text = ' . wp_json_encode( $text ) . ';
-			var node = document.getElementById( "wp-admin-bar-pigeon-access" );
+			var node = document.getElementById( "wp-admin-bar-pigeon" );
 			if ( ! node ) { return; }
 			var status = node.querySelector( ".pigeon-access-status" );
 
@@ -431,6 +506,9 @@ class Access_Controls {
 				var pigeon = window.Pigeon;
 				if ( pigeon && pigeon.paywallPromise && "function" === typeof pigeon.paywallPromise.done ) {
 					pigeon.paywallPromise.done( function ( r ) { var d = describe( r ); show( d[0], d[1] ); } );
+					if ( "function" === typeof pigeon.paywallPromise.fail ) {
+						pigeon.paywallPromise.fail( function () { show( text.unavailable, "na" ); } );
+					}
 					return;
 				}
 				if ( ++tries > 40 ) { show( text.inactive, "na" ); return; }
@@ -486,7 +564,8 @@ class Access_Controls {
 	public static function count_legacy() {
 		global $wpdb;
 
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s", Access_Tags::LEGACY_META_KEY ) ); // @phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		// Only free/restricted need moving; a 0 is the "Pigeon rules" marker the RSS feed reads.
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value IN ('1','2')", Access_Tags::LEGACY_META_KEY ) ); // @phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	}
 
 	/**
@@ -502,10 +581,11 @@ class Access_Controls {
 		$migrated = 0;
 
 		do {
-			// Each pass deletes the meta it reads, so the next batch starts again from the top.
+			// Every row read is deleted below (by set_access or delete_metadata), so each pass
+			// starts again from the top and the loop ends.
 			$rows = $wpdb->get_results( // @phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$wpdb->prepare(
-					"SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s LIMIT %d",
+					"SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value IN ('1','2') LIMIT %d",
 					Access_Tags::LEGACY_META_KEY,
 					self::MIGRATE_BATCH
 				)
@@ -517,9 +597,11 @@ class Access_Controls {
 				$post_id = (int) $row->post_id;
 				$access  = (int) $row->meta_value;
 
-				// Revisions carry copies of the meta; a tag set by hand wins over the old meta.
-				if ( wp_is_post_revision( $post_id ) || null !== Access_Tags::get_tag_access( $post_id ) || Access_Tags::ACCESS_RULES === $access || ! array_key_exists( $access, Access_Tags::get_labels() ) ) {
-					delete_post_meta( $post_id, Access_Tags::LEGACY_META_KEY );
+				// Revisions (and orphans) carry copies of the meta, and a tag set by hand wins over it.
+				// delete_metadata(), not delete_post_meta(): the latter redirects a revision ID to its
+				// parent and would wipe the parent's not-yet-migrated value.
+				if ( wp_is_post_revision( $post_id ) || ! get_post( $post_id ) || null !== Access_Tags::get_tag_access( $post_id ) ) {
+					delete_metadata( 'post', $post_id, Access_Tags::LEGACY_META_KEY );
 					continue;
 				}
 
