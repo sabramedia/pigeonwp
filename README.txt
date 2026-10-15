@@ -54,7 +54,7 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 * The reserved tags are left out of the site's pages: theme tag lists, tag clouds, sitemaps, and their archive pages and feeds. They stay visible in the REST API, which the block editor and Pigeon read
 * Pages and Pigeon custom post types now support tags, so they can carry the access tag
 * Added a settings-page button and a `wp pigeon migrate-access` command to move existing settings to the tags
-* Renamed the access options to "Pigeon rules (default)", "Always free" and "Always restricted". "Pigeon rules" was labelled "Metered", but it always meant "let the Pigeon rules decide"
+* Renamed the access options to Pigeon rules (default), Always free and Always restricted. Pigeon rules was labeled "Metered," but it always meant "let the Pigeon rules decide."
 
 = 1.6.6 =
 * Added a tags array to the JavaScript to send post tags to Pigeon
