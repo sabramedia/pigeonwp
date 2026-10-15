@@ -332,7 +332,8 @@ class Access_Controls {
 	}
 
 	/**
-	 * The "Follow Pigeon rules / Always free / Always restricted" items, current one checked.
+	 * "Make this page:" over "follow Pigeon rules / always be free / always be restricted", the
+	 * current one checked. The heading is a label, not a link.
 	 *
 	 * @since 1.7.0
 	 *
@@ -343,14 +344,29 @@ class Access_Controls {
 	 * @return void
 	 */
 	protected function add_admin_bar_overrides( $wp_admin_bar, $post_id, $access ) {
-		foreach ( Access_Tags::get_labels() as $value => $label ) {
-			$item = Access_Tags::ACCESS_RULES === $value ? __( 'Follow Pigeon rules', 'pigeon' ) : $label;
+		$items = array(
+			Access_Tags::ACCESS_RULES      => __( 'follow Pigeon rules', 'pigeon' ),
+			Access_Tags::ACCESS_FREE       => __( 'always be free', 'pigeon' ),
+			Access_Tags::ACCESS_RESTRICTED => __( 'always be restricted', 'pigeon' ),
+		);
 
+		$wp_admin_bar->add_node(
+			array(
+				'parent' => 'pigeon',
+				'id'     => 'pigeon-access-heading',
+				'title'  => esc_html__( 'Make this page:', 'pigeon' ),
+				'href'   => false,
+				'meta'   => array( 'class' => 'pigeon-access-heading' ),
+			)
+		);
+
+		foreach ( $items as $value => $item ) {
 			$wp_admin_bar->add_node(
 				array(
 					'parent' => 'pigeon',
 					'id'     => 'pigeon-access-' . $value,
-					'title'  => ( $value === $access ? '&#10003; ' : '' ) . esc_html( $item ),
+					// The check sits in a fixed-width slot so the three items line up.
+					'title'  => '<span class="pigeon-access-check">' . ( $value === $access ? '&#10003;' : '' ) . '</span>' . esc_html( $item ),
 					'href'   => $this->get_set_access_url( $post_id, $value ),
 					'meta'   => array( 'class' => $value === $access ? 'pigeon-access-current' : '' ),
 				)
@@ -446,6 +462,9 @@ class Access_Controls {
 			#wpadminbar .pigeon-access--metered .pigeon-access-dot { background: #dba617; }
 			#wpadminbar .pigeon-access--locked .pigeon-access-dot { background: #d63638; }
 			#wpadminbar .pigeon-access-current > .ab-item { font-weight: 600; }
+			#wpadminbar .pigeon-access-check { display: inline-block; width: 16px; vertical-align: top; } /* top: the check glyph otherwise drops the row\'s text */
+			#wpadminbar .quicklinks .menupop ul li.pigeon-access-heading > .ab-item,
+			#wpadminbar .quicklinks .menupop ul li.pigeon-access-heading:hover > .ab-item { color: #a7aaad; font-size: 12px; background: none; cursor: default; }
 		';
 		wp_add_inline_style( 'admin-bar', $css );
 
