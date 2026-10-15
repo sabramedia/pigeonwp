@@ -120,25 +120,15 @@ class Admin {
 			wp_enqueue_script( self::JS_HANDLE, PIGEONWP_URL . 'src/admin/settings.js', array(), PIGEONWP_VERSION, array( 'in_footer' => false ) );
 		}
 
-		// The block editor saves meta boxes without re-rendering them, so the hidden original access
-		// value would go stale; refresh it after each save. Prints only where the block editor loads.
-		if ( in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
+		// Block editor only: keep the Pigeon Settings box and the Tags panel in step across saves.
+		$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+
+		if ( in_array( $hook, array( 'post.php', 'post-new.php' ), true ) && $screen && $screen->is_block_editor() ) {
+			wp_enqueue_script( 'pigeon-editor-sync', PIGEONWP_URL . 'src/admin/editor-sync.js', array( 'wp-data', 'wp-api-fetch', 'wp-edit-post' ), PIGEONWP_VERSION, true );
 			wp_add_inline_script(
-				'wp-edit-post',
-				'( function () {
-					var wasSaving = false;
-					wp.data.subscribe( function () {
-						var saving = wp.data.select( "core/edit-post" ).isSavingMetaBoxes();
-						if ( wasSaving && ! saving ) {
-							var select = document.getElementById( "pigeon-content-access" );
-							var original = document.querySelector( "input[name=\"pigeon_content_access_original\"]" );
-							if ( select && original ) {
-								original.value = select.value;
-							}
-						}
-						wasSaving = saving;
-					} );
-				} )();'
+				'pigeon-editor-sync',
+				'window.pigeonEditorSync = ' . wp_json_encode( array( 'reserved' => Access_Tags::get_term_ids() ) ) . ';',
+				'before'
 			);
 		}
 	}
