@@ -290,10 +290,11 @@ class Access_Controls {
 			array(
 				'id'    => 'pigeon',
 				'title' => $title,
-				'href'  => $can_settings ? $settings_url : false,
+				'href'  => false, // Not a link: every action, Settings included, is picked from the menu.
 				'meta'  => array(
-					'class' => implode( ' ', $classes ),
-					'title' => $tooltip,
+					'class'    => implode( ' ', $classes ),
+					'title'    => $tooltip,
+					'tabindex' => 0, // Not a link, so it needs this to be reachable by keyboard.
 				),
 			)
 		);
