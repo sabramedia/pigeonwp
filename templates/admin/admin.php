@@ -63,7 +63,7 @@ $settings['pigeon_subdomain'] = str_replace( array( 'https://', 'http://' ), '',
 		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post">
 			<input type="hidden" name="action" value="<?php echo esc_attr( Access_Controls::MIGRATE_ACTION ); ?>" />
 			<?php wp_nonce_field( Access_Controls::MIGRATE_ACTION ); ?>
-			<p><?php submit_button( __( 'Move to tags', 'pigeon' ), 'secondary', 'submit', false ); ?></p>
+			<p><?php submit_button( __( 'Move to tags', 'pigeon' ), 'secondary', 'pigeon-migrate', false ); // Not "submit": that id belongs to the settings form's Save Changes. ?></p>
 		</form>
 	</div>
 	<?php endif; ?>
