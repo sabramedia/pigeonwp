@@ -2,8 +2,8 @@
 Contributors: pigeonplatform, sabramedia, mattgeri
 Tags: pigeon, paywall, restrict content, protect posts
 Requires at least: 5.9
-Tested up to: 6.9
-Stable tag: 1.7.0
+Tested up to: 7.1
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ rewrite ^wp-content/uploads/(.*\.pdf)$ "index.php?pdf_download=$1" last;
 ```
 
 == Changelog ==
+= 1.7.1 =
+* Tested up to WordPress 7.1
+
 = 1.7.0 =
 * The per-post Pigeon access setting is now stored as a reserved tag (pigeon-free or pigeon-restricted) instead of post meta, so it can be changed in bulk
 * Added "Pigeon: Always free / Always restricted / Follow Pigeon rules" bulk actions and a Pigeon column to post and page lists
